@@ -6,10 +6,15 @@
   position: absolute;
   padding: 5px;
   border-radius: 4px;
-  background-color: #2196F3;
+  background-color: lightgrey;
   color: white;
 }
 
 .hover .price {
   font-weight: 700;
+}
+
+.hover .mcafee {
+  font-weight: 700;
+  color: red;
 }

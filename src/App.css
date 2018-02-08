@@ -10,6 +10,20 @@ h1 {
   color: #757575;
 }
 
+p {
+  padding: 0;
+  margin: 0;
+  font-weight: 700;
+  color: #757575;
+}
+
+p#explanation {
+  font-size: 150%;
+  padding: 3em;
+  margin: 0;
+  font-weight: normal;
+}
+
 #coindesk {
   font-weight: 300;
 }

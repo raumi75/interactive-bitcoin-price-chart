@@ -24,6 +24,7 @@ class LineChart extends Component {
       max: data.reduce((max, p) => p.y > max ? p.y : max, data[0].y)
     }
   }
+
   // GET SVG COORDINATES
   getSvgX(x) {
     const {svgWidth, yLabelSize} = this.props;
@@ -47,6 +48,20 @@ class LineChart extends Component {
       <path className="linechart_path" d={pathD} style={{stroke: color}} />
     );
   }
+
+  makePathMcAfee() {
+    const {data, mcafeecolor} = this.props;
+    let pathD = "M " + this.getSvgX(data[0].x) + " " + this.getSvgY(data[0].m) + " ";
+
+    pathD += data.map((point, i) => {
+      return "L " + this.getSvgX(point.x) + " " + this.getSvgY(point.m) + " ";
+    }).join("");
+
+    return (
+      <path className="linechart_path" d={pathD} style={{stroke: mcafeecolor}} />
+    );
+  }
+
   // BUILD SHADED AREA
   makeArea() {
     const {data} = this.props;
@@ -117,7 +132,8 @@ class LineChart extends Component {
         svgX: this.getSvgX(point.x),
         svgY: this.getSvgY(point.y),
         d: point.d,
-        p: point.p
+        p: point.p,
+        m: point.m
       });
     });
 
@@ -177,6 +193,7 @@ class LineChart extends Component {
         <g>
           {this.makeAxis()}
           {this.makePath()}
+          {this.makePathMcAfee()}
           {this.makeArea()}
           {this.makeLabels()}
           {this.state.hoverLoc ? this.createLine() : null}
@@ -190,6 +207,7 @@ class LineChart extends Component {
 LineChart.defaultProps = {
   data: [],
   color: '#2196F3',
+  mcafeecolor: '#FF0000',
   pointRadius: 5,
   svgHeight: 300,
   svgWidth: 900,
