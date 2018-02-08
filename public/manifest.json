@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "McAfee Tracker",
+  "name": "McAfee Bitcoin Price Tracker",
   "icons": [
     {
       "src": "favicon.ico",
