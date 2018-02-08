@@ -135,7 +135,7 @@ class App extends Component {
         </div>
 
         <div className='row'>
-          <div id="source">Source: <a href="https://github.com/raumi75/interactive-bitcoin-price-chart">github</a>.</div>
+          <div id="source">Source: <a href="https://github.com/raumi75/mcafeetracker">github</a>.</div>
         </div>
       </div>
 
