@@ -98,7 +98,7 @@ class App extends Component {
 
         <div className='row'>
           <p id="explanation">
-            John McAfee made a bet on Juli 17th 2017: One single Bitcoin would be worth 500.000 US$ in three years. The price was 2,244.265 US$/BTC at the time. He later revised his bet and <a href="https://twitter.com/officialmcafee/status/935900326007328768">predicted one Million US$ by the end of 2020</a>.
+            John McAfee made a bet on July 17th 2017: One single Bitcoin would be worth 500.000 US$ in three years. The price was 2,244.265 US$/BTC at the time. He later revised his bet and <a href="https://twitter.com/officialmcafee/status/935900326007328768">predicted one Million US$ by the end of 2020</a>.
             <br />
             <br />Is this really possible? Bitcoin needs to grow at a rate of <strong>{ this.getGrowthRate()*100 } % per day</strong>. That is the red line on the above chart. As long as the blue line is above the red line, we are on target and John McAfee will not have to eat his own dick. Hover over the graph to get daily prices.
             <br />
