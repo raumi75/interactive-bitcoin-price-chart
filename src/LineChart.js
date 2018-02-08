@@ -20,7 +20,7 @@ class LineChart extends Component {
   getY(){
     const {data} = this.props;
     return {
-      min: data.reduce((min, p) => p.y < min ? p.y : min, data[0].y),
+      min: 0,
       max: data.reduce((max, p) => p.y > max ? p.y : max, data[0].y)
     }
   }
@@ -106,8 +106,8 @@ class LineChart extends Component {
         <text transform={`translate(${yLabelSize/2}, 20)`} textAnchor="middle">
           {this.getY().max.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}
         </text>
-        <text transform={`translate(${yLabelSize/2}, ${svgHeight - xLabelSize - padding})`} textAnchor="middle">
-          {this.getY().min.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}
+        <text transform={`translate(${yLabelSize/2}, ${this.getSvgY(this.props.data[0].y)}) `} textAnchor="middle">
+          {this.props.data[0].p.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}
         </text>
         {/* X AXIS LABELS */}
         <text transform={`translate(${yLabelSize}, ${svgHeight})`} textAnchor="start">
