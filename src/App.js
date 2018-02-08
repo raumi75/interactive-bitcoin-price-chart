@@ -99,6 +99,10 @@ class App extends Component {
             Hover over the graph to get daily prices.
           </p>
         </div>
+
+        <div className='row'>
+          <div id="source">Source: <a href="https://github.com/raumi75/interactive-bitcoin-price-chart">github</a>.</div>
+        </div>
       </div>
 
     );
