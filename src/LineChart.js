@@ -28,7 +28,7 @@ class LineChart extends Component {
   // GET SVG COORDINATES
   getSvgX(x) {
     const {svgWidth, yLabelSize} = this.props;
-    return yLabelSize + (x / this.getX().max * (svgWidth - yLabelSize));
+    return yLabelSize + (x / this.getX().max * (svgWidth - 2*yLabelSize));
   }
   getSvgY(y) {
     const {svgHeight, xLabelSize} = this.props;
@@ -102,18 +102,25 @@ class LineChart extends Component {
     const padding = 5;
     return(
       <g className="linechart_label">
-        {/* Y AXIS LABELS */}
+        {/* Y AXIS LABELS left*/}
         <text transform={`translate(${yLabelSize/2}, 20)`} textAnchor="middle">
           {this.getY().max.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}
         </text>
         <text transform={`translate(${yLabelSize/2}, ${this.getSvgY(this.props.data[0].y)}) `} textAnchor="middle">
           {this.props.data[0].p.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}
         </text>
+        {/* Y AXIS LABELS right*/}
+        <text transform={`translate(${this.getSvgX(this.props.data[this.props.data.length - 1].x)+yLabelSize/2}, ${this.getSvgY(this.props.data[this.props.data.length - 1].y)})`} textAnchor="middle">
+          {this.props.data[this.props.data.length - 1].p.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}
+        </text>
+        <text transform={`translate(${this.getSvgX(this.props.data[this.props.data.length - 1].x)+yLabelSize/2}, ${Math.max(this.getSvgY(this.props.data[this.props.data.length - 1].m)+xLabelSize/4, this.getSvgY(this.props.data[this.props.data.length - 1].y)+xLabelSize) })`} fill="red" textAnchor="middle">
+          {this.props.data[this.props.data.length - 1].m.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}
+        </text>
         {/* X AXIS LABELS */}
-        <text transform={`translate(${yLabelSize}, ${svgHeight})`} textAnchor="start">
+        <text transform={`translate(${yLabelSize/2}, ${svgHeight})`} textAnchor="start">
           { this.props.data[0].d }
         </text>
-        <text transform={`translate(${svgWidth}, ${svgHeight})`} textAnchor="end">
+        <text transform={`translate(${svgWidth-yLabelSize/2}, ${svgHeight})`} textAnchor="end">
           { this.props.data[this.props.data.length - 1].d }
         </text>
       </g>
