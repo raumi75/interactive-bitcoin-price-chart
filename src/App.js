@@ -71,10 +71,13 @@ class App extends Component {
 
       <div className='container'>
         <div className='row'>
-          <h1>McAfee Tracker</h1>
+          <h1>bircoin.top</h1>
         </div>
         <div className='row'>
-          <p>Will Bitcoin be worth 1 Million Dollars on 2020-12-31 or will John McAfee eat his own dick?</p>
+          <h2>The McAfee Prediction Tracker</h2>
+        </div>
+        <div className='row'>
+          <p>Bitcoiners turn typos into jargon. So HODL on tight to your BIRCOIN! By the end of 2020 it will be worth $1 Million.</p>
         </div>
 
         <div className='row'>
