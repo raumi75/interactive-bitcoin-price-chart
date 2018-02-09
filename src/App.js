@@ -99,12 +99,17 @@ class App extends Component {
           <div id="acknowledgement"> Based on Brandon Morellis <a href="https://codeburst.io/how-i-built-an-interactive-30-day-bitcoin-price-graph-with-react-and-an-api-6fe551c2ab1d">30 Day Bitcoin Price Graph</a></div>
         </div>
 
+
         <div className='row'>
-          <p id="explanation">
+          <p className="explanation">
             <br />John McAfee made a bet on July 17th 2017: One single Bitcoin would be worth 500.000 US$ in three years. The price was 2,244.265 US$/BTC at the time. He later revised his bet and <a href="https://twitter.com/officialmcafee/status/935900326007328768">predicted one Million US$ by the end of 2020</a>.
-            <br />
-            <br /><a href="https://twitter.com/officialmcafee/status/935900326007328768"><img src="tweet20171129.png" /></a>
-            <br />
+          </p>
+        </div>
+        <div className='row'>
+          <a href="https://twitter.com/officialmcafee/status/935900326007328768"><img src="tweet20171129.png" /></a>
+        </div>
+        <div className='row'>
+        <p className="explanation">
             <br />Is this really possible? Bitcoin needs to grow at a rate of <strong>{ this.getGrowthRate()*100 } % per day</strong>. That is the red line on the above chart. As long as the blue line is above the red line, we are on target and John McAfee will not have to eat his own dick. Hover over the graph to get daily prices.
             <br />
             <br />The growth rate of less than half a percent does not sound like much to you? That´s because we all suck at grasping the concept of exponential growth. This is the magic behind compound interest.

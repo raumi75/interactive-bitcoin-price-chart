@@ -17,10 +17,8 @@ p {
   color: #757575;
 }
 
-p#explanation {
-  font-size: 150%;
-  padding: 1em;
-  margin: 0;
+p.explanation {
+  font-size: 120%;
   font-weight: normal;
 }
 
