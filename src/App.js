@@ -59,7 +59,7 @@ class App extends Component {
   getMcAfeeRate(s){
     const {targetDate} = this.props;
     const {growthRate} = this.props;
-    const goalRate = 1+growthRate; // daily growth rate to goal of 1.000.000 USD/BTC
+    const goalRate = 1+growthRate;
     const {tweetPrice} = this.props;   // start rate USD/BTC at day of tweet
     return Math.round(Math.pow(goalRate, s) * tweetPrice);
   }
@@ -67,6 +67,17 @@ class App extends Component {
   getDaysSincePrediction(d) {
     const {tweetDate} = this.props;
     return moment(d).diff(moment(tweetDate),'days')
+  }
+
+  // Text that explains how to calculate the price on given day
+  explainPriceOn(d) {
+    const {growthRate} = this.props;
+    const {tweetPrice} = this.props;   // start rate USD/BTC at day of tweet
+
+    return ( <div> {moment(d).format('YYYY-MM-DD')}, the prediction is {this.getDaysSincePrediction(d)} days old, so the target-price is:
+    <br />{1+growthRate}<sup><strong>{this.getDaysSincePrediction(d)}</strong></sup> * {tweetPrice.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })} = { this.getMcAfeeRate(this.getDaysSincePrediction(d)).toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }) }
+ </div> );
+
   }
 
   render() {
@@ -120,28 +131,20 @@ class App extends Component {
             <br />
             <br />The growth rate of less than half a percent does not sound like much to you? That´s because we all suck at grasping the concept of exponential growth. This is the magic behind compound interest.
             <br />
-            <br />Grab a calculator and try it yourself:
+            <p>Grab a calculator and try it yourself:</p>
             <br />
-            <br />Today, the prediction is { this.getDaysSincePrediction(Date.now()) } days old, so the target-price is
-            <br />{1+growthRate}<sup><strong>{this.getDaysSincePrediction(Date.now())}</strong></sup> * 2,244.265 $ = { this.getMcAfeeRate(this.getDaysSincePrediction(Date.now())).toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }) }
-            <br />
-            <br />
-            <br />By 2018-12-31, the prediction will be {this.getDaysSincePrediction('2018-12-31')} days old
-            <br />{1+growthRate}<sup><strong>{this.getDaysSincePrediction('2018-12-31')}</strong></sup> * 2,244.265 $ = { this.getMcAfeeRate(this.getDaysSincePrediction('2018-12-31')).toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }) }
-            <br />
-            <br />By 2019-12-31, the prediction will be {this.getDaysSincePrediction('2019-12-31')} days old
-            <br />{1+growthRate}<sup><strong>{this.getDaysSincePrediction('2019-12-31')}</strong></sup> * 2,244.265 $ = { this.getMcAfeeRate(this.getDaysSincePrediction('2019-12-31')).toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }) }
+            Today, {this.explainPriceOn(Date.now())}
 
-            <br />
+            <br />{this.explainPriceOn('2018-12-31')}
+
+            <br />{this.explainPriceOn('2019-12-31')}
+
+
             <br />Still does not look like it is on target?
-            <br />
-            <br />By 2020-06-01, the prediction will be {this.getDaysSincePrediction('2020-06-01')} days old
-            <br />{1+growthRate}<sup><strong>{this.getDaysSincePrediction('2020-06-01')}</strong></sup> * 2,244.265 $ = { this.getMcAfeeRate(this.getDaysSincePrediction('2020-06-01')).toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }) }
-            <br />
-            <br />By 2020-12-31, the prediction will be {this.getDaysSincePrediction('2020-12-31')} days old and <strong>BAM!</strong>
-            <br />{1+growthRate}<sup><strong>{this.getDaysSincePrediction('2020-12-31')}</strong></sup> * 2,244.265 $ = { this.getMcAfeeRate(this.getDaysSincePrediction('2020-12-31')).toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }) }
-            <br />
-            <br />
+
+            {this.explainPriceOn('2020-06-01')}
+
+            <br />And finally, {this.explainPriceOn('2020-12-31')}
 
             <br />Of course, this growth has limits, but remember that there will only be 21 Million BTC. If every Millionaire in the world wants one, there are not enough for every one to have a whole BTC.
             <br />
@@ -159,11 +162,11 @@ class App extends Component {
 
 // DEFAULT PROPS
 App.defaultProps = {
-  tweetDate:  '2017-07-17',
-  tweetPrice:  2244.265,
-  targetDate:  '2020-12-31',
-  targetPrice: 1000000,
-  growthRate:  0.00484095703431026
+  tweetDate:  '2017-07-17',         // Date of first McAfee Tweet
+  tweetPrice:  2244.265,            // USD/BTC on TweetDate
+  targetDate:  '2020-12-31',        // Day McAfee predicted the price
+  targetPrice: 1000000,             // revised prediction (1Million)
+  growthRate:  0.00484095703431026  // daily growth rate to goal of 1.000.000 USD/BTC
 }
 
 export default App;
