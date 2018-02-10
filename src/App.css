@@ -22,6 +22,9 @@ p.explanation {
   font-weight: normal;
 }
 
+.redlineExplanation {
+  color: red;
+}
 #coindesk {
   font-weight: 300;
 }

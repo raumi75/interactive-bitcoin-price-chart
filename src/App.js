@@ -96,6 +96,9 @@ class App extends Component {
         <div className='row'>
           <p>Bitcoiners turn typos into jargon. So HODL on tight to your BIRCOIN! By the end of 2020 it will be worth $1 Million.</p>
         </div>
+        <div className='row'>
+          <p className="redlineExplanation">The red line steadily grows to 1 Mio $/BTC.</p>
+        </div>
 
         <div className='row'>
           <div className='popup'>
@@ -148,6 +151,7 @@ class App extends Component {
 
             <br />Of course, this growth has limits, but remember that there will only be 21 Million BTC. If every Millionaire in the world wants one, there are not enough for every one to have a whole BTC.
             <br />
+            <br />It will make sense to use a <a href="https://en.bitcoin.it/wiki/Units">unit</a> like microbitcoin aka bits (One Millionth of a Bitcoin) and Satoshis (One hundredth of a bit). Then a bit will be a Dollar and a Satoshi will be a Cent.
           </p>
         </div>
 
