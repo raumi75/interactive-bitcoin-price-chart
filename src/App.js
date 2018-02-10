@@ -35,7 +35,7 @@ class App extends Component {
           for (let date in bitcoinData.bpi){
             sortedData.push({
               d: moment(date).format('YYYY-MM-DD'),
-              p: bitcoinData.bpi[date],
+              p: bitcoinData.bpi[date].toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }),
               x: count, //previous days
               y: bitcoinData.bpi[date], // numerical price
               s: moment(date).diff(moment(tweetDate),'days'), // Days since McAfee Tweet

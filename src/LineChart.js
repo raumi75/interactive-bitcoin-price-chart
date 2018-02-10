@@ -107,11 +107,11 @@ class LineChart extends Component {
           {this.getY().max.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}
         </text>
         <text transform={`translate(${yLabelSize/2}, ${this.getSvgY(this.props.data[0].y)}) `} textAnchor="middle">
-          {this.props.data[0].p.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}
+          {this.props.data[0].p}
         </text>
         {/* Y AXIS LABELS right*/}
         <text transform={`translate(${this.getSvgX(this.props.data[this.props.data.length - 1].x)+yLabelSize/2}, ${this.getSvgY(this.props.data[this.props.data.length - 1].y)})`} textAnchor="middle">
-          {this.props.data[this.props.data.length - 1].p.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}
+          {this.props.data[this.props.data.length - 1].p}
         </text>
         <text transform={`translate(${this.getSvgX(this.props.data[this.props.data.length - 1].x)+yLabelSize/2}, ${Math.max(this.getSvgY(this.props.data[this.props.data.length - 1].m)+xLabelSize/4, this.getSvgY(this.props.data[this.props.data.length - 1].y)+xLabelSize) })`} fill="red" textAnchor="middle">
           {this.props.data[this.props.data.length - 1].m.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}
@@ -138,6 +138,7 @@ class LineChart extends Component {
       svgData.push({
         svgX: this.getSvgX(point.x),
         svgY: this.getSvgY(point.y),
+        y: point.y,
         d: point.d,
         p: point.p,
         m: point.m
