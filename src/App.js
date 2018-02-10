@@ -22,9 +22,11 @@ class App extends Component {
     })
   }
   componentDidMount(){
-    const mcAfeeStartDate = '2017-07-17'; // Date of Tweet
+    const {tweetDate} = this.props;
+    const {targetDate} = this.props;
+
     const getData = () => {
-      const url = 'https://api.coindesk.com/v1/bpi/historical/close.json?start='+mcAfeeStartDate+'&end=2020-12-31';
+      const url = 'https://api.coindesk.com/v1/bpi/historical/close.json?start='+tweetDate+'&end='+targetDate;
 
       fetch(url).then( r => r.json())
         .then((bitcoinData) => {
@@ -36,8 +38,8 @@ class App extends Component {
               p: bitcoinData.bpi[date],
               x: count, //previous days
               y: bitcoinData.bpi[date], // numerical price
-              s: moment(date).diff(moment(mcAfeeStartDate),'days'), // Days since McAfee Tweet
-              m: this.getMcAfeeRate(moment(date).diff(moment(mcAfeeStartDate),'days'))
+              s: moment(date).diff(moment(tweetDate),'days'), // Days since McAfee Tweet
+              m: this.getMcAfeeRate(moment(date).diff(moment(tweetDate),'days'))
             });
             count++;
           }
@@ -55,18 +57,22 @@ class App extends Component {
 
   // USD/BTC according to John McAfee's Tweet (1.000.000 by 2020)
   getMcAfeeRate(s){
-    const goalRate = 1+this.getGrowthRate(); // daily growth rate to goal of 1.000.000 USD/BTC
-    const tweetBPI = 2244.265;   // start rate USD/BTC at day of tweet
-    return Math.round(Math.pow(goalRate, s) * tweetBPI);
+    const {targetDate} = this.props;
+    const {growthRate} = this.props;
+    const goalRate = 1+growthRate; // daily growth rate to goal of 1.000.000 USD/BTC
+    const {tweetPrice} = this.props;   // start rate USD/BTC at day of tweet
+    return Math.round(Math.pow(goalRate, s) * tweetPrice);
   }
 
-  getGrowthRate() { return 0.00484095703431026; }
-
   getDaysSincePrediction(d) {
-    return moment(d).diff(moment('2017-07-17'),'days')
+    const {tweetDate} = this.props;
+    return moment(d).diff(moment(tweetDate),'days')
   }
 
   render() {
+    const {growthRate} = this.props;
+    const {tweetPrice} = this.props;
+
     return (
 
       <div className='container'>
@@ -102,7 +108,7 @@ class App extends Component {
 
         <div className='row'>
           <p className="explanation">
-            <br />John McAfee made a bet on July 17th 2017: One single Bitcoin would be worth 500.000 US$ in three years. The price was 2,244.265 US$/BTC at the time. He later revised his bet and <a href="https://twitter.com/officialmcafee/status/935900326007328768">predicted one Million US$ by the end of 2020</a>.
+            <br />John McAfee made a bet on July 17th 2017: One single Bitcoin would be worth 500.000 US$ in three years. The price was {tweetPrice.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }) } at the time. He later revised his bet and <a href="https://twitter.com/officialmcafee/status/935900326007328768">predicted one Million US$ by the end of 2020</a>.
           </p>
         </div>
         <div className='row'>
@@ -110,32 +116,30 @@ class App extends Component {
         </div>
         <div className='row'>
         <p className="explanation">
-            <br />Is this really possible? Bitcoin needs to grow at a rate of <strong>{ this.getGrowthRate()*100 } % per day</strong>. That is the red line on the above chart. As long as the blue line is above the red line, we are on target and John McAfee will not have to eat his own dick. Hover over the graph to get daily prices.
+            <br />Is this really possible? Bitcoin needs to grow at a rate of <strong>{ growthRate*100 } % per day</strong>. That is the red line on the above chart. As long as the blue line is above the red line, we are on target and John McAfee will not have to eat his own dick. Hover over the graph to get daily prices.
             <br />
             <br />The growth rate of less than half a percent does not sound like much to you? That´s because we all suck at grasping the concept of exponential growth. This is the magic behind compound interest.
             <br />
             <br />Grab a calculator and try it yourself:
             <br />
             <br />Today, the prediction is { this.getDaysSincePrediction(Date.now()) } days old, so the target-price is
-            <br />{1+this.getGrowthRate()}<sup><strong>{this.getDaysSincePrediction(Date.now())}</strong></sup> * 2,244.265 $ = { this.getMcAfeeRate(this.getDaysSincePrediction(Date.now())).toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }) }
+            <br />{1+growthRate}<sup><strong>{this.getDaysSincePrediction(Date.now())}</strong></sup> * 2,244.265 $ = { this.getMcAfeeRate(this.getDaysSincePrediction(Date.now())).toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }) }
             <br />
-
             <br />
             <br />By 2018-12-31, the prediction will be {this.getDaysSincePrediction('2018-12-31')} days old
-            <br />{1+this.getGrowthRate()}<sup><strong>{this.getDaysSincePrediction('2018-12-31')}</strong></sup> * 2,244.265 $ = { this.getMcAfeeRate(this.getDaysSincePrediction('2018-12-31')).toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }) }
-
+            <br />{1+growthRate}<sup><strong>{this.getDaysSincePrediction('2018-12-31')}</strong></sup> * 2,244.265 $ = { this.getMcAfeeRate(this.getDaysSincePrediction('2018-12-31')).toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }) }
             <br />
             <br />By 2019-12-31, the prediction will be {this.getDaysSincePrediction('2019-12-31')} days old
-            <br />{1+this.getGrowthRate()}<sup><strong>{this.getDaysSincePrediction('2019-12-31')}</strong></sup> * 2,244.265 $ = { this.getMcAfeeRate(this.getDaysSincePrediction('2019-12-31')).toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }) }
+            <br />{1+growthRate}<sup><strong>{this.getDaysSincePrediction('2019-12-31')}</strong></sup> * 2,244.265 $ = { this.getMcAfeeRate(this.getDaysSincePrediction('2019-12-31')).toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }) }
 
             <br />
             <br />Still does not look like it is on target?
             <br />
             <br />By 2020-06-01, the prediction will be {this.getDaysSincePrediction('2020-06-01')} days old
-            <br />{1+this.getGrowthRate()}<sup><strong>{this.getDaysSincePrediction('2020-06-01')}</strong></sup> * 2,244.265 $ = { this.getMcAfeeRate(this.getDaysSincePrediction('2020-06-01')).toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }) }
+            <br />{1+growthRate}<sup><strong>{this.getDaysSincePrediction('2020-06-01')}</strong></sup> * 2,244.265 $ = { this.getMcAfeeRate(this.getDaysSincePrediction('2020-06-01')).toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }) }
             <br />
             <br />By 2020-12-31, the prediction will be {this.getDaysSincePrediction('2020-12-31')} days old and <strong>BAM!</strong>
-            <br />{1+this.getGrowthRate()}<sup><strong>{this.getDaysSincePrediction('2020-12-31')}</strong></sup> * 2,244.265 $ = { this.getMcAfeeRate(this.getDaysSincePrediction('2020-12-31')).toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }) }
+            <br />{1+growthRate}<sup><strong>{this.getDaysSincePrediction('2020-12-31')}</strong></sup> * 2,244.265 $ = { this.getMcAfeeRate(this.getDaysSincePrediction('2020-12-31')).toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }) }
             <br />
             <br />
 
@@ -151,6 +155,15 @@ class App extends Component {
 
     );
   }
+}
+
+// DEFAULT PROPS
+App.defaultProps = {
+  tweetDate:  '2017-07-17',
+  tweetPrice:  2244.265,
+  targetDate:  '2020-12-31',
+  targetPrice: 1000000,
+  growthRate:  0.00484095703431026
 }
 
 export default App;
