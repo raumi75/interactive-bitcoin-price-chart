@@ -72,7 +72,7 @@ class InfoBox extends Component {
         : null}
 
           <div id="middle" className='box'>
-            <div className="subtext">If it was smooth ride to 1 Million $, Bitcoin would be at:</div>
+            <div className="subtext">If it were a smooth ride to 1 Million $, Bitcoin would be at:</div>
             <div className="heading">{this.getMcAfeeRate().toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}</div>
           </div>
           <div id="right" className='box'>
