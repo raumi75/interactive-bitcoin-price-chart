@@ -1,6 +1,8 @@
 .linechart {
-  padding: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
+
 .linechart_path {
   stroke-width: 3;
   fill: none;
