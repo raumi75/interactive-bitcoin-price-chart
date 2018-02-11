@@ -75,7 +75,7 @@ class App extends Component {
     const {tweetPrice} = this.props;   // start rate USD/BTC at day of tweet
 
     return ( <div> {moment(d).format('YYYY-MM-DD')}, the prediction is {this.getDaysSincePrediction(d)} days old, so the target-price is:
-    <br />{1+growthRate}<sup><strong>{this.getDaysSincePrediction(d)}</strong></sup> * {tweetPrice.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })} = { this.getMcAfeeRate(this.getDaysSincePrediction(d)).toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }) }
+    <br />{1+growthRate}<sup><strong>{this.getDaysSincePrediction(d)}</strong></sup> * {tweetPrice.toLocaleString('us-EN',{ style: 'currency', currency: 'USD', minimumFractionDigits: 3 })} = { this.getMcAfeeRate(this.getDaysSincePrediction(d)).toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }) }
  </div> );
 
   }
@@ -122,7 +122,7 @@ class App extends Component {
 
         <div className='row'>
           <p className="explanation">
-            <br />John McAfee made a bet on July 17th 2017: One single Bitcoin would be worth 500.000 US$ in three years. The price was {tweetPrice.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }) } at the time. He later revised his bet and <a href="https://twitter.com/officialmcafee/status/935900326007328768">predicted one Million US$ by the end of 2020</a>.
+            <br />John McAfee made a bet on July 17th 2017: One single Bitcoin would be worth 500.000 US$ in three years. The price was {tweetPrice.toLocaleString('us-EN',{ style: 'currency', currency: 'USD', minimumFractionDigits: 3 }) } at the time. He later revised his bet and <a href="https://twitter.com/officialmcafee/status/935900326007328768">predicted one Million US$ by the end of 2020</a>.
           </p>
         </div>
         <div className='row'>
