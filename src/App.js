@@ -99,7 +99,11 @@ class App extends Component {
         <div className='row'>
           <p className="redlineExplanation">The red line steadily grows to 1 Mio $/BTC.</p>
         </div>
-
+        <div className='row'>
+          { !this.state.fetchingData ?
+          <InfoBox data={this.state.data} />
+          : null }
+        </div>
         <div className='row'>
           <div className='popup'>
             {this.state.hoverLoc ? <ToolTip hoverLoc={this.state.hoverLoc} activePoint={this.state.activePoint}/> : null}

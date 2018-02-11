@@ -35,34 +35,63 @@ class InfoBox extends Component {
         });
     }
     this.getData();
-    this.refresh = setInterval(() => this.getData(), 90000);
+    this.refresh = setInterval(() => this.getData(), 60000);
   }
   componentWillUnmount(){
     clearInterval(this.refresh);
   }
+
+  // No Paramter because this is realtime
+  getDaysSincePrediction() {
+    const {tweetDate} = this.props;
+    return moment().diff(moment(tweetDate),'days', true)
+  }
+
+  // No Paramter because this is realtime
+  getMcAfeeRate(){
+    const {targetDate} = this.props;
+    const {growthRate} = this.props;
+    const goalRate = 1+growthRate;
+    const {tweetPrice} = this.props;   // start rate USD/BTC at day of tweet
+    return Math.pow(goalRate, this.getDaysSincePrediction()) * tweetPrice;
+  }
+
+  getAheadOrBehind() {
+    if (this.state.currentPrice>this.getMcAfeeRate())
+    { return ('ahead'); } else { return 'behind' ; }
+  }
+
   render(){
     return (
       <div id="data-container">
         { this.state.currentPrice ?
           <div id="left" className='box'>
+            <div className="subtext">Bitcoin rollercoaster price <br /> { moment(this.state.updatedAt).format('YYYY-MM-DD hh:mm:ss')} </div>
             <div className="heading">{this.state.currentPrice.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}</div>
-            <div className="subtext">McAfee Target {this.state.currentPrice.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}</div>
-            <div className="subtext">{'Updated ' + moment(this.state.updatedAt ).fromNow()}</div>
           </div>
         : null}
-        { this.state.currentPrice ?
+
           <div id="middle" className='box'>
-            <div className="heading">{this.state.monthChangeD}</div>
-            <div className="subtext">Change since McAfee tweet</div>
+            <div className="subtext">If it was smooth ride to 1 Million $, Bitcoin would be at:</div>
+            <div className="heading">{this.getMcAfeeRate().toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}</div>
           </div>
-        : null}
           <div id="right" className='box'>
-            <div className="heading">{this.state.monthChangeP}</div>
-            <div className="subtext">Change since McAfee tweet (%)</div>
+            <div className="subtext">So right now, Bitcoin is</div>
+            <div className="heading">{(this.state.currentPrice/this.getMcAfeeRate()-1).toLocaleString('en-us', {style: 'percent', maximumSignificantDigits: 4})}</div>
+            <div className="subtext">{this.getAheadOrBehind()} of his prediction</div>
           </div>
       </div>
     );
   }
+}
+
+// DEFAULT PROPS
+InfoBox.defaultProps = {
+  tweetDate:  '2017-07-17 00:00:00',         // Date of first McAfee Tweet
+  tweetPrice:  2244.265,            // USD/BTC on TweetDate
+  targetDate:  '2020-12-31',        // Day McAfee predicted the price
+  targetPrice: 1000000,             // revised prediction (1Million)
+  growthRate:  0.00484095703431026  // daily growth rate to goal of 1.000.000 USD/BTC
 }
 
 export default InfoBox;
