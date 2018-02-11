@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { Grid, Row , Col, Image, PageHeader } from 'react-bootstrap';
+import { Grid, Row , Col, Image, PageHeader, Button } from 'react-bootstrap';
 import './App.css';
 import LineChart from './LineChart';
 import ToolTip from './ToolTip';
@@ -93,7 +93,7 @@ class App extends Component {
             <PageHeader>
               bircoin.top <small>The McAfee Prediction Tracker</small>
             </PageHeader>
-            <p>Bitcoiners turn typos into jargon. So HODL on tight to your BIRCOIN! John McAfee says: By the end of 2020 it will be worth $1 Million.</p>
+            <p>Bitcoiners turn typos into jargon. So HODL on tight to your BIRCOIN! John McAfee says: By the end of 2020 it will be worth $1 Million. <Button href="#explainmath" bsStyle="info">Explain the math!</Button></p>
           </Col>
         </Row>
 
@@ -142,7 +142,7 @@ class App extends Component {
 
         <Row>
           <Col xs={12}>
-            <h2>The Math behind it</h2>
+            <h2 id="explainmath">The math behind it</h2>
 
             <p>Is this really possible? Bitcoin needs to grow at a rate of <strong>{ growthRate*100 } % per day</strong>. That is the red line on the above chart. As long as the blue line is above the red line, we are on target and John McAfee will not have to eat his own dick. Hover over the graph to get daily prices.</p>
             <p>The growth rate of less than half a percent does not sound like much to you? That´s because we all suck at grasping the concept of exponential growth. This is the magic behind compound interest.</p>

@@ -70,7 +70,7 @@ class InfoBox extends Component {
           <Col xs={12} sm={4} lg={3} lgOffset={1}>
             <Panel height={"4em"} >
               <Panel.Body>
-                <div className="subtext">Bitcoin rollercoaster price <br /> { moment(this.state.updatedAt).format('YYYY-MM-DD hh:mm:ss')} </div>
+                <div className="subtext">Bitcoin price (auto update)<br />{ moment(this.state.updatedAt).format('YYYY-MM-DD hh:mm A')}</div>
                 <div className="heading">{this.state.currentPrice.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}</div>
               </Panel.Body>
             </Panel>
@@ -79,7 +79,7 @@ class InfoBox extends Component {
           <Col xs={12} sm={4} lg={3} >
             <Panel height={"4em"}>
               <Panel.Body>
-                <div className="subtext">If it were a smooth ride to 1 Million $, Bitcoin would be at:</div>
+                <div className="subtext">If it were a smooth ride to 1 Million $ the price would be</div>
                 <div className="heading">{this.getMcAfeeRate().toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}</div>
               </Panel.Body>
             </Panel>
@@ -87,7 +87,7 @@ class InfoBox extends Component {
           <Col xs={12} sm={4} lg={3} >
             <Panel height={"4em"}>
               <Panel.Body>
-                <div className="subtext">So right now, Bitcoin is</div>
+                <div className="subtext">Bitcoin is</div>
                 <div className="heading">{(this.state.currentPrice/this.getMcAfeeRate()-1).toLocaleString('en-us', {style: 'percent', maximumSignificantDigits: 4})}</div>
                 <div className="subtext">{this.getAheadOrBehind()} of his prediction</div>
               </Panel.Body>
