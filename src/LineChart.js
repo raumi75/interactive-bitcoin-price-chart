@@ -6,9 +6,25 @@ class LineChart extends Component {
     super(props);
     this.state = {
       hoverLoc: null,
-      activePoint: null
+      activePoint: null,
+      svgWidth: window.innerWidth
     }
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
   }
+
+  componentDidMount() {
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  }
+
+  updateWindowDimensions() {
+    this.setState({ svgWidth: window.innerWidth, svgHeight: window.innerWidth/3 });
+  }
+
   // GET X & Y || MAX & MIN
   getX(){
     const {data} = this.props;
@@ -27,13 +43,13 @@ class LineChart extends Component {
 
   // GET SVG COORDINATES
   getSvgX(x) {
-    const {svgWidth, yLabelSize} = this.props;
-    return yLabelSize + (x / this.getX().max * (svgWidth - 2*yLabelSize));
+    const {yLabelSize} = this.props;
+    return yLabelSize + (x / this.getX().max * (this.state.svgWidth - 2*yLabelSize));
   }
   getSvgY(y) {
-    const {svgHeight, xLabelSize} = this.props;
+    const {xLabelSize} = this.props;
     const gY = this.getY();
-    return ((svgHeight - xLabelSize) * gY.max - (svgHeight - xLabelSize) * y) / (gY.max - gY.min);
+    return ((this.state.svgHeight - xLabelSize) * gY.max - (this.state.svgHeight - xLabelSize) * y) / (gY.max - gY.min);
   }
   // BUILD SVG PATH
   makePath() {
@@ -98,7 +114,7 @@ class LineChart extends Component {
     );
   }
   makeLabels(){
-    const {svgHeight, svgWidth, xLabelSize, yLabelSize} = this.props;
+    const {xLabelSize, yLabelSize} = this.props;
     const padding = 5;
     return(
       <g className="linechart_label">
@@ -117,10 +133,10 @@ class LineChart extends Component {
           {this.props.data[this.props.data.length - 1].m.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}
         </text>
         {/* X AXIS LABELS */}
-        <text transform={`translate(${yLabelSize/2}, ${svgHeight})`} textAnchor="start">
+        <text transform={`translate(${yLabelSize/2}, ${this.state.svgHeight})`} textAnchor="start">
           { this.props.data[0].d }
         </text>
-        <text transform={`translate(${svgWidth-yLabelSize/2}, ${svgHeight})`} textAnchor="end">
+        <text transform={`translate(${this.state.svgWidth-yLabelSize/2}, ${this.state.svgHeight})`} textAnchor="end">
           { this.props.data[this.props.data.length - 1].d }
         </text>
       </g>
@@ -128,9 +144,9 @@ class LineChart extends Component {
   }
   // FIND CLOSEST POINT TO MOUSE
   getCoords(e){
-    const {svgWidth, data, yLabelSize} = this.props;
+    const {data, yLabelSize} = this.props;
     const svgLocation = document.getElementsByClassName("linechart")[0].getBoundingClientRect();
-    const adjustment = (svgLocation.width - svgWidth) / 2; //takes padding into consideration
+    const adjustment = (svgLocation.width - this.state.svgWidth) / 2; //takes padding into consideration
     const relativeLoc = e.clientX - svgLocation.left - adjustment;
 
     let svgData = [];
@@ -183,19 +199,17 @@ class LineChart extends Component {
   }
   // MAKE HOVER LINE
   createLine(){
-    const {svgHeight, xLabelSize} = this.props;
+    const {xLabelSize} = this.props;
     return (
       <line className='hoverLine'
         x1={this.state.hoverLoc} y1={-8}
-        x2={this.state.hoverLoc} y2={svgHeight - xLabelSize} />
+        x2={this.state.hoverLoc} y2={this.state.svgHeight - xLabelSize} />
     )
   }
 
   render() {
-    const {svgHeight, svgWidth} = this.props;
-
     return (
-      <svg  width={svgWidth} height={svgHeight} viewBox={`0 0 ${svgWidth} ${svgHeight}`} className={'linechart'}
+      <svg  width={this.state.svgWidth} height={this.state.svgHeight} viewBox={`0 0 ${this.state.svgWidth} ${this.state.svgHeight}`} className={'linechart'}
             onMouseLeave={ () => this.stopHover() }
             onMouseMove={ (e) => this.getCoords(e) } >
         <g>
@@ -217,8 +231,6 @@ LineChart.defaultProps = {
   color: '#2196F3',
   mcafeecolor: '#FF0000',
   pointRadius: 5,
-  svgHeight: 300,
-  svgWidth: 900,
   xLabelSize: 20,
   yLabelSize: 80
 }

@@ -86,7 +86,7 @@ class App extends Component {
 
     return (
 
-      <Grid>
+      <Grid fluid={true} >
 
         <Row>
           <Col xs={12}>
