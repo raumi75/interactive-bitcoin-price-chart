@@ -1,10 +1,25 @@
 .heading {
-  font-size: 200%;
-  color: #2196F3;
+  font-size: 150%;
   text-align: center;
 }
 
+.actual {
+  color: #2196F3;
+}
+
+.predicted {
+  color: red;
+}
+
+.ahead {
+  color: green;
+}
+
+.behind {
+  color: red;
+}
+
+
 .subtext {
-  color: #64B5F6;
   text-align: center;
 }

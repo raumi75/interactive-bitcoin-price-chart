@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { Row, Col, Panel } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 
 import './InfoBox.css';
 
@@ -66,32 +66,24 @@ class InfoBox extends Component {
   render(){
     return (
       <Row>
+          <Col xs={4} md={3} mdOffset={1} lg={2} lgOffset={2} height={"4em"}>
+            <div className="subtext">Predicted</div>
+            <div className="heading predicted">{this.getMcAfeeRate().toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}</div>
+            <div className="subtext">steady growth</div>
+          </Col>
         { this.state.currentPrice ?
-          <Col xs={12} sm={4} lg={3} lgOffset={1}>
-            <Panel height={"4em"} >
-              <Panel.Body>
-                <div className="subtext">Bitcoin price (auto update)<br />{ moment(this.state.updatedAt).format('YYYY-MM-DD hh:mm A')}</div>
-                <div className="heading">{this.state.currentPrice.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}</div>
-              </Panel.Body>
-            </Panel>
+
+          <Col xs={4} md={3} lg={2} height={"4em"}>
+            <div className="subtext">Actual</div>
+            <div className="heading actual">{this.state.currentPrice.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}</div>
+            <div className="subtext">{ moment(this.state.updatedAt).format('YYYY-MM-DD hh:mm A')}</div>
           </Col>
-        : null}
-          <Col xs={12} sm={4} lg={3} >
-            <Panel height={"4em"}>
-              <Panel.Body>
-                <div className="subtext">If it were a smooth ride to 1 Million $ the price would be</div>
-                <div className="heading">{this.getMcAfeeRate().toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}</div>
-              </Panel.Body>
-            </Panel>
-          </Col>
-          <Col xs={12} sm={4} lg={3} >
-            <Panel height={"4em"}>
-              <Panel.Body>
-                <div className="subtext">Bitcoin is</div>
-                <div className="heading">{(this.state.currentPrice/this.getMcAfeeRate()-1).toLocaleString('en-us', {style: 'percent', maximumSignificantDigits: 4})}</div>
-                <div className="subtext">{this.getAheadOrBehind()} of his prediction</div>
-              </Panel.Body>
-            </Panel>
+          : null}
+
+          <Col xs={4} md={3} lg={2} height={"4em"}>
+            <div className="subtext">Bitcoin is</div>
+            <div className={"heading "+this.getAheadOrBehind() }>{(this.state.currentPrice/this.getMcAfeeRate()-1).toLocaleString('en-us', {style: 'percent', maximumSignificantDigits: 4})}</div>
+            <div className="subtext">{this.getAheadOrBehind()} of his prediction</div>
           </Col>
       </Row>
     );
