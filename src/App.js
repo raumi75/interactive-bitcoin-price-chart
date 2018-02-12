@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { Grid, Row , Col, Image, PageHeader, Button } from 'react-bootstrap';
+import { Grid, Row , Col, Image, PageHeader } from 'react-bootstrap';
 import './App.css';
 import LineChart from './LineChart';
 import ToolTip from './ToolTip';
@@ -56,15 +56,15 @@ class App extends Component {
           }
 
           var mark = [];
-          mark[count-1] = 'today';
+          mark[count] = 'today';
 
           this.setState({
-            todayCount: count-1,
+            todayCount: count,
             sliderMarks: mark
           })
 
 
-          for (count = count-1; count <= predictionCount+1 ; count++) {
+          for (count = count; count <= predictionCount ; count++) {
             sortedData.push({
               d: moment(tweetDate).add(count, 'days').format('YYYY-MM-DD'),
               p: 0,
@@ -98,10 +98,10 @@ class App extends Component {
       }
     }
 
-    var dataCut = this.state.dataComplete.slice(pos[0],pos[1]);
+    var dataCut = this.state.dataComplete.slice(pos[0]-1,pos[1]+1);
 
     if (pos[0]>0) {
-      var dataCut = dataCut.map(function(val) {
+        dataCut = dataCut.map(function(val) {
         return {
           d: val.d,
           p: val.p,
@@ -156,7 +156,7 @@ class App extends Component {
             <PageHeader>
               bircoin.top <small>The McAfee Prediction Tracker</small>
             </PageHeader>
-            <p>Bitcoiners turn typos into jargon. So HODL on tight to your BIRCOIN! John McAfee says: By the end of 2020 it will be worth $1 Million. <Button href="#explainmath" bsStyle="info">Explain the math!</Button></p>
+            <p>Bitcoiners turn typos into jargon. So HODL on tight to your BIRCOIN! John McAfee says: By the end of 2020 it will be worth $1 Million.</p>
           </Col>
         </Row>
 
@@ -184,7 +184,7 @@ class App extends Component {
                 <Range
                   allowCross={false}
                   min={1}
-                  max={this.state.dataComplete.length}
+                  max={predictionCount}
                   marks={this.state.sliderMarks}
                   defaultValue={[0, this.state.todayCount]}
                   onChange={this.handleLineChartLength} />
