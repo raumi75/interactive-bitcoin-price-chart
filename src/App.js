@@ -19,7 +19,8 @@ class App extends Component {
       activePoint: null,
       maxCount: 1263,
       minCount: 0,
-      todayCount: 0
+      todayCount: 0,
+      sliderMarks: []
     }
   }
 
@@ -52,11 +53,16 @@ class App extends Component {
             count++;
           }
 
+          var targetCount = 1264;
+
+          var mark = [];
+          mark[count-1] = 'today';
+
           this.setState({
-            todayCount: count-1
+            todayCount: count-1,
+            sliderMarks: mark
           })
 
-          var targetCount = 1264;
 
           for (count = count-1; count <= targetCount ; count++) {
             sortedData.push({
@@ -152,7 +158,16 @@ class App extends Component {
 
               <LineChart data={this.state.data} onChartHover={ (a,b) => this.handleChartHover(a,b) }/>
 
-              <Col xs={12}><Range allowCross={false} min={1} max={this.state.dataComplete.length} defaultValue={[0, this.state.todayCount]} onChange={this.handleLineChartLength} /></Col>
+              <Col xs={12}>
+                <Range
+                  allowCross={false}
+                  min={1}
+                  max={this.state.dataComplete.length}
+                  marks={this.state.sliderMarks}
+                  defaultValue={[0, this.state.todayCount]}
+                  onChange={this.handleLineChartLength} />
+                  <br />
+              </Col>
               </div>
 
               : null }
