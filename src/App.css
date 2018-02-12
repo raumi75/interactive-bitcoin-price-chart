@@ -1,8 +1,3 @@
-p.explanation {
-  font-size: 120%;
-  font-weight: normal;
-}
-
 .redlineExplanation {
   color: red;
 }
@@ -14,4 +9,9 @@ p.explanation {
 #coindesk a {
   text-decoration: none;
   color: inherit;
+}
+
+.range {
+  margin-left:7%;
+  width:82%;
 }

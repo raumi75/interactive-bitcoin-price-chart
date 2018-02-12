@@ -180,7 +180,7 @@ class App extends Component {
 
               <LineChart data={this.state.data} onChartHover={ (a,b) => this.handleChartHover(a,b) }/>
 
-              <Col xs={12}>
+              <Col xs={12} className='range'>
                 <Range
                   allowCross={false}
                   min={1}
@@ -197,7 +197,7 @@ class App extends Component {
 
         <Row>
           <Col xs={12}>
-          <p className="redlineExplanation">The red line steadily grows to 1 Mio $/BTC. Move the slider to zoom.</p>
+          <p className="lead redlineExplanation">The red line steadily grows to 1 Mio $/BTC. Move the slider to zoom.</p>
             <p id="coindesk"> Powered by <a href="http://www.coindesk.com/price/">CoinDesk</a></p>
             <p id="acknowledgement"> Based on Brandon Morellis <a href="https://codeburst.io/how-i-built-an-interactive-30-day-bitcoin-price-graph-with-react-and-an-api-6fe551c2ab1d">30 Day Bitcoin Price Graph</a></p>
           </Col>
@@ -207,7 +207,7 @@ class App extends Component {
         <Row>
           <Col xs={12} md={6}>
             <h2>It started with a tweet</h2>
-            <p className="explanation">
+            <p className="lead explanation">
               John McAfee made a bet on July 17th 2017: One single Bitcoin would be worth 500.000 US$ in three years. The price was {tweetPrice.toLocaleString('us-EN',{ style: 'currency', currency: 'USD', minimumFractionDigits: 3 }) } at the time. He later revised his bet and <a href="https://twitter.com/officialmcafee/status/935900326007328768">predicted one Million US$ by the end of 2020</a>.
             </p>
           </Col>
