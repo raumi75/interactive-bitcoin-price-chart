@@ -36,21 +36,21 @@ class LineChart extends Component {
   getP(){
     const {data} = this.props;
     return {
-      min: 0,
+      min: data.reduce((min, p) => p.y < min ? p.y : min, data[0].y),
       max: data.reduce((max, p) => p.y > max ? p.y : max, data[0].y)
     }
   }
   getM(){
     const {data} = this.props;
     return {
-      min: 0,
+      min: data.reduce((min, m) => m.m < min ? m.m : min, data[0].m),
       max: data.reduce((max, m) => m.m > max ? m.m : max, data[0].m)
     }
   }
 
   getY() {
     return {
-      min: 0,
+      min: this.getM().min,
       max: Math.max(this.getP().max, this.getM().max)
     }
   }
@@ -61,18 +61,33 @@ class LineChart extends Component {
     const {yLabelSize} = this.props;
     return yLabelSize + (x / this.getX().max * (this.state.svgWidth - 2*yLabelSize));
   }
+
   getSvgY(y) {
     const {xLabelSize} = this.props;
+    const {scale} = this.props;
     const gY = this.getY();
-    return ((this.state.svgHeight - xLabelSize) * gY.max - (this.state.svgHeight - xLabelSize) * y) / (gY.max - gY.min);
+
+    if (scale === 'lin') {
+      return ((this.state.svgHeight - xLabelSize) * gY.max
+            - (this.state.svgHeight - xLabelSize) * y) / (gY.max - gY.min);
+    } else {
+      // scale === 'log'
+      return ((this.state.svgHeight - xLabelSize) * Math.log(gY.max)
+            - (this.state.svgHeight - xLabelSize) * Math.log(y) ) / (Math.log(gY.max) - Math.log(gY.min));
+    }
   }
+
   // BUILD SVG PATH
   makePath() {
     const {data, color} = this.props;
     let pathD = "M " + this.getSvgX(data[0].x) + " " + this.getSvgY(data[0].y) + " ";
 
     pathD += data.map((point, i) => {
-      if (point.y>0) {return "L " + this.getSvgX(point.x) + " " + this.getSvgY(point.y) + " ";} else { return null; }
+      if (point.y>0) {
+        return "L " + this.getSvgX(point.x) + " " + this.getSvgY(point.y) + " ";
+      } else {
+        return null;
+      }
     }).join("");
 
     return (
@@ -99,7 +114,11 @@ class LineChart extends Component {
     let pathD = "M " + this.getSvgX(data[0].x) + " " + this.getSvgY(data[0].y) + " ";
 
     pathD += data.map((point, i) => {
-      return "L " + this.getSvgX(point.x) + " " + this.getSvgY(point.y) + " ";
+      if (point.y > 0) {
+        return "L " + this.getSvgX(point.x) + " " + this.getSvgY(point.y) + " ";
+      } else {
+        return "L " + this.getSvgX(point.x) + " " + (this.state.svgHeight - this.props.xLabelSize) + " ";
+      }
     }).join("");
 
     const x = this.getX();

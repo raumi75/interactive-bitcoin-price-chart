@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { Grid, Row , Col, Image, PageHeader } from 'react-bootstrap';
+import { Grid, Row , Col, Image, PageHeader, FormGroup, Radio } from 'react-bootstrap';
 import './App.css';
 import LineChart from './LineChart';
 import ToolTip from './ToolTip';
@@ -22,7 +22,8 @@ class App extends Component {
       maxCount: predictionCount,
       minCount: 0,
       todayCount: 0,
-      sliderMarks: []
+      sliderMarks: [],
+      scale: 'lin'
     }
   }
 
@@ -64,7 +65,7 @@ class App extends Component {
           })
 
 
-          for (count = count; count <= predictionCount ; count++) {
+          for (count; count <= predictionCount ; count++) {
             sortedData.push({
               d: moment(tweetDate).add(count, 'days').format('YYYY-MM-DD'),
               p: 0,
@@ -121,6 +122,12 @@ class App extends Component {
 
   };
 
+  handleScaleChange = (changeEvent) => {
+    this.setState({
+      scale: changeEvent.target.value
+    });
+  }
+
   // USD/BTC according to John McAfee's Tweet (1.000.000 by 2020)
   getMcAfeeRate(s){
     const goalRate = 1+this.props.growthRate;
@@ -154,7 +161,7 @@ class App extends Component {
         <Row>
           <Col xs={12}>
             <PageHeader>
-              bircoin.top <small>The McAfee Prediction Tracker</small>
+              bircoin.top <br className="visible-xs"/><small>The McAfee Prediction Tracker</small>
             </PageHeader>
             <p>Bitcoiners turn typos into jargon. So HODL on tight to your BIRCOIN! John McAfee says: By the end of 2020 it will be worth $1 Million.</p>
           </Col>
@@ -178,7 +185,7 @@ class App extends Component {
             { !this.state.fetchingData ?
               <div className='chart'>
 
-              <LineChart data={this.state.data} onChartHover={ (a,b) => this.handleChartHover(a,b) }/>
+              <LineChart data={this.state.data} scale={this.state.scale} onChartHover={ (a,b) => this.handleChartHover(a,b) }/>
 
               <Col xs={12} className='range'>
                 <Range
@@ -190,6 +197,18 @@ class App extends Component {
                   onChange={this.handleLineChartLength} />
                   <br />
               </Col>
+
+              <Col xs={12} sm={11} smOffset={1}>
+                <FormGroup>
+                  <Radio name="radioGroup" value="lin" checked={this.state.scale === 'lin'} onChange={this.handleScaleChange} >
+                    Linear scale
+                  </Radio>{' '}
+                  <Radio name="radioGroup" value="log" checked={this.state.scale === 'log'} onChange={this.handleScaleChange} >
+                    Logarithmic scale
+                  </Radio>
+                </FormGroup>
+              </Col>
+
               </div>
 
               : null }
