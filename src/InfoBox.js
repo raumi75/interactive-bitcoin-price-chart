@@ -51,9 +51,7 @@ class InfoBox extends Component {
 
   // No Paramter because this is realtime
   getMcAfeeRate(){
-    const {targetDate} = this.props;
-    const {growthRate} = this.props;
-    const goalRate = 1+growthRate;
+    const goalRate = 1+this.props.growthRate;
     const {tweetPrice} = this.props;   // start rate USD/BTC at day of tweet
     return Math.pow(goalRate, this.getDaysSincePrediction()) * tweetPrice;
   }

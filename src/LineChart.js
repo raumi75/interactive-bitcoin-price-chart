@@ -115,7 +115,6 @@ class LineChart extends Component {
   }
   makeLabels(){
     const {xLabelSize, yLabelSize} = this.props;
-    const padding = 5;
     return(
       <g className="linechart_label">
         {/* Y AXIS LABELS left*/}
@@ -162,6 +161,7 @@ class LineChart extends Component {
         p: point.p,
         m: point.m
       });
+      return null;
     });
 
     let closestPoint = {};

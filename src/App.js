@@ -99,9 +99,7 @@ class App extends Component {
 
   // USD/BTC according to John McAfee's Tweet (1.000.000 by 2020)
   getMcAfeeRate(s){
-    const {targetDate} = this.props;
-    const {growthRate} = this.props;
-    const goalRate = 1+growthRate;
+    const goalRate = 1+this.props.growthRate;
     const {tweetPrice} = this.props;   // start rate USD/BTC at day of tweet
     return Math.pow(goalRate, s) * tweetPrice;
   }
