@@ -33,13 +33,28 @@ class LineChart extends Component {
       max: data[data.length - 1].x
     }
   }
-  getY(){
+  getP(){
     const {data} = this.props;
     return {
       min: 0,
-      max: Math.max(data.reduce((max, p) => p.y > max ? p.y : max, data[0].y), data.reduce((max, m) => m.m > max ? m.m : max, data[0].m))
+      max: data.reduce((max, p) => p.y > max ? p.y : max, data[0].y)
     }
   }
+  getM(){
+    const {data} = this.props;
+    return {
+      min: 0,
+      max: data.reduce((max, m) => m.m > max ? m.m : max, data[0].m)
+    }
+  }
+
+  getY() {
+    return {
+      min: 0,
+      max: Math.max(this.getP().max, this.getM().max)
+    }
+  }
+
 
   // GET SVG COORDINATES
   getSvgX(x) {
@@ -57,7 +72,7 @@ class LineChart extends Component {
     let pathD = "M " + this.getSvgX(data[0].x) + " " + this.getSvgY(data[0].y) + " ";
 
     pathD += data.map((point, i) => {
-      if (point.y>0) {return "L " + this.getSvgX(point.x) + " " + this.getSvgY(point.y) + " ";}
+      if (point.y>0) {return "L " + this.getSvgX(point.x) + " " + this.getSvgY(point.y) + " ";} else { return null; }
     }).join("");
 
     return (
@@ -99,6 +114,7 @@ class LineChart extends Component {
     const {yLabelSize} = this.props;
     const x = this.getX();
     const y = this.getY();
+    const p = this.getP();
 
     return (
       <g className="linechart_axis">
@@ -107,19 +123,21 @@ class LineChart extends Component {
           x2={this.getSvgX(x.max)} y2={this.getSvgY(y.min)}
           strokeDasharray="5" />
         <line
-          x1={this.getSvgX(x.min) - yLabelSize} y1={this.getSvgY(y.max)}
-          x2={this.getSvgX(x.max)} y2={this.getSvgY(y.max)}
-          strokeDasharray="5" />
+          x1={this.getSvgX(x.min) - yLabelSize} y1={this.getSvgY(p.max)}
+          x2={this.getSvgX(x.max)} y2={this.getSvgY(p.max)}
+          strokeDasharray="9" />
       </g>
     );
   }
   makeLabels(){
+    const p = this.getP();
+
     const {xLabelSize, yLabelSize} = this.props;
     return(
       <g className="linechart_label">
         {/* Y AXIS LABELS left*/}
-        <text transform={`translate(${yLabelSize/2}, 20)`} textAnchor="middle">
-          {this.getY().max.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}
+        <text transform={`translate(${yLabelSize/2}, ${this.getSvgY(p.max)+20})`} textAnchor="middle">
+          {p.max.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}
         </text>
         <text transform={`translate(${yLabelSize/2}, ${this.getSvgY(this.props.data[0].y)}) `} textAnchor="middle">
           {this.props.data[0].p}
