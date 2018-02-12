@@ -5,6 +5,8 @@ import './App.css';
 import LineChart from './LineChart';
 import ToolTip from './ToolTip';
 import InfoBox from './InfoBox';
+import Slider, { Range } from 'rc-slider';
+import 'rc-slider/assets/index.css';
 
 class App extends Component {
   constructor(props) {
@@ -12,10 +14,15 @@ class App extends Component {
     this.state = {
       fetchingData: true,
       data: null,
+      sortedData: null,
       hoverLoc: null,
-      activePoint: null
+      activePoint: null,
+      maxCount: 1263,
+      minCount: 0,
+      todayCount: 0
     }
   }
+
   handleChartHover(hoverLoc, activePoint){
     this.setState({
       hoverLoc: hoverLoc,
@@ -40,12 +47,32 @@ class App extends Component {
               x: count, //previous days
               y: bitcoinData.bpi[date], // numerical price
               s: moment(date).diff(moment(tweetDate),'days'), // Days since McAfee Tweet
-              m: this.getMcAfeeRate(moment(date).diff(moment(tweetDate),'days'))
+              m: this.getMcAfeeRate(count)
             });
             count++;
           }
+
           this.setState({
-            data: sortedData,
+            todayCount: count-1
+          })
+
+          var targetCount = 1264;
+
+          for (count = count-1; count <= targetCount ; count++) {
+            sortedData.push({
+              d: moment(tweetDate).add(count, 'days').format('YYYY-MM-DD'),
+              p: 0,
+              x: count, //previous days
+              y: 0,
+              s: count, // Days since McAfee Tweet
+              m: this.getMcAfeeRate(count)
+            })
+            count++;
+          }
+
+          this.setState({
+            dataComplete: sortedData,
+            data: sortedData.slice(0,this.state.todayCount),
             fetchingData: false
           })
         })
@@ -56,13 +83,21 @@ class App extends Component {
     getData();
   }
 
+  handleLineChartLength = (pos) => {
+    this.setState({
+      maxCount: pos[1],
+      minCount: 0,
+      data: this.state.dataComplete.slice(0,pos[1])
+    });
+  };
+
   // USD/BTC according to John McAfee's Tweet (1.000.000 by 2020)
   getMcAfeeRate(s){
     const {targetDate} = this.props;
     const {growthRate} = this.props;
     const goalRate = 1+growthRate;
     const {tweetPrice} = this.props;   // start rate USD/BTC at day of tweet
-    return Math.round(Math.pow(goalRate, s) * tweetPrice);
+    return Math.pow(goalRate, s) * tweetPrice;
   }
 
   getDaysSincePrediction(d) {
@@ -112,16 +147,20 @@ class App extends Component {
         </Row>
 
         <Row>
-          <div className='chart'>
             { !this.state.fetchingData ?
+              <div className='chart'>
+
               <LineChart data={this.state.data} onChartHover={ (a,b) => this.handleChartHover(a,b) }/>
+
+              <Col xs={12}><Range allowCross={false} min={1} max={this.state.dataComplete.length} defaultValue={[0, this.state.todayCount]} onChange={this.handleLineChartLength} /></Col>
+              </div>
+
               : null }
-          </div>
         </Row>
 
         <Row>
           <Col xs={12}>
-          <p className="redlineExplanation">The red line steadily grows to 1 Mio $/BTC.</p>
+          <p className="redlineExplanation">The red line steadily grows to 1 Mio $/BTC. Move the slider to zoom.</p>
             <p id="coindesk"> Powered by <a href="http://www.coindesk.com/price/">CoinDesk</a></p>
             <p id="acknowledgement"> Based on Brandon Morellis <a href="https://codeburst.io/how-i-built-an-interactive-30-day-bitcoin-price-graph-with-react-and-an-api-6fe551c2ab1d">30 Day Bitcoin Price Graph</a></p>
           </Col>

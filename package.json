@@ -3,6 +3,7 @@
   "version": "1.0.1",
   "dependencies": {
     "moment": "^2.18.1",
+    "rc-slider": "^8.6.0",
     "react": "^15.6.1",
     "react-bootstrap": "^0.32.1",
     "react-dom": "^15.6.1",

@@ -37,7 +37,7 @@ class LineChart extends Component {
     const {data} = this.props;
     return {
       min: 0,
-      max: data.reduce((max, p) => p.y > max ? p.y : max, data[0].y)
+      max: Math.max(data.reduce((max, p) => p.y > max ? p.y : max, data[0].y), data.reduce((max, m) => m.m > max ? m.m : max, data[0].m))
     }
   }
 
@@ -57,7 +57,7 @@ class LineChart extends Component {
     let pathD = "M " + this.getSvgX(data[0].x) + " " + this.getSvgY(data[0].y) + " ";
 
     pathD += data.map((point, i) => {
-      return "L " + this.getSvgX(point.x) + " " + this.getSvgY(point.y) + " ";
+      if (point.y>0) {return "L " + this.getSvgX(point.x) + " " + this.getSvgY(point.y) + " ";}
     }).join("");
 
     return (
@@ -126,10 +126,13 @@ class LineChart extends Component {
           {this.props.data[0].p}
         </text>
         {/* Y AXIS LABELS right*/}
-        <text transform={`translate(${this.getSvgX(this.props.data[this.props.data.length - 1].x)+yLabelSize/2}, ${this.getSvgY(this.props.data[this.props.data.length - 1].y)})`} textAnchor="middle">
+        <text transform={`translate(${this.getSvgX(this.props.data[this.props.data.length - 1].x)+yLabelSize/2},
+                                    ${this.getSvgY(this.props.data[this.props.data.length - 1].y)})`} textAnchor="middle">
           {this.props.data[this.props.data.length - 1].p}
         </text>
-        <text transform={`translate(${this.getSvgX(this.props.data[this.props.data.length - 1].x)+yLabelSize/2}, ${Math.max(this.getSvgY(this.props.data[this.props.data.length - 1].m)+xLabelSize/4, this.getSvgY(this.props.data[this.props.data.length - 1].y)+xLabelSize) })`} fill="red" textAnchor="middle">
+        <text transform={`translate(${this.getSvgX(this.props.data[this.props.data.length - 1].x)+yLabelSize/2},
+                                    ${this.getSvgY(this.props.data[this.props.data.length - 1].m)+xLabelSize/4 })`}
+                                    fill="red" textAnchor="middle">
           {this.props.data[this.props.data.length - 1].m.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}
         </text>
         {/* X AXIS LABELS */}
