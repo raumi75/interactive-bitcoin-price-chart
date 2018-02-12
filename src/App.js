@@ -8,6 +8,8 @@ import InfoBox from './InfoBox';
 import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
+const predictionCount = 1263;
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -17,7 +19,7 @@ class App extends Component {
       sortedData: null,
       hoverLoc: null,
       activePoint: null,
-      maxCount: 1263,
+      maxCount: predictionCount,
       minCount: 0,
       todayCount: 0,
       sliderMarks: []
@@ -53,8 +55,6 @@ class App extends Component {
             count++;
           }
 
-          var targetCount = 1264;
-
           var mark = [];
           mark[count-1] = 'today';
 
@@ -64,7 +64,7 @@ class App extends Component {
           })
 
 
-          for (count = count-1; count <= targetCount ; count++) {
+          for (count = count-1; count <= predictionCount+1 ; count++) {
             sortedData.push({
               d: moment(tweetDate).add(count, 'days').format('YYYY-MM-DD'),
               p: 0,
@@ -72,8 +72,7 @@ class App extends Component {
               y: 0,
               s: count, // Days since McAfee Tweet
               m: this.getMcAfeeRate(count)
-            })
-            count++;
+            });
           }
 
           this.setState({
@@ -90,11 +89,36 @@ class App extends Component {
   }
 
   handleLineChartLength = (pos) => {
+
+    const minSliderDistance = 30;
+    if (pos[0] >= (pos[1]-minSliderDistance)) {
+      // Both sliders are too close
+      if (pos[1] < predictionCount-minSliderDistance) {
+        pos[1] = pos[0]+minSliderDistance;
+      }
+    }
+
+    var dataCut = this.state.dataComplete.slice(pos[0],pos[1]);
+
+    if (pos[0]>0) {
+      var dataCut = dataCut.map(function(val) {
+        return {
+          d: val.d,
+          p: val.p,
+          x: val.x-pos[0], //previous days
+          y: val.y,
+          s: val.s, // Days since McAfee Tweet
+          m: val.m
+        }
+      });
+    }
+
     this.setState({
       maxCount: pos[1],
-      minCount: 0,
-      data: this.state.dataComplete.slice(0,pos[1])
+      minCount: pos[0],
+      data: dataCut
     });
+
   };
 
   // USD/BTC according to John McAfee's Tweet (1.000.000 by 2020)
