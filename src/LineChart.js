@@ -262,15 +262,19 @@ class LineChart extends Component {
   // MAKE ACTIVE POINT
   makeActivePoint(){
     const {color, pointRadius} = this.props;
-    return (
-      <circle
-        className='linechart_point'
-        style={{stroke: color}}
-        r={pointRadius}
-        cx={this.state.activePoint.svgX}
-        cy={this.state.activePoint.svgY}
-      />
-    );
+    if (this.state.activePoint.y>0) {
+      return (
+        <circle
+          className='linechart_point'
+          style={{stroke: color}}
+          r={pointRadius}
+          cx={this.state.activePoint.svgX}
+          cy={this.state.activePoint.svgY}
+        />
+      );
+    } else {
+      return (null);
+    }
   }
   // MAKE HOVER LINE
   createLine(){
@@ -287,6 +291,8 @@ class LineChart extends Component {
     const {yLabelSize} = this.props;
     var param = 'm';
     if (pricetype === 'p') { param = 'y'; }
+    if (this.state.activePoint[param] === 0)
+    { return (null); }
     var svgY = this.getSvgY(this.state.activePoint[param]);
 
     return (
