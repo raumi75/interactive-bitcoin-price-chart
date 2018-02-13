@@ -22,7 +22,7 @@ class App extends Component {
       maxCount: predictionCount,
       minCount: 0,
       todayCount: 0,
-      sliderMarks: [],
+      sliderMarks: {},
       scale: 'lin'
     }
   }
@@ -56,7 +56,7 @@ class App extends Component {
             count++;
           }
 
-          var mark = [];
+          var mark = {};
           mark[count] = 'today';
 
           this.setState({
