@@ -175,15 +175,25 @@ class LineChart extends Component {
           {this.props.data[this.props.data.length - 1].m.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}
         </text>
         {/* X AXIS LABELS */}
-        <text transform={`translate(${yLabelSize/2}, ${this.state.svgHeight})`} textAnchor="start">
-          { this.props.data[0].d }
-        </text>
-        <text transform={`translate(${this.state.svgWidth-yLabelSize/2}, ${this.state.svgHeight})`} textAnchor="end">
-          { this.props.data[this.props.data.length - 1].d }
-        </text>
+        { this.makeLabelDate(0) }
+        { this.makeLabelDate(this.props.data.length - 1) }
       </g>
     )
   }
+
+  // Label on X-Axis (Date)
+  makeLabelDate(count) {
+    const {yLabelSize} = this.props;
+
+    return(
+      <text transform={`translate(${this.getSvgX(this.props.data[count].x)},
+                                  ${this.state.svgHeight})`}
+                                  textAnchor="middle">
+        { this.props.data[count].d }
+      </text>
+    );
+  }
+
   // FIND CLOSEST POINT TO MOUSE
   getCoords(e){
     const {data, yLabelSize} = this.props;
