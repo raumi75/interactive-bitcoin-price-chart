@@ -154,7 +154,7 @@ class LineChart extends Component {
   makeLabels(){
     const p = this.getP();
 
-    const {xLabelSize, yLabelSize} = this.props;
+    const {xLabelSize} = this.props;
     return(
       <g className="linechart_label">
         {/* Highest price */}
@@ -175,8 +175,6 @@ class LineChart extends Component {
 
   // Label on X-Axis (Date)
   makeLabelDate(count) {
-    const {yLabelSize} = this.props;
-
     return(
       <text transform={`translate(${this.getSvgX(this.props.data[count].x)},
                                   ${this.state.svgHeight})`}
@@ -188,8 +186,6 @@ class LineChart extends Component {
 
   // Label on Y-Axis (Date)
   makeLabelPrice(count, position, pricetype) {
-    const {xLabelSize, yLabelSize} = this.props;
-
     var xpos = 0;
     var y = 0;
     var anchor = 'right';
