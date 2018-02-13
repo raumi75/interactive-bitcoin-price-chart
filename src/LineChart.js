@@ -281,9 +281,31 @@ class LineChart extends Component {
         x2={this.state.hoverLoc} y2={this.state.svgHeight - xLabelSize} />
     )
   }
+
+  // MAKE HOVER LINE
+  createHorizontalLine(pricetype){
+    const {yLabelSize} = this.props;
+    var param = 'm';
+    if (pricetype === 'p') { param = 'y'; }
+    var svgY = this.getSvgY(this.state.activePoint[param]);
+
+    return (
+      <line className='hoverLine'
+        x1={yLabelSize}                       y1={svgY}
+        x2={this.state.svgWidth - yLabelSize} y2={svgY} />
+    )
+  }
+
   // MAKE HOVER LINE
   makeActiveDate(){
     return (this.makeLabelDate(this.state.activePoint.x));
+  }
+
+  makeActiveLabelPrice(pricetype, position){
+    var param = 'm';
+    if (pricetype === 'p') { param = 'y'; }
+
+    return ( this.makeLabelPrice(this.state.activePoint[param], position, pricetype) );
   }
 
   render() {
@@ -301,6 +323,15 @@ class LineChart extends Component {
           {this.state.hoverLoc ? this.createLine() : null}
           {this.state.hoverLoc ? this.makeActivePoint() : null}
           {this.state.hoverLoc ? this.makeActiveDate() : null}
+
+          {this.state.hoverLoc ? this.createHorizontalLine('p') : null}
+          {this.state.hoverLoc ? this.createHorizontalLine('m') : null}
+
+          {this.state.hoverLoc ? this.makeActiveLabelPrice('p', 'left') : null}
+          {this.state.hoverLoc ? this.makeActiveLabelPrice('m', 'left') : null}
+
+          {this.state.hoverLoc ? this.makeActiveLabelPrice('p', 'right') : null}
+          {this.state.hoverLoc ? this.makeActiveLabelPrice('m', 'right') : null}
 
         </g>
       </svg>
