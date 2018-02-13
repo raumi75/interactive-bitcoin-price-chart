@@ -29,7 +29,7 @@ class InfoBox extends Component {
             currentPrice: bitcoinData.bpi.USD.rate_float,
             monthChangeD: change.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }),
             monthChangeP: changeP.toFixed(2) + '%',
-            updatedAt: bitcoinData.time.updated
+            updatedAt: bitcoinData.time.updatedISO
           })
         })
         .catch((e) => {
