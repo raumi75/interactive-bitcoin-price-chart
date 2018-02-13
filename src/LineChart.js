@@ -153,22 +153,22 @@ class LineChart extends Component {
   }
   makeLabels(){
     const p = this.getP();
-
+    const data = this.props.data;
+    const minCount = 0;
+    const maxCount = (this.props.data.length - 1);
     const {xLabelSize} = this.props;
     return(
       <g className="linechart_label">
-        {/* Highest price */}
-        <text transform={`translate(0, ${this.getSvgY(p.max)+xLabelSize/4})`} textAnchor="left">
-          {p.max.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}
-        </text>
+        { this.makeLabelPrice(p.max, 'left', 'p') }
 
-        { this.makeLabelPrice(0, 'left', 'p') }
+        { this.makeLabelPrice(data[minCount]['y'], 'left', 'p') }
+        { this.makeLabelPrice(data[minCount]['m'], 'left', 'm') }
 
-        { this.makeLabelPrice(this.props.data.length - 1, 'right', 'p') }
-        { this.makeLabelPrice(this.props.data.length - 1, 'right', 'm') }
+        { this.makeLabelPrice(data[maxCount]['y'], 'right', 'p') }
+        { this.makeLabelPrice(data[maxCount]['m'], 'right', 'm') }
 
-        { this.makeLabelDate(0) }
-        { this.makeLabelDate(this.props.data.length - 1) }
+        { this.makeLabelDate(minCount) }
+        { this.makeLabelDate(maxCount) }
       </g>
     )
   }
@@ -185,23 +185,18 @@ class LineChart extends Component {
   }
 
   // Label on Y-Axis (Date)
-  makeLabelPrice(count, position, pricetype) {
+  makeLabelPrice(y, position, pricetype) {
     var xpos = 0;
-    var y = 0;
     var anchor = 'right';
     var className = '';
 
-    if (pricetype === 'p') { pricetype = 'y'; }
-
     if (pricetype === 'm') { className='linechart_label_prediction'; }
-
-    y = this.props.data[count][pricetype];
 
     if (position === 'left') {
       xpos = 0;
       anchor = 'left';
     } else {
-      xpos = this.getSvgX(this.props.data[this.props.data.length - 1].x);
+      xpos = this.getSvgX(this.props.data.length - 1);
       anchor = 'left';
     }
 
