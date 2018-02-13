@@ -1,13 +1,16 @@
 import React, {Component} from "react";
 import "./LineChart.css";
 
+const chartRatio = 3
+
 class LineChart extends Component {
   constructor(props) {
     super(props);
     this.state = {
       hoverLoc: null,
       activePoint: null,
-      svgWidth: window.innerWidth
+      svgWidth: window.innerWidth,
+      svgHeight: window.innerWidth/chartRatio
     }
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
   }
@@ -22,7 +25,7 @@ class LineChart extends Component {
   }
 
   updateWindowDimensions() {
-    this.setState({ svgWidth: window.innerWidth, svgHeight: window.innerWidth/3 });
+    this.setState({ svgWidth: window.innerWidth, svgHeight: window.innerWidth/chartRatio });
   }
 
   // GET X & Y || MAX & MIN
