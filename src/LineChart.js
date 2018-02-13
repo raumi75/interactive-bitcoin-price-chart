@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import "./LineChart.css";
 
-const chartRatio = 3
+const chartRatio = 3;
 
 class LineChart extends Component {
   constructor(props) {
@@ -120,7 +120,7 @@ class LineChart extends Component {
       if (point.y > 0) {
         return "L " + this.getSvgX(point.x) + " " + this.getSvgY(point.y) + " ";
       } else {
-        return "L " + this.getSvgX(data[i-1].x) + " " + (this.state.svgHeight - this.props.xLabelSize) + " ";
+        return "L " + this.getSvgX((point.x)-1) + " " + (this.state.svgHeight - this.props.xLabelSize) + " ";
       }
     }).join("");
 
