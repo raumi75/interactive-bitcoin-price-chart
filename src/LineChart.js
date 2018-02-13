@@ -157,24 +157,16 @@ class LineChart extends Component {
     const {xLabelSize, yLabelSize} = this.props;
     return(
       <g className="linechart_label">
-        {/* Y AXIS LABELS left*/}
-        <text transform={`translate(${yLabelSize/2}, ${this.getSvgY(p.max)+xLabelSize/4})`} textAnchor="middle">
+        {/* Highest price */}
+        <text transform={`translate(0, ${this.getSvgY(p.max)+xLabelSize/4})`} textAnchor="left">
           {p.max.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}
         </text>
-        <text transform={`translate(${yLabelSize/2}, ${this.getSvgY(this.props.data[0].y)}) `} textAnchor="middle">
-          {this.props.data[0].p}
-        </text>
-        {/* Y AXIS LABELS right*/}
-        <text transform={`translate(${this.getSvgX(this.props.data[this.props.data.length - 1].x)+yLabelSize/2},
-                                    ${this.getSvgY(this.props.data[this.props.data.length - 1].y)})`} textAnchor="middle">
-          {this.props.data[this.props.data.length - 1].p}
-        </text>
-        <text transform={`translate(${this.getSvgX(this.props.data[this.props.data.length - 1].x)+yLabelSize/2},
-                                    ${this.getSvgY(this.props.data[this.props.data.length - 1].m)+xLabelSize/4 })`}
-                                    fill="red" textAnchor="middle">
-          {this.props.data[this.props.data.length - 1].m.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}
-        </text>
-        {/* X AXIS LABELS */}
+
+        { this.makeLabelPrice(0, 'left', 'p') }
+
+        { this.makeLabelPrice(this.props.data.length - 1, 'right', 'p') }
+        { this.makeLabelPrice(this.props.data.length - 1, 'right', 'm') }
+
         { this.makeLabelDate(0) }
         { this.makeLabelDate(this.props.data.length - 1) }
       </g>
@@ -192,6 +184,44 @@ class LineChart extends Component {
         { this.props.data[count].d }
       </text>
     );
+  }
+
+  // Label on Y-Axis (Date)
+  makeLabelPrice(count, position, pricetype) {
+    const {xLabelSize, yLabelSize} = this.props;
+
+    var xpos = 0;
+    var y = 0;
+    var anchor = 'right';
+    var className = '';
+
+    if (pricetype === 'p') { pricetype = 'y'; }
+
+    if (pricetype === 'm') { className='linechart_label_prediction'; }
+
+    y = this.props.data[count][pricetype];
+
+    if (position === 'left') {
+      xpos = 0;
+      anchor = 'left';
+    } else {
+      xpos = this.getSvgX(this.props.data[this.props.data.length - 1].x);
+      anchor = 'left';
+    }
+
+    if (y > 0) {
+      return(
+        <text transform={`translate(${xpos},
+                                    ${this.getSvgY(y)})`}
+                                    textAnchor={anchor}
+                                    className={className} >
+
+          {y.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}
+        </text>
+      );
+    } else {
+      return '';
+    }
   }
 
   // FIND CLOSEST POINT TO MOUSE
@@ -265,6 +295,7 @@ class LineChart extends Component {
       <svg  width={this.state.svgWidth} height={this.state.svgHeight} viewBox={`0 0 ${this.state.svgWidth} ${this.state.svgHeight}`} className={'linechart'}
             onMouseLeave={ () => this.stopHover() }
             onMouseMove={ (e) => this.getCoords(e) } >
+
         <g>
           {this.makeAxis()}
           {this.makePath()}

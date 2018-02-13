@@ -1,5 +1,5 @@
 .linechart {
-  padding: 8px;
+  padding-top: 1em;;
 }
 
 .linechart_path {
@@ -31,4 +31,8 @@
 .hoverLine {
   stroke: #7D95B6;
   stroke-width: 1;
+}
+
+.linechart_label_prediction {
+  fill: red;
 }
