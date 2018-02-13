@@ -201,10 +201,10 @@ class App extends Component {
               <Col xs={12} sm={11} smOffset={1}>
                 <FormGroup>
                   <Radio name="radioGroup" value="lin" checked={this.state.scale === 'lin'} onChange={this.handleScaleChange} >
-                    Linear scale
+                    Linear scale (1, 2, 3)
                   </Radio>{' '}
                   <Radio name="radioGroup" value="log" checked={this.state.scale === 'log'} onChange={this.handleScaleChange} >
-                    Logarithmic scale
+                    Logarithmic scale (1, 10, 100)
                   </Radio>
                 </FormGroup>
               </Col>
