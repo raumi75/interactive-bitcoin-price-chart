@@ -156,7 +156,7 @@ class LineChart extends Component {
     const data = this.props.data;
     const minCount = 0;
     const maxCount = (this.props.data.length - 1);
-    const {xLabelSize} = this.props;
+
     return(
       <g className="linechart_label">
         { this.makeLabelPrice(p.max, 'left', 'p') }
