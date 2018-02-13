@@ -14,7 +14,6 @@ class ToolTip extends Component {
 
     return (
       <div className='hover' style={ placementStyles }>
-        <div className='date'>{ activePoint.d }</div>
         <div className='price'>{activePoint.p }</div>
         <div className='mcafee'>{ activePoint.m.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }) }</div>
         <div className='mcafee'>{(activePoint.y/activePoint.m-1).toLocaleString('en-us', { style: 'percent', maximumSignificantDigits: 3})}</div>

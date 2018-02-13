@@ -232,6 +232,7 @@ class LineChart extends Component {
       svgData.push({
         svgX: this.getSvgX(point.x),
         svgY: this.getSvgY(point.y),
+        x: point.x,
         y: point.y,
         d: point.d,
         p: point.p,
@@ -241,7 +242,7 @@ class LineChart extends Component {
     });
 
     let closestPoint = {};
-    for(let i = 0, c = 500; i < svgData.length; i++){
+    for(let i = 0, c = this.state.svgWidth; i < svgData.length; i++){
       if ( Math.abs(svgData[i].svgX - this.state.hoverLoc) <= c ){
         c = Math.abs(svgData[i].svgX - this.state.hoverLoc);
         closestPoint = svgData[i];
@@ -285,6 +286,10 @@ class LineChart extends Component {
         x2={this.state.hoverLoc} y2={this.state.svgHeight - xLabelSize} />
     )
   }
+  // MAKE HOVER LINE
+  makeActiveDate(){
+    return (this.makeLabelDate(this.state.activePoint.x))
+  }
 
   render() {
     return (
@@ -300,6 +305,8 @@ class LineChart extends Component {
           {this.makeLabels()}
           {this.state.hoverLoc ? this.createLine() : null}
           {this.state.hoverLoc ? this.makeActivePoint() : null}
+          {this.state.hoverLoc ? this.makeActiveDate() : null}
+
         </g>
       </svg>
     );
