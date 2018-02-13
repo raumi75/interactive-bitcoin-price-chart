@@ -288,7 +288,7 @@ class LineChart extends Component {
   }
   // MAKE HOVER LINE
   makeActiveDate(){
-    return (this.makeLabelDate(this.state.activePoint.x))
+    return (this.makeLabelDate(this.state.activePoint.x));
   }
 
   render() {

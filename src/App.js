@@ -106,7 +106,7 @@ class App extends Component {
         return {
           d: val.d,
           p: val.p,
-          x: val.x-pos[0], //previous days
+          x: val.x-pos[0]+1, //previous days
           y: val.y,
           s: val.s, // Days since McAfee Tweet
           m: val.m
