@@ -160,10 +160,8 @@ class App extends Component {
 
         <Row>
           <Col xs={12}>
-            <PageHeader>
-              bircoin.top <br className="visible-xs"/><small>The McAfee Prediction Tracker</small>
-            </PageHeader>
-            <p>Bitcoiners turn typos into jargon. So HODL on tight to your BIRCOIN! John McAfee says: By the end of 2020 it will be worth $1 Million.</p>
+            <h1>Bitcoin Price Prediction Tracker</h1>
+            <p>John McAfee says: By the end of 2020 Bitcoin will be worth $1 Million. Is he losing his bet?</p>
           </Col>
         </Row>
 
