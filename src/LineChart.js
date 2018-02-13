@@ -117,7 +117,7 @@ class LineChart extends Component {
       if (point.y > 0) {
         return "L " + this.getSvgX(point.x) + " " + this.getSvgY(point.y) + " ";
       } else {
-        return "L " + this.getSvgX(point.x) + " " + (this.state.svgHeight - this.props.xLabelSize) + " ";
+        return "L " + this.getSvgX(data[i-1].x) + " " + (this.state.svgHeight - this.props.xLabelSize) + " ";
       }
     }).join("");
 
@@ -142,7 +142,7 @@ class LineChart extends Component {
           x2={this.getSvgX(x.max)} y2={this.getSvgY(y.min)}
           strokeDasharray="5" />
         <line
-          x1={this.getSvgX(x.min) - yLabelSize} y1={this.getSvgY(p.max)}
+          x1={this.getSvgX(x.min)} y1={this.getSvgY(p.max)}
           x2={this.getSvgX(x.max)} y2={this.getSvgY(p.max)}
           strokeDasharray="9" />
       </g>
