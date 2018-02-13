@@ -155,7 +155,7 @@ class LineChart extends Component {
     return(
       <g className="linechart_label">
         {/* Y AXIS LABELS left*/}
-        <text transform={`translate(${yLabelSize/2}, ${this.getSvgY(p.max)+20})`} textAnchor="middle">
+        <text transform={`translate(${yLabelSize/2}, ${this.getSvgY(p.max)+xLabelSize/4})`} textAnchor="middle">
           {p.max.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}
         </text>
         <text transform={`translate(${yLabelSize/2}, ${this.getSvgY(this.props.data[0].y)}) `} textAnchor="middle">
