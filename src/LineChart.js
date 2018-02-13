@@ -317,8 +317,9 @@ class LineChart extends Component {
   render() {
     return (
       <svg  width={this.state.svgWidth} height={this.state.svgHeight} viewBox={`0 0 ${this.state.svgWidth} ${this.state.svgHeight}`} className={'linechart'}
-            onMouseLeave={ () => this.stopHover() }
-            onMouseMove={ (e) => this.getCoords(e) } >
+            onMouseLeave= { () => this.stopHover() }
+            onMouseMove = { (e) => this.getCoords(e) }
+            onMouseDown = { (e) => this.getCoords(e) } >
 
         <g>
           {this.makeAxis()}
