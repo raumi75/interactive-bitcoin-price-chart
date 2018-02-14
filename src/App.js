@@ -9,6 +9,7 @@ import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
 const predictionCount = 1263;
+const minSliderDistance = 29;
 
 class App extends Component {
   constructor(props) {
@@ -93,15 +94,16 @@ class App extends Component {
 
   handleLineChartLength = (pos) => {
 
-    const minSliderDistance = 30;
+    if (pos[0] < 0) { pos[0] = 0; }
+
+    if (pos[1] < 1) { pos[1] = this.state.todayCount; }
+
     if (pos[0] >= (pos[1]-minSliderDistance)) {
-      // Both sliders are too close
-      if (pos[1] < predictionCount-minSliderDistance) {
-        pos[1] = pos[0]+minSliderDistance;
-      }
+      pos[0] = 0;
+      pos[1] = this.state.todayCount;
     }
 
-    var dataCut = this.state.dataComplete.slice(pos[0]-1,pos[1]+1);
+    var dataCut = this.state.dataComplete.slice(pos[0],pos[1]+1);
 
     if (pos[0]>0) {
         dataCut = dataCut.map(function(val) {
@@ -186,11 +188,12 @@ class App extends Component {
               <Col xs={12} className='range'>
                 <Range
                   allowCross={false}
-                  min={1}
+                  min={0}
                   max={predictionCount}
                   marks={this.state.sliderMarks}
                   defaultValue={[0, this.state.todayCount]}
-                  onChange={this.handleLineChartLength} />
+                  onChange={this.handleLineChartLength}
+                  pushable={minSliderDistance+1} />
                   <br />
               </Col>
 
