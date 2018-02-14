@@ -40,7 +40,8 @@ class LineChart extends Component {
     const {data} = this.props;
     return {
       min: data.reduce((min, p) => p.y < min ? p.y : min, data[0].y),
-      max: data.reduce((max, p) => p.y > max ? p.y : max, data[0].y)
+      max: data.reduce((max, p) => p.y > max ? p.y : max, data[0].y),
+      last: data.reduce((last, p) => p.y > 0 ? p.y : last, data[0].y)
     }
   }
   getM(){
@@ -147,6 +148,10 @@ class LineChart extends Component {
         <line
           x1={this.getSvgX(x.min)} y1={this.getSvgY(p.max)}
           x2={this.getSvgX(x.max)} y2={this.getSvgY(p.max)}
+          strokeDasharray="9" />
+        <line
+          x1={this.getSvgX(x.min)} y1={this.getSvgY(p.last)}
+          x2={this.getSvgX(x.max)} y2={this.getSvgY(p.last)}
           strokeDasharray="9" />
       </g>
     );
