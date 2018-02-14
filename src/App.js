@@ -57,12 +57,14 @@ class App extends Component {
           }
 
           var mark = {};
-          mark[count] = 'today';
+          mark[0] = moment(tweetDate).format('YYYY-MM-DD');
+          mark[count] = 'yesterday';
+          mark[this.state.maxCount] = moment(targetDate).format('YYYY-MM-DD');
 
           this.setState({
             todayCount: count,
             sliderMarks: mark
-          })
+          });
 
 
           for (count; count <= predictionCount ; count++) {
