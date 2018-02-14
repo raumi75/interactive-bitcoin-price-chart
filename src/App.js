@@ -162,18 +162,14 @@ class App extends Component {
 
         <Row>
           <Col xs={12}>
-            <h1>Bitcoin Price Prediction Tracker</h1>
-            <p>John McAfee says: By the end of 2020 Bitcoin will be worth $1 Million. Is he losing his bet?</p>
+            <h1 className="text-center">Bitcoin Price Prediction Tracker</h1>
+            <p className="text-center">John McAfee says: By the end of 2020 Bitcoin will be worth $1 Million. Is he losing his bet?</p>
           </Col>
         </Row>
 
-        <Row>
-          <Col xs={12}>
-            { !this.state.fetchingData ?
-            <InfoBox data={this.state.data} />
-            : null }
-          </Col>
-        </Row>
+        { !this.state.fetchingData ?
+        <InfoBox data={this.state.data} />
+        : null }
 
         <Row>
           <div className='popup'>
@@ -216,9 +212,9 @@ class App extends Component {
 
         <Row>
           <Col xs={12}>
-          <p className="lead redlineExplanation">The red line steadily grows to 1 Mio $/BTC. Move the slider to zoom.</p>
-            <p id="coindesk"> Powered by <a href="http://www.coindesk.com/price/">CoinDesk</a></p>
-            <p id="acknowledgement"> Based on Brandon Morellis <a href="https://codeburst.io/how-i-built-an-interactive-30-day-bitcoin-price-graph-with-react-and-an-api-6fe551c2ab1d">30 Day Bitcoin Price Graph</a></p>
+            <p className="lead redlineExplanation">The red line steadily grows to 1 Mio $/BTC. Move the slider to zoom.</p>
+            <p id="coindesk" className="text-right"> Powered by <a href="http://www.coindesk.com/price/">CoinDesk</a></p>
+            <p id="acknowledgement"  className="text-right"> Based on Brandon Morellis <a href="https://codeburst.io/how-i-built-an-interactive-30-day-bitcoin-price-graph-with-react-and-an-api-6fe551c2ab1d">30 Day Bitcoin Price Graph</a></p>
           </Col>
         </Row>
 
