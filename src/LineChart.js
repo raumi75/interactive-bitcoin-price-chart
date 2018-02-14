@@ -18,10 +18,12 @@ class LineChart extends Component {
   componentDidMount() {
     this.updateWindowDimensions();
     window.addEventListener('resize', this.updateWindowDimensions);
+    window.addEventListener('orientationchange', this.updateWindowDimensions);
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.updateWindowDimensions);
+    window.removeEventListener('orientationchange', this.updateWindowDimensions);
   }
 
   updateWindowDimensions() {
