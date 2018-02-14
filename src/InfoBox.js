@@ -11,7 +11,8 @@ class InfoBox extends Component {
       currentPrice: null,
       monthChangeD: null,
       monthChangeP: null,
-      updatedAt: null
+      updatedAt: null,
+      mcAfeePrice: null
     }
   }
   componentDidMount(){
@@ -29,7 +30,8 @@ class InfoBox extends Component {
             currentPrice: bitcoinData.bpi.USD.rate_float,
             monthChangeD: change.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }),
             monthChangeP: changeP.toFixed(2) + '%',
-            updatedAt: bitcoinData.time.updatedISO
+            updatedAt: bitcoinData.time.updatedISO,
+            mcAfeePrice: this.getMcAfeePrice()
           })
         })
         .catch((e) => {
@@ -38,9 +40,16 @@ class InfoBox extends Component {
     }
     this.getData();
     this.refresh = setInterval(() => this.getData(), 60000);
+    this.refresh = setInterval(() => this.refreshMcAfeePrice(), 10000);
   }
   componentWillUnmount(){
     clearInterval(this.refresh);
+  }
+
+  refreshMcAfeePrice() {
+    this.setState({
+      mcAfeePrice: this.getMcAfeePrice()
+    })
   }
 
   // No Paramter because this is realtime
@@ -50,14 +59,14 @@ class InfoBox extends Component {
   }
 
   // No Paramter because this is realtime
-  getMcAfeeRate(){
+  getMcAfeePrice(){
     const goalRate = 1+this.props.growthRate;
     const {tweetPrice} = this.props;   // start rate USD/BTC at day of tweet
     return Math.pow(goalRate, this.getDaysSincePrediction()) * tweetPrice;
   }
 
   getAheadOrBehind() {
-    if (this.state.currentPrice>this.getMcAfeeRate())
+    if (this.state.currentPrice>this.state.mcAfeePrice)
     { return ('ahead'); } else { return 'behind' ; }
   }
 
@@ -66,7 +75,7 @@ class InfoBox extends Component {
       <Row>
           <Col xs={4} md={2} mdOffset={3} height={"5em"}>
             <div className="subtext">Predicted</div>
-            <div className="heading predicted">{this.getMcAfeeRate().toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}</div>
+            <div className="heading predicted">{ this.state.mcAfeePrice ? this.state.mcAfeePrice.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }) : 'thinking...' }</div>
             <div className="subtext">steady growth</div>
           </Col>
 
@@ -78,7 +87,7 @@ class InfoBox extends Component {
 
           <Col xs={4} md={2} height={"5em"}>
             <div className="subtext">Bitcoin is</div>
-            <div className={"heading "+this.getAheadOrBehind() }>{(this.state.currentPrice/this.getMcAfeeRate()-1).toLocaleString('en-us', {style: 'percent', maximumSignificantDigits: 4})}</div>
+            <div className={"heading "+this.getAheadOrBehind() }>{ this.state.currentPrice ? (this.state.currentPrice/this.state.mcAfeePrice-1).toLocaleString('en-us', {style: 'percent', maximumSignificantDigits: 4}) : '...' }</div>
             <div className="subtext">{this.getAheadOrBehind()} of his prediction</div>
           </Col>
       </Row>
