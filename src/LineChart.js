@@ -226,8 +226,11 @@ class LineChart extends Component {
   getCoords(e){
     const {data, yLabelSize} = this.props;
     const svgLocation = document.getElementsByClassName("linechart")[0].getBoundingClientRect();
-    const adjustment = (svgLocation.width - this.state.svgWidth) / 2; //takes padding into consideration
-    const relativeLoc = e.clientX - svgLocation.left - adjustment;
+    const chartMarginLeft = yLabelSize;
+    const chartMarginRight = yLabelSize;
+    const chartWidth = svgLocation.width-chartMarginLeft-chartMarginRight;
+    const chartRightBounding = svgLocation.width-chartMarginRight;
+    const relativeLoc = (e.clientX-40)/chartRightBounding*svgLocation.width;
 
     let svgData = [];
     data.map((point, i) => {
@@ -243,29 +246,34 @@ class LineChart extends Component {
       return null;
     });
 
+    var resolution = (chartWidth/svgData.length) // Optimize within this range. Just for speed.
+
     let closestPoint = {};
-    for(let i = 0, c = this.state.svgWidth; i < svgData.length; i++){
-      if ( Math.abs(svgData[i].svgX - this.state.hoverLoc) <= c ){
-        c = Math.abs(svgData[i].svgX - this.state.hoverLoc);
+    for(let i = 0, c = resolution*2; i < svgData.length; i++){
+      if ( Math.abs(svgData[i].svgX - relativeLoc) <= c ){
+        c = Math.abs(svgData[i].svgX - relativeLoc);
         closestPoint = svgData[i];
       }
     }
 
-    if(relativeLoc - yLabelSize < 0){
-      this.stopHover();
-    } else {
+    if ( (chartMarginLeft < relativeLoc) && (relativeLoc < chartRightBounding) ) {
       this.setState({
         hoverLoc: relativeLoc,
         activePoint: closestPoint
-      })
+      });
       this.props.onChartHover(relativeLoc, closestPoint);
+    } else {
+      // Pointer is outside of chart
+      this.stopHover();
     }
+
   }
   // STOP HOVER
   stopHover(){
     this.setState({hoverLoc: null, activePoint: null});
     this.props.onChartHover(null, null);
   }
+
   // MAKE ACTIVE POINT
   makeActivePoint(){
     const {color, pointRadius} = this.props;

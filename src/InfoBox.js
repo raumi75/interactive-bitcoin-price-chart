@@ -64,21 +64,19 @@ class InfoBox extends Component {
   render(){
     return (
       <Row>
-          <Col xs={4} md={3} mdOffset={1} lg={2} lgOffset={2} height={"4em"}>
+          <Col xs={4} md={2} mdOffset={3} height={"5em"}>
             <div className="subtext">Predicted</div>
             <div className="heading predicted">{this.getMcAfeeRate().toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}</div>
             <div className="subtext">steady growth</div>
           </Col>
-        { this.state.currentPrice ?
 
-          <Col xs={4} md={3} lg={2} height={"4em"}>
+          <Col xs={4} md={2} height={"5em"}>
             <div className="subtext">Actual</div>
-            <div className="heading actual">{this.state.currentPrice.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}</div>
-            <div className="subtext">{ moment(this.state.updatedAt).format('YYYY-MM-DD hh:mm A')}</div>
+            <div className="heading actual">{ this.state.currentPrice ? this.state.currentPrice.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }) : 'loading...' }</div>
+            <div className="subtext">{ this.state.updatedAt ? moment(this.state.updatedAt).format('YYYY-MM-DD hh:mm A') : null }</div>
           </Col>
-          : null}
 
-          <Col xs={4} md={3} lg={2} height={"4em"}>
+          <Col xs={4} md={2} height={"5em"}>
             <div className="subtext">Bitcoin is</div>
             <div className={"heading "+this.getAheadOrBehind() }>{(this.state.currentPrice/this.getMcAfeeRate()-1).toLocaleString('en-us', {style: 'percent', maximumSignificantDigits: 4})}</div>
             <div className="subtext">{this.getAheadOrBehind()} of his prediction</div>
