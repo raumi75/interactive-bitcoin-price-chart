@@ -236,7 +236,7 @@ class App extends Component {
         </Row>
 
         <Row>
-          <Col xs={12}>
+          <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
             <h2 id="explainmath">The math behind it</h2>
 
             <p>Is this really possible? Bitcoin needs to grow at a rate of <strong>{ growthRate*100 } % per day</strong>. That is the red line on the above chart. As long as the blue line is above the red line, we are on target and John McAfee will not have to eat his own dick. Hover over the graph to get daily prices.</p>
@@ -251,20 +251,50 @@ class App extends Component {
             <p>{this.explainPriceOn('2020-06-01')}</p>
             <p>And finally, {this.explainPriceOn('2020-12-31')}</p>
 
-            </Col>
-          </Row>
+          </Col>
+        </Row>
 
-          <Row>
-            <Col xs={12}>
-              <h2>Why would it grow?</h2>
-              <p>Bitcoin is scarce. There will only be 21 Million BTC. If every Millionaire in the world wants one, there are not enough for every one to have a whole BTC.</p>
-              <p>It will make sense to use a <a href="https://en.bitcoin.it/wiki/Units">unit</a> like microbitcoin aka bits (One Millionth of a Bitcoin) and Satoshis (One hundredth of a bit). Then a bit will be a Dollar and a Satoshi will be a Cent.</p>
-            </Col>
+        <Row>
+          <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
+            <h2>Why would it grow?</h2>
+            <p>Bitcoin is scarce. There will only be 21 Million BTC. If every Millionaire in the world wants one, there are not enough for every one to have a whole BTC.</p>
+            <p>More people adopting and buying bitcoin will raise the price.</p>
+            <p>This technology is still at an early. Think the internet in the mid-nineties when the majority thought it was only for nerds and had no real use.</p>
+            <p>The market capitalization of bitcoin is still tiny, <a href="http://money.visualcapitalist.com/worlds-money-markets-one-visualization-2017/">compared to</a> gold, credit cards or the stock market.</p>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
+            <h2>Such an expensive currency!</h2>
+            <p>You can buy and spend fractions of a bitcoin.</p>
+            <p>Sooner or later, it will make sense to use a <a href="https://en.bitcoin.it/wiki/Units">unit</a> like microbitcoin aka bits (One Millionth of a Bitcoin) and Satoshis (One hundredth of a bit). Then a bit will be a Dollar and a Satoshi will be a Cent.</p>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
+            <h2>What can go wrong?</h2>
+            <p>Though bitcoin has proven to be secure and many people put their trust in it, there is still a
+            lot that can go wrong. Do not invest more than you can afford to lose!</p>
+            <p>Bitcoin could go to zero and <a href="https://99bitcoins.com/bitcoinobituaries/">many people think so.</a></p>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
+            <h2>Who is that John McAfee guy?</h2>
+            <p>The founder of McAfee Antivirus. Some say he is a genius. Some say he is a lunatic. But that does not matter.</p>
+            <p className="lead">This is not about McAfee. It is about comparing the price to a prediction that sounds too good to be true.</p>
+          </Col>
         </Row>
 
         <Row>
           <Col xs={12}>
-            <div id="source">Source: <a href="https://github.com/raumi75/mcafeetracker">github</a>.</div>
+            <div id="source">
+              <p className="text-center">Source: <a href="https://github.com/raumi75/mcafeetracker">github</a></p>
+              <p className="text-center">User: <a href="https://reddit.com/u/raumi75/">/u/raumi75</a>, <a href="https://twitter.com/raumi75">@raumi75</a></p>
+            </div>
           </Col>
         </Row>
       </Grid>
