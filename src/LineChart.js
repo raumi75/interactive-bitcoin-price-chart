@@ -182,13 +182,18 @@ class LineChart extends Component {
 
   // Label on X-Axis (Date)
   makeLabelDate(count) {
-    return(
-      <text transform={`translate(${this.getSvgX(this.props.data[count].x)},
-                                  ${this.state.svgHeight})`}
-                                  textAnchor="middle">
-        { this.props.data[count].d }
-      </text>
-    );
+    if ((count < this.props.data.length) && (count >= 0)) {
+      return(
+        <text transform={`translate(${this.getSvgX(this.props.data[count].x-1)},
+                                    ${this.state.svgHeight})`}
+                                    textAnchor="middle">
+          { this.props.data[count].d }
+        </text>
+      );
+    } else {
+      return null;
+    }
+
   }
 
   // Label on Y-Axis (Date)
