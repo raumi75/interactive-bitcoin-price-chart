@@ -1,6 +1,7 @@
 .linechart {
+  margin-top: 1em;
   padding-top: 1em;
-  padding-bottom: 1em;
+  margin-bottom: 2em;
 }
 
 .linechart_path {
@@ -18,7 +19,6 @@
 }
 
 .linechart_area {
-  padding: 8px;
   fill: #64B5F6;
   stroke: none;
   opacity: .4;
