@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { Grid, Row , Col, Image, FormGroup, Radio } from 'react-bootstrap';
+import { Grid, Row , Col, Image, FormGroup, Radio, Button } from 'react-bootstrap';
 import './App.css';
 import LineChart from './LineChart';
 import ToolTip from './ToolTip';
@@ -20,8 +20,7 @@ class App extends Component {
       sortedData: null,
       hoverLoc: null,
       activePoint: null,
-      maxCount: predictionCount,
-      minCount: 0,
+      countRange: [0, predictionCount],
       todayCount: 0,
       sliderMarks: {},
       scale: 'lin'
@@ -59,11 +58,12 @@ class App extends Component {
 
           var mark = {};
           mark[0] = moment(tweetDate).format('YYYY-MM-DD');
-          mark[count] = 'yesterday';
-          mark[this.state.maxCount] = moment(targetDate).format('YYYY-MM-DD');
+          mark[count-1] = 'yesterday';
+          mark[predictionCount] = moment(targetDate).format('YYYY-MM-DD');
 
           this.setState({
             todayCount: count,
+            countRange: [0, count-1],
             sliderMarks: mark
           });
 
@@ -95,14 +95,20 @@ class App extends Component {
   handleLineChartLength = (pos) => {
 
     if (pos[0] < 0) { pos[0] = 0; }
-
     if (pos[1] < 1) { pos[1] = this.state.todayCount; }
-
     if (pos[0] >= (pos[1]-minSliderDistance)) {
       pos[0] = 0;
       pos[1] = this.state.todayCount;
     }
 
+    this.setState({
+      countRange: [pos[0], pos[1]],
+    });
+
+    this.cutData([pos[0], pos[1]]);
+  };
+
+  cutData(pos) {
     var dataCut = this.state.dataComplete.slice(pos[0],pos[1]+1);
 
     if (pos[0]>0) {
@@ -119,17 +125,22 @@ class App extends Component {
     }
 
     this.setState({
-      maxCount: pos[1],
-      minCount: pos[0],
       data: dataCut
     });
 
-  };
-
+  }
   handleScaleChange = (changeEvent) => {
     this.setState({
       scale: changeEvent.target.value
     });
+  }
+
+  handleRangeReset = () => {
+    this.setState({
+      countRange: [0, this.state.todayCount-1],
+      scale: 'lin'
+    });
+    this.cutData([0, this.state.todayCount-1]);
   }
 
   // USD/BTC according to John McAfee's Tweet (1.000.000 by 2020)
@@ -191,13 +202,13 @@ class App extends Component {
                   min={0}
                   max={predictionCount}
                   marks={this.state.sliderMarks}
-                  defaultValue={[0, this.state.todayCount]}
                   onChange={this.handleLineChartLength}
+                  value={this.state.countRange}
                   pushable={minSliderDistance+1} />
                   <br />
               </Col>
 
-              <Col xs={12} sm={11} smOffset={1}>
+              <Col xs={9} sm={5} smOffset={1}>
                 <FormGroup>
                   <Radio name="radioGroup" value="lin" checked={this.state.scale === 'lin'} onChange={this.handleScaleChange} >
                     Linear scale (1, 2, 3)
@@ -208,6 +219,9 @@ class App extends Component {
                 </FormGroup>
               </Col>
 
+              <Col xs={3} sm={6} >
+                <Button onClick={this.handleRangeReset}>Reset</Button>
+              </Col>
               </div>
 
               : null }
