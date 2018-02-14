@@ -230,8 +230,8 @@ class App extends Component {
         <Row>
           <Col xs={12}>
             <p className="lead redlineExplanation">The red line steadily grows to 1 Mio $/BTC. Move the slider to zoom.</p>
-            <p id="coindesk" className="text-right"> Powered by <a href="http://www.coindesk.com/price/">CoinDesk</a></p>
-            <p id="acknowledgement"  className="text-right"> Based on Brandon Morellis <a href="https://codeburst.io/how-i-built-an-interactive-30-day-bitcoin-price-graph-with-react-and-an-api-6fe551c2ab1d">30 Day Bitcoin Price Graph</a></p>
+            <p id="coindesk" className="text-right">Data kindly provided by <a href="http://www.coindesk.com/price/">CoinDesk</a></p>
+            <p id="acknowledgement"  className="text-right">Chart based on Brandon Morellis <a href="https://codeburst.io/how-i-built-an-interactive-30-day-bitcoin-price-graph-with-react-and-an-api-6fe551c2ab1d">Tutorial</a></p>
           </Col>
         </Row>
 
