@@ -257,7 +257,7 @@ class App extends Component {
             <h2 id="explainmath">The math behind it</h2>
 
             <p>Is this really possible? Bitcoin needs to grow at a rate of <strong>{ growthRate*100 } % per day</strong>. That is the red line on the above chart. As long as the blue line is above the red line, we are on target and John McAfee will not have to eat his own dick. Hover over the graph to get daily prices.</p>
-            <p>The growth rate of less than half a percent does not sound like much to you? That´s because we all suck at grasping the concept of exponential growth. This is the magic behind compound interest.</p>
+            <p>Compared to the enormous price changes, half a percent does not sound like much to you? This is the magic of exponential grows.</p>
 
             <p>Grab a calculator and try it yourself:</p>
 
@@ -276,7 +276,7 @@ class App extends Component {
             <h2>Why would it grow?</h2>
             <p>Bitcoin is scarce. There will only be 21 Million BTC. If every Millionaire in the world wants one, there are not enough for every one to have a whole BTC.</p>
             <p>More people adopting and buying bitcoin will raise the price.</p>
-            <p>This technology is still at an early. Think the internet in the mid-nineties when the majority thought it was only for nerds and had no real use.</p>
+            <p>This technology is still at a relatively early stage. Think the internet in the mid-nineties when the majority thought it was only for nerds and had no real use.</p>
             <p>The market capitalization of bitcoin is still tiny, <a href="http://money.visualcapitalist.com/worlds-money-markets-one-visualization-2017/">compared to</a> gold, credit cards or the stock market.</p>
           </Col>
         </Row>
