@@ -31,7 +31,7 @@ class InfoBox extends Component {
             monthChangeD: change.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }),
             monthChangeP: changeP.toFixed(2) + '%',
             updatedAt: bitcoinData.time.updatedISO,
-            mcAfeePrice: this.getMcAfeePrice()
+            mcAfeePrice: this.getMcAfeePriceNow()
           })
         })
         .catch((e) => {
@@ -48,7 +48,7 @@ class InfoBox extends Component {
 
   refreshMcAfeePrice() {
     this.setState({
-      mcAfeePrice: this.getMcAfeePrice()
+      mcAfeePrice: this.getMcAfeePriceNow()
     })
   }
 
@@ -59,10 +59,19 @@ class InfoBox extends Component {
   }
 
   // No Paramter because this is realtime
-  getMcAfeePrice(){
+  // The price will be calculated for this moment.
+  // The chart below the InfoBox shows the
+  // historical price at closing and the predicted price at 0:00 AM
+  // I know this is inconsitent. This way, the prdicted price will reach the
+  // targetPrice on 2020-12-31 at 0:00 am, which is not exactly end of the year, but who cares...
+  //
+  // To make it a little more consistend with the chart, I cheat and subtract
+  // one day. This way, todays price right now will relate to the displayed price at the chart.
+  // Shortly after midnight, the chart price will be the same as the InfoBox price.
+  getMcAfeePriceNow(){
     const goalRate = 1+this.props.growthRate;
     const {tweetPrice} = this.props;   // start rate USD/BTC at day of tweet
-    return Math.pow(goalRate, this.getDaysSincePrediction()) * tweetPrice;
+    return Math.pow(goalRate, this.getDaysSincePrediction()-1) * tweetPrice;
   }
 
   getAheadOrBehind() {
