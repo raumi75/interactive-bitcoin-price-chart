@@ -11,6 +11,10 @@
   color: inherit;
 }
 
+quote {
+  font-weight: bold;
+}
+
 .range {
   margin-left:7%;
   width:82%;

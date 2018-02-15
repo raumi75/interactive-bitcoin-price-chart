@@ -279,9 +279,23 @@ class App extends Component {
 
         <Row>
           <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
+            <h2>That parabolic curve - seriously?</h2>
+            <p>When you zoom out, the curve gets steeper and steeper.
+            Relax! Growth curves look like that. Take the Dow Jones, a savings account
+            with interest or bacteria growing in a petri dish.</p>
+            <p>With a fixed percentage per time, rising from 1 to 10 takes as long as
+            from 100,000 to 1,000,000. Both is the growth by a factor of 10.</p>
+            <p>That is why many analysts like to look at charts with a <strong>logarithmic
+            scale</strong> where the y-axis scales in orders of magnitude.</p>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
             <h2>Such an expensive currency!</h2>
             <p>You can buy and spend fractions of a bitcoin.</p>
             <p>Sooner or later, it will make sense to use a <a href="https://en.bitcoin.it/wiki/Units">unit</a> like microbitcoin aka bits (One Millionth of a Bitcoin) and Satoshis (One hundredth of a bit). Then a bit will be a Dollar and a Satoshi will be a Cent.</p>
+            <p>How does something like <quote>'1 μBTC is 1.07 $'</quote> or <quote>'1 Satoshi is 0.01 $'</quote> sound to you? A lot less expensive, right?</p>
           </Col>
         </Row>
 
