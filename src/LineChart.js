@@ -2,7 +2,8 @@ import React, {Component} from "react";
 import "./LineChart.css";
 
 const chartRatio = 3;
-
+let stopHoverTimer;
+const stopHoverMilliseconds = 2000;
 class LineChart extends Component {
   constructor(props) {
     super(props);
@@ -232,6 +233,8 @@ class LineChart extends Component {
   }
 
   getTouchCoords(e) {
+    clearTimeout(stopHoverTimer);
+    stopHoverTimer = setTimeout(function() { this.stopHover(); }.bind(this), stopHoverMilliseconds);
     this.getCoords(e.touches[0].pageX);
   }
 
