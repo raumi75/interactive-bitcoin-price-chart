@@ -231,15 +231,22 @@ class LineChart extends Component {
     }
   }
 
+  getTouchCoords(e) {
+    this.getCoords(e.touches[0].pageX);
+  }
+
+  getMouseCoords(e) {
+    this.getCoords(e.pageX);
+  }
+
   // FIND CLOSEST POINT TO MOUSE
-  getCoords(e){
+  getCoords(relativeLoc) {
     const {data, yLabelSize} = this.props;
     const svgLocation = document.getElementsByClassName("linechart")[0].getBoundingClientRect();
     const chartMarginLeft = yLabelSize;
     const chartMarginRight = yLabelSize;
     const chartWidth = svgLocation.width-chartMarginLeft-chartMarginRight;
     const chartRightBounding = svgLocation.width-chartMarginRight;
-    const relativeLoc = e.pageX;
 
     let svgData = [];
     data.map((point, i) => {
@@ -342,10 +349,10 @@ class LineChart extends Component {
     return (
       <svg  width={this.state.svgWidth} height={this.state.svgHeight} viewBox={`0 0 ${this.state.svgWidth} ${this.state.svgHeight}`} className={'linechart'}
             onMouseLeave= { () => this.stopHover() }
-            onMouseMove = { (e) => this.getCoords(e) }
-            onTouchMove = { (e) => this.getCoords(e) }
-            onTouchStart= { (e) => this.getCoords(e) }
-            onMouseDown = { (e) => this.getCoords(e) } >
+            onMouseMove = { (e) => this.getMouseCoords(e) }
+            onTouchMove = { (e) => this.getTouchCoords(e) }
+            onTouchStart= { (e) => this.getTouchCoords(e) }
+            onMouseDown = { (e) => this.getMouseCoords(e) } >
 
         <g>
           {this.makeAxis()}
