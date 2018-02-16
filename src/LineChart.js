@@ -239,7 +239,7 @@ class LineChart extends Component {
     const chartMarginRight = yLabelSize;
     const chartWidth = svgLocation.width-chartMarginLeft-chartMarginRight;
     const chartRightBounding = svgLocation.width-chartMarginRight;
-    const relativeLoc = (e.clientX-40)/chartRightBounding*svgLocation.width;
+    const relativeLoc = e.pageX;
 
     let svgData = [];
     data.map((point, i) => {
