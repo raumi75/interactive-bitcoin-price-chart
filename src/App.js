@@ -177,10 +177,10 @@ class App extends Component {
 
       <Grid fluid={true} >
 
-        <Row>
+        <Row className="header">
           <Col xs={12}>
-            <h1 className="text-center">Bitcoin Price Prediction Tracker</h1>
-            <p className="text-center">John McAfee says: By the end of 2020 Bitcoin will be worth 1 Million $. Is he losing his bet?</p>
+            <h1>Bitcoin Price Prediction Tracker</h1>
+            <p>John McAfee says: By the end of 2020 Bitcoin will be worth 1 Million $. Is he losing his bet?</p>
           </Col>
         </Row>
 
@@ -232,8 +232,10 @@ class App extends Component {
         </Row>
 
         <Row>
-          <Col xs={12}>
+          <Col xs={12} lg={6}>
             <p className="lead redlineExplanation">The red line steadily grows to 1 Mio $/BTC. Move the slider to zoom.</p>
+          </Col>
+          <Col xs={12} lg={6}>
             <p id="coindesk" className="text-right">Data kindly provided by <a href="http://www.coindesk.com/price/">CoinDesk</a></p>
             <p id="acknowledgement"  className="text-right">Chart based on Brandon Morellis <a href="https://codeburst.io/how-i-built-an-interactive-30-day-bitcoin-price-graph-with-react-and-an-api-6fe551c2ab1d">Tutorial</a></p>
           </Col>
@@ -321,12 +323,15 @@ class App extends Component {
           </Col>
         </Row>
 
-        <Row>
+        <Row className="footer">
           <Col xs={12}>
-            <div id="source">
-              <p className="text-center">Source: <a href="https://github.com/raumi75/mcafeetracker">github</a></p>
-              <p className="text-center">User: <a href="https://reddit.com/u/raumi75/">/u/raumi75</a>, <a href="https://twitter.com/raumi75">@raumi75</a></p>
-            </div>
+            <p>Source: <a href="https://github.com/raumi75/mcafeetracker">raumi75@github</a></p>
+            <p>Get in touch: <a href="https://reddit.com/u/raumi75/">/u/raumi75</a>, <a href="https://twitter.com/raumi75">@raumi75</a></p>
+            <p>Spread the word:
+              <a href="https://twitter.com/raumi75/status/964468501657391104">retweet</a>,
+              share <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A//fnordprefekt.de">on Facebook</a>,
+              or on <a href="https://plus.google.com/share?url=https%3A//fnordprefekt.de">Google Plus</a>
+            </p>
           </Col>
         </Row>
       </Grid>
