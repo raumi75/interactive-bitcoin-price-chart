@@ -180,7 +180,7 @@ class App extends Component {
         <Row>
           <Col xs={12}>
             <h1 className="text-center">Bitcoin Price Prediction Tracker</h1>
-            <p className="text-center">John McAfee says: By the end of 2020 Bitcoin will be worth $1 Million. Is he losing his bet?</p>
+            <p className="text-center">John McAfee says: By the end of 2020 Bitcoin will be worth 1 Million $. Is he losing his bet?</p>
           </Col>
         </Row>
 
