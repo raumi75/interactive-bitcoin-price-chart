@@ -74,12 +74,16 @@ class LineChart extends Component {
     const gY = this.getY();
 
     if (scale === 'lin') {
-      return ((this.state.svgHeight - xLabelSize) * gY.max
-            - (this.state.svgHeight - xLabelSize) * y) / (gY.max - gY.min);
+      return (
+              (this.state.svgHeight - 2*xLabelSize) * gY.max
+            - (this.state.svgHeight - 2*xLabelSize) * y) / (gY.max - gY.min)
+            + xLabelSize;
     } else {
       // scale === 'log'
-      return ((this.state.svgHeight - xLabelSize) * Math.log(gY.max)
-            - (this.state.svgHeight - xLabelSize) * Math.log(y) ) / (Math.log(gY.max) - Math.log(gY.min));
+      return (
+              (this.state.svgHeight - 2*xLabelSize) * Math.log(gY.max)
+            - (this.state.svgHeight - 2*xLabelSize) * Math.log(y) ) / (Math.log(gY.max) - Math.log(gY.min))
+            + xLabelSize;
     }
   }
 
@@ -185,7 +189,7 @@ class LineChart extends Component {
     if ((count < this.props.data.length) && (count >= 0)) {
       return(
         <text transform={`translate(${this.getSvgX(this.props.data[count].x-1)},
-                                    ${this.state.svgHeight})`}
+                                    ${this.state.svgHeight -2})`}
                                     textAnchor="middle">
           { this.props.data[count].d }
         </text>
