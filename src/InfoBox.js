@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import { Row, Col } from 'react-bootstrap';
+import formatDollar from './formatting.js';
 
 import './InfoBox.css';
 
@@ -28,7 +29,7 @@ class InfoBox extends Component {
 
           this.setState({
             currentPrice: bitcoinData.bpi.USD.rate_float,
-            monthChangeD: change.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }),
+            monthChangeD: formatDollar(change),
             monthChangeP: changeP.toFixed(2) + '%',
             updatedAt: bitcoinData.time.updatedISO,
             mcAfeePrice: this.getMcAfeePriceNow()
@@ -84,13 +85,13 @@ class InfoBox extends Component {
       <Row>
           <Col xs={4} md={2} mdOffset={3} height={"5em"}>
             <div className="subtext">Predicted</div>
-            <div className="heading predicted">{ this.state.mcAfeePrice ? this.state.mcAfeePrice.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }) : 'thinking...' }</div>
+            <div className="heading predicted">{ this.state.mcAfeePrice ? formatDollar(this.state.mcAfeePrice) : 'loading...' }</div>
             <div className="subtext">steady growth</div>
           </Col>
 
           <Col xs={4} md={2} height={"5em"}>
             <div className="subtext">Actual</div>
-            <div className="heading actual">{ this.state.currentPrice ? this.state.currentPrice.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }) : 'loading...' }</div>
+            <div className="heading actual">{ this.state.currentPrice ? formatDollar(this.state.currentPrice) : 'loading...' }</div>
             <div className="subtext">{ this.state.updatedAt ? moment(this.state.updatedAt).format('YYYY-MM-DD hh:mm A') : null }</div>
           </Col>
 

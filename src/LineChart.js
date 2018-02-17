@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import "./LineChart.css";
+import formatDollar from './formatting.js';
 
 const chartRatio = 3;
 let stopHoverTimer;
@@ -198,7 +199,6 @@ class LineChart extends Component {
     } else {
       return null;
     }
-
   }
 
   // Label on Y-Axis (Date)
@@ -224,7 +224,7 @@ class LineChart extends Component {
                                     textAnchor={anchor}
                                     className={className} >
 
-          {y.toLocaleString('us-EN',{ style: 'currency', currency: 'USD' })}
+          {formatDollar(y)}
         </text>
       );
     } else {

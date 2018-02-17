@@ -7,6 +7,7 @@ import ToolTip from './ToolTip';
 import InfoBox from './InfoBox';
 import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
+import {formatDollar} from './formatting.js';
 
 const predictionCount = 1263;
 const minSliderDistance = 29;
@@ -47,7 +48,7 @@ class App extends Component {
           for (let date in bitcoinData.bpi){
             sortedData.push({
               d: moment(date).format('YYYY-MM-DD'),
-              p: bitcoinData.bpi[date].toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }),
+              p: bitcoinData.bpi[date],
               x: count, //previous days
               y: bitcoinData.bpi[date], // numerical price
               s: moment(date).diff(moment(tweetDate),'days'), // Days since McAfee Tweet
@@ -163,7 +164,7 @@ class App extends Component {
     return (
       <Panel className="panelFormula">
         <Panel.Heading>By the end of {moment(d).format('YYYY-MM-DD')}, the prediction is {this.getDaysSincePrediction(d)} days old</Panel.Heading>
-        <Panel.Body>{1+growthRate}<sup><strong>{this.getDaysSincePrediction(d)}</strong></sup> * {tweetPrice.toLocaleString('us-EN',{ style: 'currency', currency: 'USD', minimumFractionDigits: 3 })} = { this.getMcAfeeRate(this.getDaysSincePrediction(d)).toLocaleString('us-EN',{ style: 'currency', currency: 'USD' }) }</Panel.Body>
+        <Panel.Body>{1+growthRate}<sup><strong>{this.getDaysSincePrediction(d)}</strong></sup> * { formatDollar(tweetPrice, 3) } = { formatDollar(this.getMcAfeeRate(this.getDaysSincePrediction(d)),2) }</Panel.Body>
       </Panel>
     );
 
@@ -180,7 +181,7 @@ class App extends Component {
         <Row className="header">
           <Col xs={12}>
             <h1>Bitcoin Price Prediction Tracker</h1>
-            <p>John McAfee says: By the end of 2020 Bitcoin will be worth 1 Million $. Is he losing his bet?</p>
+            <p>John McAfee says: By the end of 2020 Bitcoin will be worth $&nbsp;1&nbsp;Million. Is he losing his bet?</p>
           </Col>
         </Row>
 
@@ -246,7 +247,7 @@ class App extends Component {
           <Col xs={12} md={6}>
             <h2>It started with a tweet</h2>
             <p className="lead explanation">
-              John McAfee made a bet on July 17th 2017: One single Bitcoin would be worth 500.000 US$ in three years. The price was {tweetPrice.toLocaleString('us-EN',{ style: 'currency', currency: 'USD', minimumFractionDigits: 3 }) } at the time. He later revised his bet and <a href="https://twitter.com/officialmcafee/status/935900326007328768">predicted one Million US$ by the end of 2020</a>.
+              John McAfee made a bet on July 17th 2017: One single Bitcoin would be worth 500.000 US$ in three years. The price was { formatDollar(tweetPrice, 3) } at the time. He later revised his bet and <a href="https://twitter.com/officialmcafee/status/935900326007328768">predicted one Million US$ by the end of 2020</a>.
             </p>
           </Col>
           <Col xs={12} md={6}>
@@ -301,7 +302,7 @@ class App extends Component {
             <h2>Such an expensive currency!</h2>
             <p>You can buy and spend fractions of a bitcoin.</p>
             <p>Sooner or later, it will make sense to use a <a href="https://en.bitcoin.it/wiki/Units">unit</a> like microbitcoin aka bits (One Millionth of a Bitcoin) and Satoshis (One hundredth of a bit). Then a bit will be a Dollar and a Satoshi will be a Cent.</p>
-            <p>How does something like <quote>'1 μBTC is 1.07 $'</quote> or <quote>'1 Satoshi is 0.01 $'</quote> sound to you? A lot less expensive, right?</p>
+            <p>How does something like <quote>'1 μBTC is {formatDollar(1.07)}'</quote> or <quote>'1 Satoshi is {formatDollar(0.01)}'</quote> sound to you? A lot less expensive, right?</p>
             <p>Maybe people will start calling a microbitcoin just bitcoin. No big deal. When we say calorie, we actually mean a kilocalorie.</p>
           </Col>
         </Row>
