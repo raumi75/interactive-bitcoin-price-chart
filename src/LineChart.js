@@ -40,19 +40,24 @@ class LineChart extends Component {
       max: data[data.length - 1].x
     }
   }
+
   getY(pricetype){
     const {data} = this.props;
+    const yMax = data.reduce((max,  d) => d.y[pricetype] > max ? d.y[pricetype] : max,  data[0].y[pricetype]);
     return {
-      min:  data.reduce((min,  d) => d.y[pricetype] < min ? d.y[pricetype] : min,  data[0].y[pricetype]),
-      max:  data.reduce((max,  d) => d.y[pricetype] > max ? d.y[pricetype] : max,  data[0].y[pricetype]),
-      last: data.reduce((last, d) => d.y[pricetype] > 0   ? d.y[pricetype] : last, data[0].y[pricetype])
+      min:  data.reduce((min,  d) => d.y[pricetype] < min ? d.y[pricetype] : min,  yMax),
+      max:  yMax,
+      last: data.reduce((last, d) => d.y[pricetype] > 0   ? d.y[pricetype] : last, yMax)
     }
   }
 
   getYbounds() {
+    const y = {p: this.getY('p'),
+               m: this.getY('m')};
+
     return {
-      min: this.getY('m').min,
-      max: Math.max(this.getY('p').max, this.getY('m').max)
+      min: Math.min(y.p.min, y.m.min),
+      max: Math.max(y.p.max, y.m.max)
     }
   }
 
