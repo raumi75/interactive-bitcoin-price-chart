@@ -43,9 +43,9 @@ class LineChart extends Component {
   getP(){
     const {data} = this.props;
     return {
-      min: data.reduce((min, p) => p.y < min ? p.y : min, data[0].y),
-      max: data.reduce((max, p) => p.y > max ? p.y : max, data[0].y),
-      last: data.reduce((last, p) => p.y > 0 ? p.y : last, data[0].y)
+      min: data.reduce((min, p) => p.p < min ? p.p : min,  data[0].p),
+      max: data.reduce((max, p) => p.p > max ? p.p : max,  data[0].p),
+      last: data.reduce((last, p) => p.p > 0 ? p.p : last, data[0].p)
     }
   }
   getM(){
@@ -92,11 +92,11 @@ class LineChart extends Component {
   // BUILD SVG PATH
   makePath() {
     const {data, color} = this.props;
-    let pathD = "M " + this.getSvgX(data[0].x) + " " + this.getSvgY(data[0].y) + " ";
+    let pathD = "M " + this.getSvgX(data[0].x) + " " + this.getSvgY(data[0].p) + " ";
 
     pathD += data.map((point, i) => {
-      if (point.y>0) {
-        return "L " + this.getSvgX(point.x) + " " + this.getSvgY(point.y) + " ";
+      if (point.p>0) {
+        return "L " + this.getSvgX(point.x) + " " + this.getSvgY(point.p) + " ";
       } else {
         return null;
       }
@@ -123,11 +123,11 @@ class LineChart extends Component {
   // BUILD SHADED AREA
   makeArea() {
     const {data} = this.props;
-    let pathD = "M " + this.getSvgX(data[0].x) + " " + this.getSvgY(data[0].y) + " ";
+    let pathD = "M " + this.getSvgX(data[0].x) + " " + this.getSvgY(data[0].p) + " ";
 
     pathD += data.map((point, i) => {
-      if (point.y > 0) {
-        return "L " + this.getSvgX(point.x) + " " + this.getSvgY(point.y) + " ";
+      if (point.p > 0) {
+        return "L " + this.getSvgX(point.x) + " " + this.getSvgY(point.p) + " ";
       } else {
         return "L " + this.getSvgX((point.x)-1) + " " + (this.state.svgHeight - this.props.xLabelSize) + " ";
       }
@@ -144,14 +144,14 @@ class LineChart extends Component {
   makeAxis() {
     const {yLabelSize} = this.props;
     const x = this.getX();
-    const y = this.getY();
+    const ymin = this.getY().min;
     const p = this.getP();
 
     return (
       <g className="linechart_axis">
         <line
-          x1={this.getSvgX(x.min) - yLabelSize} y1={this.getSvgY(y.min)}
-          x2={this.getSvgX(x.max)} y2={this.getSvgY(y.min)}
+          x1={this.getSvgX(x.min) - yLabelSize} y1={this.getSvgY(ymin)}
+          x2={this.getSvgX(x.max)} y2={this.getSvgY(ymin)}
           strokeDasharray="5" />
         <line
           x1={this.getSvgX(x.min)} y1={this.getSvgY(p.max)}
@@ -174,10 +174,10 @@ class LineChart extends Component {
       <g className="linechart_label">
         { this.makeLabelPrice(p.max, 'left', 'p') }
 
-        { this.makeLabelPrice(data[minCount]['y'], 'left', 'p') }
+        { this.makeLabelPrice(data[minCount]['p'], 'left', 'p') }
         { this.makeLabelPrice(data[minCount]['m'], 'left', 'm') }
 
-        { this.makeLabelPrice(data[maxCount]['y'], 'right', 'p') }
+        { this.makeLabelPrice(data[maxCount]['p'], 'right', 'p') }
         { this.makeLabelPrice(data[maxCount]['m'], 'right', 'm') }
 
         { this.makeLabelDate(minCount) }
@@ -255,9 +255,8 @@ class LineChart extends Component {
     data.map((point, i) => {
       svgData.push({
         svgX: this.getSvgX(point.x),
-        svgY: this.getSvgY(point.y),
+        svgY: this.getSvgY(point.p),
         x: point.x,
-        y: point.y,
         d: point.d,
         p: point.p,
         m: point.m
@@ -296,7 +295,7 @@ class LineChart extends Component {
   // MAKE ACTIVE POINT
   makeActivePoint(){
     const {color, pointRadius} = this.props;
-    if (this.state.activePoint.y>0) {
+    if (this.state.activePoint.p>0) {
       return (
         <circle
           className='linechart_point'
@@ -323,11 +322,9 @@ class LineChart extends Component {
   // MAKE HOVER LINE
   createHorizontalLine(pricetype){
     const {yLabelSize} = this.props;
-    var param = 'm';
-    if (pricetype === 'p') { param = 'y'; }
-    if (this.state.activePoint[param] === 0)
+    if (this.state.activePoint[pricetype] === 0)
     { return (null); }
-    var svgY = this.getSvgY(this.state.activePoint[param]);
+    var svgY = this.getSvgY(this.state.activePoint[pricetype]);
 
     return (
       <line className='hoverLine'
@@ -342,10 +339,7 @@ class LineChart extends Component {
   }
 
   makeActiveLabelPrice(pricetype, position){
-    var param = 'm';
-    if (pricetype === 'p') { param = 'y'; }
-
-    return ( this.makeLabelPrice(this.state.activePoint[param], position, pricetype) );
+    return ( this.makeLabelPrice(this.state.activePoint[pricetype], position, pricetype) );
   }
 
   render() {

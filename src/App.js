@@ -48,11 +48,10 @@ class App extends Component {
           for (let date in bitcoinData.bpi){
             sortedData.push({
               d: moment(date).format('YYYY-MM-DD'),
-              p: bitcoinData.bpi[date],
               x: count, //previous days
-              y: bitcoinData.bpi[date], // numerical price
               s: moment(date).diff(moment(tweetDate),'days'), // Days since McAfee Tweet
-              m: this.getMcAfeeRate(count)
+              p: bitcoinData.bpi[date], // historical price on date
+              m: this.getMcAfeeRate(count) // predicted price for date
             });
             count++;
           }
@@ -74,7 +73,6 @@ class App extends Component {
               d: moment(tweetDate).add(count, 'days').format('YYYY-MM-DD'),
               p: 0,
               x: count, //previous days
-              y: 0,
               s: count, // Days since McAfee Tweet
               m: this.getMcAfeeRate(count)
             });
@@ -118,7 +116,6 @@ class App extends Component {
           d: val.d,
           p: val.p,
           x: val.x-pos[0]+1, //previous days
-          y: val.y,
           s: val.s, // Days since McAfee Tweet
           m: val.m
         }
