@@ -8,31 +8,41 @@
   fill: none;
 }
 
+.linechart_path_p {
+  stroke: #2196F3;
+}
+
+.linechart_path_m {
+  stroke: #FF0000;
+}
+
 .linechart_axis {
   stroke: #bdc3c7;
 }
 
 .linechart_point {
-  fill: #fff;
-  stroke-width: 2;
+  fill: none;
+  stroke-width: 3;
+  stroke: darkgrey;
 }
 
-.linechart_area {
+.linechart_area_p {
   fill: #64B5F6;
   stroke: none;
   opacity: .4;
 }
 
-.linechart_label {
+.linechart_label_p {
  fill: #64B5F6;
  font-weight: 700;
+}
+
+.linechart_label_m {
+  font-weight: 700;
+  fill: red;
 }
 
 .hoverLine {
   stroke: #7D95B6;
   stroke-width: 1;
-}
-
-.linechart_label_prediction {
-  fill: red;
 }

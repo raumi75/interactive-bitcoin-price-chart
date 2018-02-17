@@ -39,6 +39,7 @@ class App extends Component {
     const {targetDate} = this.props;
 
     const getData = () => {
+      // Coinbase API requires start >= 2010-07-17
       const url = 'https://api.coindesk.com/v1/bpi/historical/close.json?start='+tweetDate+'&end='+targetDate;
 
       fetch(url).then( r => r.json())
@@ -50,12 +51,13 @@ class App extends Component {
               d: moment(date).format('YYYY-MM-DD'),
               x: count, //previous days
               s: moment(date).diff(moment(tweetDate),'days'), // Days since McAfee Tweet
-              p: bitcoinData.bpi[date], // historical price on date
-              m: this.getMcAfeeRate(count) // predicted price for date
+              y: {p: bitcoinData.bpi[date], // historical price on date
+                  m: this.getMcAfeeRate(count)} // predicted price for date
             });
             count++;
           }
 
+          // Labels on range-slider below chart
           var mark = {};
           mark[0] = moment(tweetDate).format('YYYY-MM-DD');
           mark[count-1] = 'yesterday';
@@ -74,7 +76,8 @@ class App extends Component {
               p: 0,
               x: count, //previous days
               s: count, // Days since McAfee Tweet
-              m: this.getMcAfeeRate(count)
+              y: {p: 0, // historical price on date
+                  m: this.getMcAfeeRate(count)}
             });
           }
 
@@ -114,10 +117,9 @@ class App extends Component {
         dataCut = dataCut.map(function(val) {
         return {
           d: val.d,
-          p: val.p,
+          y: val.y,
           x: val.x-pos[0]+1, //previous days
           s: val.s, // Days since McAfee Tweet
-          m: val.m
         }
       });
     }
