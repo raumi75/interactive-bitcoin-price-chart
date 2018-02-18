@@ -12,6 +12,10 @@ class ToolTip extends Component {
     placementStyles.width = width + 'px';
     placementStyles.left = hoverLoc + svgLocation.left - (width/2);
 
+    if (typeof(activePoint.y) === 'undefined') {
+      return null;
+    }
+
     if (activePoint.y.p>0 && activePoint.y.m>0) {
       return (
         <div className='hover' style={ placementStyles }>

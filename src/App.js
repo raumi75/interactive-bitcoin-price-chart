@@ -8,8 +8,11 @@ import InfoBox from './InfoBox';
 import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import {formatDollar} from './formatting.js';
+import {getDataBoundaries} from './chartDataBoundaries.js';
 
-const predictionCount = 1263;
+const predictionDays = 1263;
+var predictionCount = 1263;
+var offsetPrediction = 0;
 const minSliderDistance = 29;
 
 class App extends Component {
@@ -34,58 +37,65 @@ class App extends Component {
       activePoint: activePoint
     })
   }
+
   componentDidMount(){
     const {tweetDate} = this.props;
     const {targetDate} = this.props;
-
+    const historicalStart  = '2017-01-01';
+    const historicalEnd    = moment().format('YYYY-MM-DD');
+    offsetPrediction = moment(historicalStart).diff(moment(tweetDate),'days');
     const getData = () => {
-      // Coinbase API requires start >= 2010-07-17
-      const url = 'https://api.coindesk.com/v1/bpi/historical/close.json?start='+tweetDate+'&end='+targetDate;
-
+      // Coinbase API requires historicalStart >= 2010-07-17
+      const url = 'https://api.coindesk.com/v1/bpi/historical/close.json?start='+historicalStart+'&end='+historicalEnd;
       fetch(url).then( r => r.json())
         .then((bitcoinData) => {
           const sortedData = [];
           let count = 0;
+
           for (let date in bitcoinData.bpi){
             sortedData.push({
               d: moment(date).format('YYYY-MM-DD'),
               x: count, //previous days
-              s: moment(date).diff(moment(tweetDate),'days'), // Days since McAfee Tweet
+              s: (count + offsetPrediction), // Days since McAfee Tweet
               y: {p: bitcoinData.bpi[date], // historical price on date
-                  m: this.getMcAfeeRate(count)} // predicted price for date
+                  m: this.getMcAfeeRate(count + offsetPrediction) } // predicted price for date
             });
             count++;
           }
 
           // Labels on range-slider below chart
+          predictionCount = predictionDays-offsetPrediction;
           var mark = {};
-          mark[0] = moment(tweetDate).format('YYYY-MM-DD');
+          mark[0] = moment(historicalStart).format('YYYY-MM-DD');;
+          mark[0-offsetPrediction] = moment(tweetDate).format('YYYY-MM-DD');;
           mark[count-1] = 'yesterday';
           mark[predictionCount] = moment(targetDate).format('YYYY-MM-DD');
 
           this.setState({
             todayCount: count,
-            countRange: [0, count-1],
+            countRange: [Math.max(-1-offsetPrediction,0), count-1],
             sliderMarks: mark
           });
 
 
-          for (count; count <= predictionCount ; count++) {
+          for (count; count <= predictionCount; count++) {
             sortedData.push({
-              d: moment(tweetDate).add(count, 'days').format('YYYY-MM-DD'),
-              p: 0,
+              d: moment(historicalStart).add(count, 'days').format('YYYY-MM-DD'),
               x: count, //previous days
-              s: count, // Days since McAfee Tweet
+              s: (count + offsetPrediction), // Days since McAfee Tweet
               y: {p: 0, // historical price on date
-                  m: this.getMcAfeeRate(count)}
+              m: this.getMcAfeeRate(count + offsetPrediction)}
             });
           }
 
           this.setState({
             dataComplete: sortedData,
-            data: sortedData.slice(0,this.state.todayCount),
+            data: sortedData,
             fetchingData: false
-          })
+          });
+
+          this.cutData(this.state.countRange);
+
         })
         .catch((e) => {
           console.log(e);
@@ -99,7 +109,7 @@ class App extends Component {
     if (pos[0] < 0) { pos[0] = 0; }
     if (pos[1] < 1) { pos[1] = this.state.todayCount; }
     if (pos[0] >= (pos[1]-minSliderDistance)) {
-      pos[0] = 0;
+      pos[0] = offsetPrediction;
       pos[1] = this.state.todayCount;
     }
 
@@ -137,17 +147,21 @@ class App extends Component {
 
   handleRangeReset = () => {
     this.setState({
-      countRange: [0, this.state.todayCount-1],
+      countRange: [offsetPrediction*-1, this.state.todayCount-1],
       scale: 'lin'
     });
-    this.cutData([0, this.state.todayCount-1]);
+    this.cutData([offsetPrediction*-1, this.state.todayCount-1]);
   }
 
   // USD/BTC according to John McAfee's Tweet (1.000.000 by 2020)
   getMcAfeeRate(s){
     const goalRate = 1+this.props.growthRate;
     const {tweetPrice} = this.props;   // start rate USD/BTC at day of tweet
-    return Math.pow(goalRate, s) * tweetPrice;
+    if (s >= 0) {
+      return Math.pow(goalRate, s) * tweetPrice;
+    } else {
+      return 0;
+    }
   }
 
   getDaysSincePrediction(d) {
@@ -186,7 +200,7 @@ class App extends Component {
 
         { !this.state.fetchingData ?
         <InfoBox data={this.state.data} />
-        : null }
+        : 'Loading data from Coinbase ... ' }
 
         <Row>
           <div className='popup'>
@@ -198,7 +212,7 @@ class App extends Component {
             { !this.state.fetchingData ?
               <div className='chart'>
 
-              <LineChart data={this.state.data} scale={this.state.scale} onChartHover={ (a,b) => this.handleChartHover(a,b) }/>
+              <LineChart data={this.state.data} scale={this.state.scale} boundaries={getDataBoundaries(this.state.data)} onChartHover={ (a,b) => this.handleChartHover(a,b) }/>
 
               <Col xs={12} className='range'>
                 <Range
