@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { Grid, Row , Col, Image, FormGroup, Radio, Button, Panel } from 'react-bootstrap';
+import { Grid, Row , Col, Image, FormGroup, Radio, Panel, Tabs, Tab } from 'react-bootstrap';
 import './App.css';
 import LineChart from './LineChart';
 import ToolTip from './ToolTip';
@@ -14,6 +14,8 @@ const predictionDays = 1263;
 var predictionCount = 1263;
 var offsetPrediction = 0;
 const minSliderDistance = 29;
+const minHistoricalStart = '2010-07-17';  // Coinbase API requires historicalStart >= 2010-07-17
+const defaultRangeMin = moment('2017-01-01').diff(moment(minHistoricalStart), 'days');
 
 class App extends Component {
   constructor(props) {
@@ -25,8 +27,11 @@ class App extends Component {
       hoverLoc: null,
       activePoint: null,
       countRange: [0, predictionCount],
+      activeTabKey: 2,
+      rangeMin: defaultRangeMin,
       todayCount: 0,
       sliderMarks: {},
+      historicalStart: minHistoricalStart, //'2017-01-01',
       scale: 'lin'
     }
   }
@@ -41,11 +46,10 @@ class App extends Component {
   componentDidMount(){
     const {tweetDate} = this.props;
     const {targetDate} = this.props;
-    const historicalStart  = '2017-01-01';
+    const {historicalStart}  = this.state;
     const historicalEnd    = moment().format('YYYY-MM-DD');
     offsetPrediction = moment(historicalStart).diff(moment(tweetDate),'days');
     const getData = () => {
-      // Coinbase API requires historicalStart >= 2010-07-17
       const url = 'https://api.coindesk.com/v1/bpi/historical/close.json?start='+historicalStart+'&end='+historicalEnd;
       fetch(url).then( r => r.json())
         .then((bitcoinData) => {
@@ -76,7 +80,6 @@ class App extends Component {
             countRange: [Math.max(-1-offsetPrediction,0), count-1],
             sliderMarks: mark
           });
-
 
           for (count; count <= predictionCount; count++) {
             sortedData.push({
@@ -145,12 +148,85 @@ class App extends Component {
     });
   }
 
+  handleSelectRangeTab = (key) => {
+    switch (key) {
+      case 1:
+        this.handleRangeExtend();
+        break;
+      case 2:
+        this.handleRangeReset();
+        break;
+      case 3:
+        this.handleRange1m();
+        break;
+      case 4:
+        this.handleRange3m();
+        break;
+      case 5:
+        this.handleRange1y();
+        break;
+      default:
+
+    }
+  }
+
   handleRangeReset = () => {
+    var cr = [Math.max(-1-offsetPrediction,0), this.state.todayCount-1]
     this.setState({
-      countRange: [offsetPrediction*-1, this.state.todayCount-1],
-      scale: 'lin'
+      rangeMin: defaultRangeMin,
+      countRange: cr,
+      scale: 'lin',
+      activeTabKey: 2
     });
-    this.cutData([offsetPrediction*-1, this.state.todayCount-1]);
+    this.cutData(cr);
+  }
+
+  handleRangeExtend = () => {
+    var cr = [0, this.state.todayCount-1];
+    this.setState( {
+      rangeMin: 0,
+      countRange: cr,
+      scale: 'log',
+      activeTabKey: 1
+      }
+    );
+    this.cutData(cr);
+  }
+
+  handleRange1m = () => {
+    var cr = [this.state.todayCount-32, this.state.todayCount-1];
+    this.setState( {
+      rangeMin: defaultRangeMin,
+      countRange: cr,
+      scale: 'lin',
+      activeTabKey: 3
+      }
+    );
+    this.cutData(cr);
+  }
+
+  handleRange3m = () => {
+    var cr = [this.state.todayCount-92, this.state.todayCount-1];
+    this.setState( {
+      rangeMin: defaultRangeMin,
+      countRange: cr,
+      scale: 'lin',
+      activeTabKey: 4
+      }
+    );
+    this.cutData(cr);
+  }
+
+  handleRange1y = () => {
+    var cr = [this.state.todayCount-367, this.state.todayCount-1];
+    this.setState( {
+      rangeMin: defaultRangeMin,
+      countRange: cr,
+      scale: 'lin',
+      activeTabKey: 5
+      }
+    );
+    this.cutData(cr);
   }
 
   // USD/BTC according to John McAfee's Tweet (1.000.000 by 2020)
@@ -187,6 +263,7 @@ class App extends Component {
     const {growthRate} = this.props;
     const {tweetPrice} = this.props;
 
+    console.log (this.state.rangeMin);
     return (
 
       <Grid fluid={true} >
@@ -203,6 +280,20 @@ class App extends Component {
         : 'Loading data from Coinbase ... ' }
 
         <Row>
+          <Col xs={12}>
+            <Tabs activeKey={this.state.activeTabKey}
+                  onSelect={this.handleSelectRangeTab}
+                  id="rangeTab" >
+              <Tab eventKey={1} title="all (log)"></Tab>
+              <Tab eventKey={2} title="prediction"></Tab>
+              <Tab eventKey={3} title="1m"></Tab>
+              <Tab eventKey={4} title="3m"></Tab>
+              <Tab eventKey={5} title="1y"></Tab>
+            </Tabs>
+          </Col>
+        </Row>
+
+        <Row>
           <div className='popup'>
             {this.state.hoverLoc ? <ToolTip hoverLoc={this.state.hoverLoc} activePoint={this.state.activePoint}/> : null}
           </div>
@@ -217,7 +308,7 @@ class App extends Component {
               <Col xs={12} className='range'>
                 <Range
                   allowCross={false}
-                  min={0}
+                  min={this.state.rangeMin}
                   max={predictionCount}
                   marks={this.state.sliderMarks}
                   onChange={this.handleLineChartLength}
@@ -237,9 +328,6 @@ class App extends Component {
                 </FormGroup>
               </Col>
 
-              <Col xs={3} sm={6} >
-                <Button onClick={this.handleRangeReset}>Reset</Button>
-              </Col>
               </div>
 
               : null }
