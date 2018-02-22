@@ -19,6 +19,10 @@ quote {
   font-weight: bold;
 }
 
+#rangeTab {
+  margin-top: 3em;
+}
+
 .range {
   margin-left:7%;
   width:82%;
