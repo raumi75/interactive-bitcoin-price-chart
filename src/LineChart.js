@@ -304,6 +304,22 @@ class LineChart extends Component {
     return ( this.makeLabelPrice(this.state.activePoint.y[pricetype], position, pricetype) );
   }
 
+  makeHover() {
+    return (
+          <g id="hoverData">
+           {this.createLine()}
+           {this.makeActivePoint()}
+           {this.makeActiveDate()}
+           {this.createHorizontalLine('p')}
+           {this.createHorizontalLine('m')}
+           {this.makeActiveLabelPrice('p', 'left')}
+           {this.makeActiveLabelPrice('m', 'left')}
+           {this.makeActiveLabelPrice('p', 'right')}
+           {this.makeActiveLabelPrice('m', 'right')}
+          </g>
+         );
+  }
+
   render() {
     const {svgHeight, svgWidth, hoverLoc} = this.state
     return (
@@ -320,19 +336,7 @@ class LineChart extends Component {
           {this.makePath('m', false)}
           {this.makePath('p', true)}
           {this.makeLabels()}
-          {hoverLoc ? this.createLine()      : null}
-          {hoverLoc ? this.makeActivePoint() : null}
-          {hoverLoc ? this.makeActiveDate()  : null}
-
-          {hoverLoc ? this.createHorizontalLine('p') : null}
-          {hoverLoc ? this.createHorizontalLine('m') : null}
-
-          {hoverLoc ? this.makeActiveLabelPrice('p', 'left') : null}
-          {hoverLoc ? this.makeActiveLabelPrice('m', 'left') : null}
-
-          {hoverLoc ? this.makeActiveLabelPrice('p', 'right') : null}
-          {hoverLoc ? this.makeActiveLabelPrice('m', 'right') : null}
-
+          {hoverLoc ? this.makeHover() : null}
         </g>
       </svg>
     );
