@@ -62,9 +62,11 @@ class LineChart extends Component {
   }
 
   // BUILD SVG PATH
-  makePath(pricetype) {
+  // for the pricetype (p = historical price / m = mcafee prediction)
+  makePath(pricetype, isArea) {
     const {data} = this.props;
-    const {firstPoint} = this.props.boundaries;
+    const {firstPoint, lastPoint, minY} = this.props.boundaries;
+    let classNames = 'linechart_path linechart_path_'+pricetype;
 
     if (typeof(firstPoint[pricetype]) === 'undefined') {
       return null;
@@ -75,37 +77,23 @@ class LineChart extends Component {
     pathD += data.map((point, i) => {
       if (point.y[pricetype]>0) {
         return "L " + this.getSvgX(point.x) + " " + this.getSvgY(point.y[pricetype]) + " ";
+      } else if (isArea) {
+        return "L " + this.getSvgX((point.x)-1) + " " + (this.state.svgHeight - this.props.xLabelSize) + " ";
       } else {
         return null;
       }
     }).join("");
 
-    return (
-      <path className={'linechart_path linechart_path_'+pricetype} d={pathD} />
-    );
-  }
+    if (isArea) {
+      pathD += "L " + this.getSvgX(lastPoint[pricetype].x)  + " " + this.getSvgY(minY) + " "
+             + "L " + this.getSvgX(firstPoint[pricetype].x) + " " + this.getSvgY(minY) + " ";
 
-  // BUILD SHADED AREA
-  makeArea(pricetype) {
-    const {data} = this.props;
-    const {firstPoint, lastPoint, minY} = this.props.boundaries;
-    if (typeof(firstPoint[pricetype]) === 'undefined') {
-      return null;
+      classNames = "linechart_area_"+pricetype;
     }
-    let pathD = "M " + this.getSvgX(firstPoint[pricetype].x) + " " + this.getSvgY(firstPoint[pricetype]['y'][pricetype]) + " ";
 
-    pathD += data.map((point, i) => {
-      if (point.y[pricetype] > 0) {
-        return "L " + this.getSvgX(point.x) + " " + this.getSvgY(point.y[pricetype]) + " ";
-      } else {
-        return "L " + this.getSvgX((point.x)-1) + " " + (this.state.svgHeight - this.props.xLabelSize) + " ";
-      }
-    }).join("");
-
-    pathD += "L " + this.getSvgX(lastPoint[pricetype].x)  + " " + this.getSvgY(minY) + " "
-           + "L " + this.getSvgX(firstPoint[pricetype].x) + " " + this.getSvgY(minY) + " ";
-
-    return <path className={"linechart_area_"+pricetype} d={pathD} />
+    return (
+      <path className={classNames} d={pathD} />
+    );
   }
 
   // BUILD GRID AXIS
@@ -328,9 +316,9 @@ class LineChart extends Component {
 
         <g>
           {this.makeAxis()}
-          {this.makePath('p')}
-          {this.makePath('m')}
-          {this.makeArea('p')}
+          {this.makePath('p', false)}
+          {this.makePath('m', false)}
+          {this.makePath('p', true)}
           {this.makeLabels()}
           {hoverLoc ? this.createLine()      : null}
           {hoverLoc ? this.makeActivePoint() : null}
