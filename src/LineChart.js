@@ -30,7 +30,7 @@ class LineChart extends Component {
   }
 
   updateWindowDimensions = () => {
-    this.setState({ svgWidth: window.innerWidth, svgHeight: window.innerWidth/chartRatio });
+    this.setState({ svgWidth: document.documentElement.clientWidth, svgHeight: document.documentElement.clientWidth/chartRatio });
   }
 
 
