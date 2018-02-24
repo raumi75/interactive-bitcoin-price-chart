@@ -263,7 +263,6 @@ class App extends Component {
     const {growthRate} = this.props;
     const {tweetPrice} = this.props;
 
-    console.log (this.state.rangeMin);
     return (
 
       <Grid fluid={true} >
