@@ -2,17 +2,17 @@ import React, {Component} from "react";
 import "./LineChart.css";
 import formatDollar from './formatting.js';
 
-const chartRatio = 3;
+const chartRatio = 3; // Chart's height is 1/3 of width
 let stopHoverTimer;
+const stopHoverMilliseconds = 2000; // Hover Tooltip disappears after 2 seconds (touch displays)
 
-const stopHoverMilliseconds = 2000;
 class LineChart extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      hoverLoc: null,
-      activePoint: null,
+      hoverLoc: null,     // x-location of the hovering mouse
+      activePoint: null,  // the data point closest to hovering mouse
       svgWidth: window.innerWidth,
       svgHeight: window.innerWidth/chartRatio
     }
@@ -210,25 +210,34 @@ class LineChart extends Component {
     }
   }
 
-  getTouchCoords(e) {
-    clearTimeout(stopHoverTimer);
-    stopHoverTimer = setTimeout(function() { this.stopHover(); }.bind(this), stopHoverMilliseconds);
-    this.getCoords(e.touches[0].pageX);
-    if (this.state.hoverLoc !== null) {e.preventDefault()};
+  getTouchCoords = (e) => {
+    if (this.areCoordsOnChart(e.touches[0].pageX)) {
+      e.preventDefault();
+      clearTimeout(stopHoverTimer);
+      stopHoverTimer = setTimeout(function() { this.stopHover(); }.bind(this), stopHoverMilliseconds);
+      this.getCoords(e.touches[0].pageX);
+    } else {
+      this.stopHover();
+    }
   }
 
   getMouseCoords(e) {
     this.getCoords(e.pageX);
   }
 
+  areCoordsOnChart(relativeLoc) {
+    const {yLabelSize} = this.props;
+    const svgLocation = document.getElementsByClassName("linechart")[0].getBoundingClientRect();
+    const chartRightBounding = svgLocation.width-yLabelSize;
+
+    return ( (yLabelSize < relativeLoc) && (relativeLoc < chartRightBounding) )
+  }
+
   // FIND CLOSEST POINT TO MOUSE
   getCoords(relativeLoc) {
     const {data, yLabelSize} = this.props;
     const svgLocation = document.getElementsByClassName("linechart")[0].getBoundingClientRect();
-    const chartMarginLeft = yLabelSize;
-    const chartMarginRight = yLabelSize;
-    const chartWidth = svgLocation.width-chartMarginLeft-chartMarginRight;
-    const chartRightBounding = svgLocation.width-chartMarginRight;
+    const chartWidth = svgLocation.width-yLabelSize*2;
 
     let svgData = [];
     data.map((point, i) => {
@@ -252,7 +261,7 @@ class LineChart extends Component {
       }
     }
 
-    if ( (chartMarginLeft < relativeLoc) && (relativeLoc < chartRightBounding) ) {
+    if (this.areCoordsOnChart(relativeLoc)) {
       this.setState({
         hoverLoc: relativeLoc,
         activePoint: closestPoint
