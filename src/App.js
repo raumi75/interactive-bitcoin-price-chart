@@ -5,6 +5,7 @@ import './App.css';
 import LineChart from './LineChart';
 import ToolTip from './ToolTip';
 import InfoBox from './InfoBox';
+// eslint-disable-next-line
 import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import {formatDollar} from './formatting.js';
