@@ -32,12 +32,30 @@
   opacity: .4;
 }
 
-.linechart_label_p {
+.linechart_area_m {
+  fill: red;
+  stroke:none;
+  opacity: .2;
+}
+
+rect.linechart_label_p {
+ fill: #FFF;
+}
+
+rect.linechart_label_m {
+ fill: #FFF;
+}
+
+rect.linechart_label_x {
+ fill: #FFF;
+}
+
+text.linechart_label_p {
  fill: #64B5F6;
  font-weight: 700;
 }
 
-.linechart_label_m {
+text.linechart_label_m {
   font-weight: 700;
   fill: red;
 }

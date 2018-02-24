@@ -155,15 +155,23 @@ class LineChart extends Component {
 
   // Label on X-Axis (Date)
   makeLabelDate(count) {
-    const {data} = this.props;
+    const {data, xLabelSize, yLabelSize} = this.props;
     const {svgHeight} = this.state;
     if ((count < data.length) && (count >= 0)) {
       return(
-        <text transform={`translate(${this.getSvgX(data[count].x)},
-                                    ${svgHeight -2})`}
-                                    textAnchor="middle">
-          { data[count].d }
-        </text>
+        <g>
+          <rect x={this.getSvgX(data[count].x)-yLabelSize/2}
+                y={svgHeight-xLabelSize+5}
+                height={xLabelSize}
+                width={yLabelSize}
+                className='linechart_label_x'
+                />
+          <text transform={`translate(${this.getSvgX(data[count].x)},
+                                      ${svgHeight -2})`}
+                                      textAnchor="middle">
+            { data[count].d }
+          </text>
+        </g>
       );
     } else {
       return null;
@@ -172,6 +180,7 @@ class LineChart extends Component {
 
   // Label on Y-Axis (Date)
   makeLabelPrice(y, position, pricetype) {
+    const {xLabelSize, yLabelSize} = this.props;
     const {maxX} = this.props.boundaries;
     var xpos = 0;
 
@@ -181,11 +190,20 @@ class LineChart extends Component {
 
     if (y > 0) {
       return(
-        <text transform={`translate(${xpos},
-                                    ${this.getSvgY(y)})`}
-                                    className={'linechart_label_' + pricetype} >
-          {formatDollar(y)}
-        </text>
+        <g>
+          <rect x={xpos}
+                y={this.getSvgY(y)-xLabelSize+5}
+                height={xLabelSize}
+                width={yLabelSize}
+                className={'linechart_label_' + pricetype}
+                />
+          <text transform={`translate(${xpos},
+                                      ${this.getSvgY(y)})`}
+                                      fill="red"
+                                      className={'linechart_label_' + pricetype} >
+            {formatDollar(y)}
+          </text>
+        </g>
       );
     } else {
       return '';
