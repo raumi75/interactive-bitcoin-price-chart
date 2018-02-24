@@ -364,12 +364,14 @@ class App extends Component {
 
             <p>Grab a calculator and try it yourself:</p>
 
-            <p>Today, {this.explainPriceOn(Date.now())}</p>
-            <p>{this.explainPriceOn('2018-12-31')}</p>
-            <p>{this.explainPriceOn('2019-12-31')}</p>
+            <p>Today,</p>
+            {this.explainPriceOn(Date.now())}
+            {this.explainPriceOn('2018-12-31')}
+            {this.explainPriceOn('2019-12-31')}
             <p>Still does not look like it is on target?</p>
-            <p>{this.explainPriceOn('2020-06-01')}</p>
-            <p>And finally, {this.explainPriceOn('2020-12-31')}</p>
+            {this.explainPriceOn('2020-06-01')}
+            <p>And finally,</p>
+            {this.explainPriceOn('2020-12-31')}
 
           </Col>
         </Row>
