@@ -211,6 +211,7 @@ class LineChart extends Component {
   }
 
   getTouchCoords(e) {
+    e.preventDefault();
     clearTimeout(stopHoverTimer);
     stopHoverTimer = setTimeout(function() { this.stopHover(); }.bind(this), stopHoverMilliseconds);
     this.getCoords(e.touches[0].pageX);
