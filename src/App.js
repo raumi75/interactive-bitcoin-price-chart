@@ -15,7 +15,7 @@ const predictionDays = 1263;
 var predictionCount = 1263;
 var offsetPrediction = 0;
 const minSliderDistance = 29;
-const minHistoricalStart = '2010-07-17';  // Coinbase API requires historicalStart >= 2010-07-17
+const minHistoricalStart = '2010-07-17';  // Coindesk API requires historicalStart >= 2010-07-17
 const defaultRangeMin = moment('2017-01-01').diff(moment(minHistoricalStart), 'days');
 
 class App extends Component {
@@ -277,7 +277,7 @@ class App extends Component {
 
         { !this.state.fetchingData ?
         <InfoBox data={this.state.data} />
-        : 'Loading data from Coinbase ... ' }
+        : 'Loading data from Coindesk ... ' }
 
         <Row>
           <Col xs={12}>
