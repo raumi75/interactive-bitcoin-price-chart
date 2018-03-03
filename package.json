@@ -2,12 +2,12 @@
   "name": "BitcoinPricePredictionTracker",
   "version": "1.4.0",
   "dependencies": {
-    "moment": "^2.20.1",
-    "rc-slider": "^8.6.0",
+    "moment": "^2.21.0",
+    "rc-slider": "^8.6.1",
     "react": "^15.6.2",
     "react-bootstrap": "^0.32.1",
     "react-dom": "^15.6.2",
-    "serve": "^6.4.11"
+    "serve": "^6.5.1"
   },
   "devDependencies": {
     "react-scripts": "1.0.10"
