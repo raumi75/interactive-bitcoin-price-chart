@@ -41,8 +41,9 @@ class InfoBox extends Component {
     }
     this.getData();
     this.refresh = setInterval(() => this.getData(), 60000);
-    this.refresh = setInterval(() => this.refreshMcAfeePrice(), 10000);
+    this.refresh = setInterval(() => this.refreshMcAfeePrice(), 1000);
   }
+
   componentWillUnmount(){
     clearInterval(this.refresh);
   }
@@ -69,7 +70,7 @@ class InfoBox extends Component {
   // No Paramter because this is realtime
   // The price will be calculated for this moment.
   getMcAfeePriceNow(){
-    const goalRate = 1+this.props.growthRate;
+    const goalRate = 1+this.props.growthRate/100;
     const {tweetPrice} = this.props;   // start rate USD/BTC at day of tweet
     return Math.pow(goalRate, this.getDaysSincePrediction()) * tweetPrice;
   }
@@ -108,9 +109,7 @@ class InfoBox extends Component {
 InfoBox.defaultProps = {
   tweetDate:  '2017-07-17 00:00:00',         // Date of first McAfee Tweet
   tweetPrice:  2244.265,            // USD/BTC on TweetDate
-  targetDate:  '2020-12-31',        // Day McAfee predicted the price
-  targetPrice: 1000000,             // revised prediction (1Million)
-  growthRate:  0.00484095703431026  // daily growth rate to goal of 1.000.000 USD/BTC
+  data: null
 }
 
 export default InfoBox;

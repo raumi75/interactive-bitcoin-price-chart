@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { Grid, Row , Col, Image, FormGroup, Radio, Panel, Tabs, Tab } from 'react-bootstrap';
+import { Grid, Row , Col, Image, FormGroup, InputGroup, FormControl, Radio, Panel, Tabs, Tab } from 'react-bootstrap';
 import './App.css';
 import LineChart from './LineChart';
 import ToolTip from './ToolTip';
@@ -33,7 +33,8 @@ class App extends Component {
       todayCount: 0,
       sliderMarks: {},
       historicalStart: minHistoricalStart, //'2017-01-01',
-      scale: 'lin'
+      scale: 'lin',
+      growthRate: this.props.growthRate
     }
   }
 
@@ -88,7 +89,7 @@ class App extends Component {
               x: count, //previous days
               s: (count + offsetPrediction), // Days since McAfee Tweet
               y: {p: 0, // historical price on date
-              m: this.getMcAfeeRate(count + offsetPrediction)}
+                  m: this.getMcAfeeRate(count + offsetPrediction)}
             });
           }
 
@@ -119,9 +120,7 @@ class App extends Component {
 
     this.setState({
       countRange: [pos[0], pos[1]],
-    });
-
-    this.cutData([pos[0], pos[1]]);
+    }, this.cutData([pos[0], pos[1]]));
   };
 
   cutData(pos) {
@@ -230,15 +229,42 @@ class App extends Component {
     this.cutData(cr);
   }
 
+  handleGrowthRateChange = (e) => {
+    this.setState(
+      {
+        growthRate: e.target.value
+      }
+      , () => this.addMcAfeeRates()
+    );
+  }
+
   // USD/BTC according to John McAfee's Tweet (1.000.000 by 2020)
-  getMcAfeeRate(s){
-    const goalRate = 1+this.props.growthRate;
+  getMcAfeeRate = (s) => {
+    const goalRate = 1+(this.state.growthRate/100);
     const {tweetPrice} = this.props;   // start rate USD/BTC at day of tweet
     if (s >= 0) {
       return Math.pow(goalRate, s) * tweetPrice;
     } else {
       return 0;
     }
+  }
+
+  // Add predicted priced to sortedData Array
+  addMcAfeeRates = () => {
+    var newDataComplete = this.state.dataComplete.map(
+      (val) => {
+      return {
+        d: val.d,
+        x: val.x, //previous days
+        s: val.s, // Days since McAfee Tweet
+        y: {p: val.y.p,
+            m: this.getMcAfeeRate(val.s) }
+      }
+    });
+    this.setState ({ dataComplete: newDataComplete },
+      () => this.cutData(this.state.countRange)
+    );
+
   }
 
   getDaysSincePrediction(d) {
@@ -248,7 +274,7 @@ class App extends Component {
 
   // Text that explains how to calculate the price on given day
   explainPriceOn(d) {
-    const {growthRate} = this.props;
+    const growthRate = this.state.growthRate/100;
     const {tweetPrice} = this.props;   // start rate USD/BTC at day of tweet
 
     return (
@@ -261,7 +287,7 @@ class App extends Component {
   }
 
   render() {
-    const {growthRate} = this.props;
+    const growthRate = this.state.growthRate/100;
     const {tweetPrice} = this.props;
 
     return (
@@ -276,7 +302,7 @@ class App extends Component {
         </Row>
 
         { !this.state.fetchingData ?
-        <InfoBox data={this.state.data} />
+        <InfoBox data={this.state.data} growthRate={this.state.growthRate} />
         : 'Loading data from Coindesk ... ' }
 
         <Row>
@@ -343,6 +369,23 @@ class App extends Component {
           </Col>
         </Row>
 
+        <Row>
+          <Col xs={12} md={2}>
+          <label>Tinker with parameter</label>
+          </Col>
+          <Col xs={12} md={8}>
+            <FormGroup>
+              <InputGroup>
+              <InputGroup.Addon>growth rate</InputGroup.Addon>
+              <FormControl type="number"
+                           value={this.state.growthRate}
+                           onChange={this.handleGrowthRateChange}
+                            />
+              <InputGroup.Addon>% per day</InputGroup.Addon>
+              </InputGroup>
+            </FormGroup>
+          </Col>
+        </Row>
 
         <Row>
           <Col xs={12} md={6}>
@@ -360,8 +403,8 @@ class App extends Component {
           <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
             <h2 id="explainmath">The math behind it</h2>
 
-            <p>Is this really possible? Bitcoin needs to grow at a rate of <strong>{ growthRate*100 } % per day</strong>. That is the red line on the above chart. As long as the blue line is above the red line, we are on target and John McAfee will not have to eat his own dick. Hover over the graph to get daily prices.</p>
-            <p>Compared to the enormous price changes, half a percent does not sound like much to you? This is the magic of exponential grows.</p>
+            <p>Is this really possible? Bitcoin needs to grow at a rate of <strong>{ growthRate*100 } % per day</strong>. That is the red line on the above chart. As long as the blue line is above the red line, we are on target. Hover over the chart to get daily prices.</p>
+            <p>Compared to the enormous price changes, half a percent does not sound like much to you? This is the magic of exponential growth.</p>
 
             <p>Grab a calculator and try it yourself:</p>
 
@@ -449,7 +492,7 @@ App.defaultProps = {
   tweetPrice:  2244.265,            // USD/BTC on TweetDate
   targetDate:  '2020-12-31',        // Day McAfee predicted the price
   targetPrice: 1000000,             // revised prediction (1Million)
-  growthRate:  0.00484095703431026  // daily growth rate to goal of 1.000.000 USD/BTC
+  growthRate:  0.484095703431026  // daily growth rate to goal of 1.000.000 USD/BTC
 }
 
 export default App;
