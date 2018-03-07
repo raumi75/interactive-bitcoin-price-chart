@@ -6,7 +6,14 @@
   position: absolute;
   padding: 5px;
   border-radius: 4px;
-  background-color: green;
   color: white;
   font-weight: 700;
+}
+
+.hover-ahead {
+  background-color: green;
+}
+
+.hover-behind {
+  background-color: red;
 }
