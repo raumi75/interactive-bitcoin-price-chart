@@ -12,6 +12,7 @@ import {formatDollar} from './formatting.js';
 import {getDataBoundaries} from './chartDataBoundaries.js';
 
 const predictionDays = 1263;
+const donate_btc_address = "3B19wMMJD7Xjf9ajW2oRcfVfKjRprWmGrG";
 var predictionCount = 1263;
 var offsetPrediction = 0;
 const minSliderDistance = 29;
@@ -479,6 +480,9 @@ class App extends Component {
               share <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A//fnordprefekt.de">on Facebook</a>,
               or on <a href="https://plus.google.com/share?url=https%3A//fnordprefekt.de">Google Plus</a>
             </p>
+            <p>Do you like this site? Buy my kids some ice cream!</p>
+            <p><a href={"bitcoin:"+donate_btc_address}><Image src="/donate_qr.png" alt="QR-Code Donate Bitcoin" /></a></p>
+            <p><a href={"bitcoin:"+donate_btc_address}>{donate_btc_address}</a></p>
           </Col>
         </Row>
       </Grid>
