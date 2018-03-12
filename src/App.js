@@ -362,7 +362,7 @@ class App extends Component {
 
         <Row>
           <Col xs={12} lg={6}>
-            <p className="lead redlineExplanation">The red line steadily grows to 1 Mio $/BTC. Move the slider to zoom.</p>
+            <p className="lead redlineExplanation">The red line steadily grows to { formatDollar(1000000) } per BTC. Move the slider to zoom.</p>
           </Col>
           <Col xs={12} lg={6}>
             <p id="coindesk" className="text-right">Data kindly provided by <a href="http://www.coindesk.com/price/">CoinDesk</a></p>
@@ -392,7 +392,7 @@ class App extends Component {
           <Col xs={12} md={6}>
             <h2>It started with a tweet</h2>
             <p className="lead explanation">
-              John McAfee made a bet on July 17th 2017: One single Bitcoin would be worth 500.000 US$ in three years. The price was { formatDollar(tweetPrice, 3) } at the time. He later revised his bet and <a href="https://twitter.com/officialmcafee/status/935900326007328768">predicted one Million US$ by the end of 2020</a>.
+              John McAfee made a bet on July 17th 2017: One single Bitcoin would be worth { formatDollar(500000) } in three years. The price was { formatDollar(tweetPrice, 3) } at the time. He later revised his bet and <a href="https://twitter.com/officialmcafee/status/935900326007328768">predicted $ 1 million by the end of 2020</a>.
             </p>
           </Col>
           <Col xs={12} md={6}>
