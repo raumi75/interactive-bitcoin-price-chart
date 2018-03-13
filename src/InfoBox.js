@@ -58,13 +58,9 @@ class InfoBox extends Component {
   // historical price at closing and the predicted price at 0:00 AM
   // I know this is inconsitent. This way, the prdicted price will reach the
   // targetPrice on 2020-12-31 at 0:00 am, which is not exactly end of the year, but who cares...
-  //
-  // To make it a little more consistend with the chart, I cheat and subtract
-  // two days. This way, todays price right now will relate to the displayed price at the chart.
-  // Shortly after midnight, the chart price will be the same as the InfoBox price.
   getDaysSincePrediction() {
     const tweetDate = this.props.tweetDate + '+0000';
-    return moment().diff(moment(tweetDate),'days', true)-2;
+    return moment().diff(moment(tweetDate),'days', true)-1;
   }
 
   // No Paramter because this is realtime

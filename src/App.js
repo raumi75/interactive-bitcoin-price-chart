@@ -16,8 +16,8 @@ const donate_btc_address = "3B19wMMJD7Xjf9ajW2oRcfVfKjRprWmGrG";
 var predictionCount = 1263;
 var offsetPrediction = 0;
 const minSliderDistance = 29;
-const minHistoricalStart = '2010-07-17';  // Coindesk API requires historicalStart >= 2010-07-17
-const defaultRangeMin = moment('2017-01-01').diff(moment(minHistoricalStart), 'days');
+const minHistoricalStart = '2011-01-01';  // Coindesk API requires historicalStart >= 2010-07-17
+const defaultRangeMin = moment('2017-01-01').diff(moment(minHistoricalStart), 'days'); // left slider can go
 
 class App extends Component {
   constructor(props) {
@@ -80,7 +80,7 @@ class App extends Component {
 
           this.setState({
             todayCount: count,
-            countRange: [Math.max(-1-offsetPrediction,0), count-1],
+            countRange: [Math.max(-offsetPrediction,0), count-1],
             sliderMarks: mark
           });
 
@@ -132,7 +132,7 @@ class App extends Component {
         return {
           d: val.d,
           y: val.y,
-          x: val.x-pos[0]+1, //previous days
+          x: val.x-pos[0], //previous days
           s: val.s, // Days since McAfee Tweet
         }
       });
@@ -172,7 +172,7 @@ class App extends Component {
   }
 
   handleRangeReset = () => {
-    var cr = [Math.max(-1-offsetPrediction,0), this.state.todayCount-1]
+    var cr = [Math.max(-offsetPrediction,0), this.state.todayCount-1]
     this.setState({
       rangeMin: defaultRangeMin,
       countRange: cr,
@@ -392,7 +392,7 @@ class App extends Component {
           <Col xs={12} md={6}>
             <h2>It started with a tweet</h2>
             <p className="lead explanation">
-              John McAfee made a bet on July 17th 2017: One single Bitcoin would be worth { formatDollar(500000) } in three years. The price was { formatDollar(tweetPrice, 3) } at the time. He later revised his bet and <a href="https://twitter.com/officialmcafee/status/935900326007328768">predicted $ 1 million by the end of 2020</a>.
+              John McAfee made a bet on July 17th 2017: One single Bitcoin would be worth { formatDollar(500000) } in three years. The closing price according to CoinDesk was { formatDollar(tweetPrice, 3) } that day. He later revised his bet and <a href="https://twitter.com/officialmcafee/status/935900326007328768">predicted $ 1 million by the end of 2020</a>.
             </p>
           </Col>
           <Col xs={12} md={6}>
