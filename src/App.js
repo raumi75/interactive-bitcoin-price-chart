@@ -423,6 +423,18 @@ class App extends Component {
 
         <Row>
           <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
+            <h2>Similar sites</h2>
+            <p>You probably know the popular site <a href="https://diegorod.github.io/WillMcAfeeEatHisOwnDick/">diegorod.github.io/WillMcAfeeEatHisOwnDick/</a>.</p>
+            <p>I was asked me why my prediction is different.
+            The reason is, that DiegoRod counts to $ 1 million by <em>July 17th 2020</em>, but McAfee wrote 'by the end of 2020'.</p>
+            <p>If you change the <em>end date to 2020-12-31</em>
+            by calling <a href="https://diegorod.github.io/Bitcoin-Price-Predictor/?startDate=2017-07-17&endDate=2020-12-31&bpiPrediction=1000000">diegorod.github.io/Bitcoin-Price-Predictor/?startDate=2017-07-17&endDate=2020-12-31&bpiPrediction=1000000</a>,
+            his red predicted price should match the one for today by midnight: { formatDollar(this.getMcAfeeRate(this.getDaysSincePrediction(Date.now())),2) } (see explanation above).</p>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
             <h2>Why would it grow?</h2>
             <p>Bitcoin is scarce. There will only be 21 Million BTC. If every Millionaire in the world wants one, there are not enough for every one to have a whole BTC.</p>
             <p>More people adopting and buying bitcoin will raise the price.</p>
