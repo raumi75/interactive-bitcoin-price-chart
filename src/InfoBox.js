@@ -60,7 +60,7 @@ class InfoBox extends Component {
   // targetPrice on 2020-12-31 at 0:00 am, which is not exactly end of the year, but who cares...
   getDaysSincePrediction() {
     const tweetDate = this.props.tweetDate + '+0000';
-    return moment().diff(moment(tweetDate),'days', true)-1;
+    return moment().utc().diff(moment(tweetDate),'days', true)-1;
   }
 
   // No Paramter because this is realtime
