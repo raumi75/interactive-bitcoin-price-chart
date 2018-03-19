@@ -34,6 +34,7 @@ class App extends Component {
       todayCount: 0,
       sliderMarks: {},
       historicalStart: minHistoricalStart, //'2017-01-01',
+      historicalEnd: moment().format('YYYY-MM-DD'),
       scale: 'lin',
       growthRate: this.props.growthRate
     }
@@ -47,67 +48,84 @@ class App extends Component {
   }
 
   componentDidMount(){
+    this.loadData();
+    this.refresh = setInterval(() => this.reloadData(), 60*60*5000);
+  }
+
+  // If the chart was last updated yesterday, reload it.
+  reloadData = () => {
+    if (this.chartDataAge() > 25) { // hours
+      // console.log('Chart data was last updated yesterday. reloading it now.');
+      this.loadData();
+    }
+  }
+
+  chartDataAge = () => {
+    const {historicalEnd}    = this.state;
+    return moment().utc().diff(moment(historicalEnd + ' 00:00 +0000', 'YYYY-MM-DD HH:mm Z'), 'hours', true);
+  }
+
+  loadData = () => {
     const {tweetDate} = this.props;
     const {targetDate} = this.props;
     const {historicalStart}  = this.state;
-    const historicalEnd    = moment().format('YYYY-MM-DD');
+    const {historicalEnd}    = this.state;
     offsetPrediction = moment(historicalStart).diff(moment(tweetDate),'days');
-    const getData = () => {
-      const url = 'https://api.coindesk.com/v1/bpi/historical/close.json?start='+historicalStart+'&end='+historicalEnd;
-      fetch(url).then( r => r.json())
-        .then((bitcoinData) => {
-          const sortedData = [];
-          let count = 0;
+    const url = 'https://api.coindesk.com/v1/bpi/historical/close.json?start='+historicalStart+'&end='+historicalEnd;
+    fetch(url).then( r => r.json())
+      .then((bitcoinData) => {
 
-          for (let date in bitcoinData.bpi){
-            sortedData.push({
-              d: moment(date).format('YYYY-MM-DD'),
-              x: count, //previous days
-              s: (count + offsetPrediction), // Days since McAfee Tweet
-              y: {p: bitcoinData.bpi[date], // historical price on date
-                  m: this.getMcAfeeRate(count + offsetPrediction) } // predicted price for date
-            });
-            count++;
-          }
+      const sortedData = [];
+      let count = 0;
 
-          // Labels on range-slider below chart
-          predictionCount = predictionDays-offsetPrediction;
-          var mark = {};
-          mark[0] = moment(historicalStart).format('YYYY-MM-DD');;
-          mark[0-offsetPrediction] = moment(tweetDate).format('YYYY-MM-DD');;
-          mark[count-1] = 'yesterday';
-          mark[predictionCount] = moment(targetDate).format('YYYY-MM-DD');
-
-          this.setState({
-            todayCount: count,
-            countRange: [Math.max(-offsetPrediction,0), count-1],
-            sliderMarks: mark
-          });
-
-          for (count; count <= predictionCount; count++) {
-            sortedData.push({
-              d: moment(historicalStart).add(count, 'days').format('YYYY-MM-DD'),
-              x: count, //previous days
-              s: (count + offsetPrediction), // Days since McAfee Tweet
-              y: {p: 0, // historical price on date
-                  m: this.getMcAfeeRate(count + offsetPrediction)}
-            });
-          }
-
-          this.setState({
-            dataComplete: sortedData,
-            data: sortedData,
-            fetchingData: false
-          });
-
-          this.cutData(this.state.countRange);
-
-        })
-        .catch((e) => {
-          console.log(e);
+      for (let date in bitcoinData.bpi){
+        sortedData.push({
+          d: moment(date).format('YYYY-MM-DD'),
+          x: count, //previous days
+          s: (count + offsetPrediction), // Days since McAfee Tweet
+          y: {p: bitcoinData.bpi[date], // historical price on date
+              m: this.getMcAfeeRate(count + offsetPrediction) } // predicted price for date
         });
-    }
-    getData();
+        count++;
+      }
+
+      // Labels on range-slider below chart
+      predictionCount = predictionDays-offsetPrediction;
+      var mark = {};
+      mark[0] = moment(historicalStart).format('YYYY-MM-DD');;
+      mark[0-offsetPrediction] = moment(tweetDate).format('YYYY-MM-DD');;
+      mark[count-1] = 'yesterday';
+      mark[predictionCount] = moment(targetDate).format('YYYY-MM-DD');
+
+      this.setState({
+        todayCount: count,
+        countRange: [Math.max(-offsetPrediction,0), count-1],
+        sliderMarks: mark,
+        historicalEnd: moment().format('YYYY-MM-DD')
+      });
+
+      for (count; count <= predictionCount; count++) {
+        sortedData.push({
+          d: moment(historicalStart).add(count, 'days').format('YYYY-MM-DD'),
+          x: count, //previous days
+          s: (count + offsetPrediction), // Days since McAfee Tweet
+          y: {p: 0, // historical price on date
+              m: this.getMcAfeeRate(count + offsetPrediction)}
+        });
+      }
+
+      this.setState({
+        dataComplete: sortedData,
+        data: sortedData,
+        fetchingData: false
+      });
+
+      this.cutData(this.state.countRange);
+
+    })
+    .catch((e) => {
+      console.log(e);
+    });
   }
 
   handleLineChartLength = (pos) => {
