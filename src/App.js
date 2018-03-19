@@ -49,7 +49,7 @@ class App extends Component {
 
   componentDidMount(){
     this.loadData();
-    this.refresh = setInterval(() => this.reloadData(), 60*60*5000);
+    this.refresh = setInterval(() => this.reloadData(), 60*5000);
   }
 
   // If the chart was last updated yesterday, reload it.
