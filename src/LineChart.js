@@ -135,17 +135,17 @@ class LineChart extends Component {
   }
 
   makeLabels(){
-    const {minX, maxX, firstPoint, lastPoint, maxPoint} = this.props.boundaries;
+    const {minX, maxX, firstPrices, lastPrices, maxPoint} = this.props.boundaries;
 
     return(
       <g className="linechart_label">
         { (maxPoint.p === 0) ? null : this.makeLabelPrice(maxPoint.p.y, 'left', 'p') }
 
-        { (typeof(firstPoint.p) === 'undefined') ? null : this.makeLabelPrice(firstPoint.p.y, 'left', 'p') }
-        { (typeof(firstPoint.m) === 'undefined') ? null : this.makeLabelPrice(firstPoint.m.y, 'left', 'm') }
+        { (typeof(firstPrices.p) === 'undefined') ? null : this.makeLabelPrice(firstPrices, 'left', 'p') }
+        { (typeof(firstPrices.m) === 'undefined') ? null : this.makeLabelPrice(firstPrices, 'left', 'm') }
 
-        { (typeof(lastPoint.p.y) === 'undefined') ? null : this.makeLabelPrice(lastPoint.p.y, 'right', 'p') }
-        { (typeof(lastPoint.m.y) === 'undefined') ? null : this.makeLabelPrice(lastPoint.m.y, 'right', 'm') }
+        { (typeof(lastPrices.p) === 'undefined') ? null : this.makeLabelPrice(lastPrices, 'right', 'p') }
+        { (typeof(lastPrices.m) === 'undefined') ? null : this.makeLabelPrice(lastPrices, 'right', 'm') }
 
         { this.makeLabelDate(minX) }
         { this.makeLabelDate(maxX-1) }
@@ -178,12 +178,43 @@ class LineChart extends Component {
     }
   }
 
+  otherPricetype(pricetype) {
+    if (pricetype === 'm') { return 'p'; } else { return 'm'; }
+  }
+
+  // If pricelabels are too close together, move them up or down a little
+  getOffsetLabelPrice(prices, pricetype) {
+    const {xLabelSize} = this.props;
+    var otherPricetype = this.otherPricetype(pricetype);
+    var distanceY      = 0;
+
+    if (prices[otherPricetype] > 0) {
+      distanceY = this.getSvgY(prices[pricetype])-this.getSvgY(prices[otherPricetype]);
+    }
+
+    if (distanceY === 0) {return 0;}
+
+    if (Math.abs(distanceY) < xLabelSize) {
+      // prices are too close
+      if (distanceY < 0) {
+        // this price is above the other
+        return xLabelSize*-0.25;
+      } else {
+        // this price is below the other
+        return xLabelSize*0.25;
+      }
+    } else {
+      return 0;
+    }
+  }
+
   // Label on Y-Axis (Date)
   makeLabelPrice(prices, position, pricetype) {
     const {xLabelSize, yLabelSize} = this.props;
     const {maxX} = this.props.boundaries;
     var xpos = 0;
-
+    var ypos = this.getSvgY(prices[pricetype])+this.getOffsetLabelPrice(prices, pricetype);
+    
     if (position === 'right') {
       xpos = this.getSvgX(maxX);
     }
@@ -192,13 +223,13 @@ class LineChart extends Component {
       return(
         <g>
           <rect x={xpos}
-                y={this.getSvgY(prices[pricetype])-xLabelSize+5}
+                y={ypos-xLabelSize+5}
                 height={xLabelSize}
                 width={yLabelSize}
                 className={'linechart_label_' + pricetype}
                 />
           <text transform={`translate(${xpos},
-                                      ${this.getSvgY(prices[pricetype])})`}
+                                      ${ypos})`}
                                       fill="red"
                                       className={'linechart_label_' + pricetype} >
             {formatDollar(prices[pricetype])}

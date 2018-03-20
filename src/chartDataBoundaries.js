@@ -102,7 +102,15 @@ function getDataBoundaries(data) {
 
   return {
     firstPoint: firstPoints,
+    firstPrices: {
+      p: firstPoints.p.y.p,
+      m: firstPoints.m.y.m
+    },
     lastPoint:  lastPoints,
+    lastPrices: {
+      p: lastPoints.p.y.p,
+      m: lastPoints.m.y.m
+    },
     minPoint:   minPoints,
     maxPoint:   maxPoints,
     minX:       getMinX(data),
