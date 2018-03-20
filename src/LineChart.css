@@ -38,26 +38,25 @@
   opacity: .2;
 }
 
-rect.linechart_label_p {
+rect.linechart_label_p, rect.linechart_label_m, rect.linechart_label_x {
  fill: #FFF;
 }
 
-rect.linechart_label_m {
- fill: #FFF;
-}
-
-rect.linechart_label_x {
- fill: #FFF;
-}
-
-text.linechart_label_p {
+rect.linechart_label_p_hover, text.linechart_label_p {
  fill: #64B5F6;
- font-weight: 700;
 }
 
-text.linechart_label_m {
-  font-weight: 700;
-  fill: red;
+rect.linechart_label_m_hover, text.linechart_label_m {
+ fill: red;
+}
+
+rect.linechart_label_x_hover {
+ fill: black;
+}
+
+text.linechart_label_p_hover, text.linechart_label_m_hover, text.linechart_label_x_hover {
+ fill: white;
+ font-weight: bold;
 }
 
 .hoverLine {
