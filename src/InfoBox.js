@@ -73,7 +73,7 @@ class InfoBox extends Component {
 
   getAheadOrBehind() {
     if (this.state.currentPrice>this.state.mcAfeePrice)
-    { return ('ahead'); } else { return 'behind' ; }
+    { return ('ahead'); } else { return 'below' ; }
   }
 
   render(){
@@ -93,8 +93,8 @@ class InfoBox extends Component {
 
           <Col xs={4} md={2} height={"5em"}>
             <div className="subtext">Bitcoin is</div>
-            <div className={"heading "+this.getAheadOrBehind() }>{ this.state.currentPrice ? (this.state.currentPrice/this.state.mcAfeePrice-1).toLocaleString('en-us', {style: 'percent', maximumSignificantDigits: 4}) : '...' }</div>
-            <div className="subtext">{this.getAheadOrBehind()} of his prediction</div>
+            <div className={"heading "+this.getAheadOrBehind() }>{ this.state.currentPrice ? (Math.abs(this.state.currentPrice/this.state.mcAfeePrice-1)).toLocaleString('en-us', {style: 'percent', maximumSignificantDigits: 4}) : '...' }</div>
+            <div className={"subtext "+this.getAheadOrBehind() }>{this.getAheadOrBehind()}</div>
           </Col>
       </Row>
     );
