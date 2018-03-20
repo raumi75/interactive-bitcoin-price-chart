@@ -99,17 +99,16 @@ function getDataBoundaries(data) {
 
   }
 
-
   return {
     firstPoint: firstPoints,
     firstPrices: {
-      p: firstPoints.p.y.p,
-      m: firstPoints.m.y.m
+      p: ((typeof(firstPoints.p) === 'undefined') ? 0 : firstPoints.p.y.p),
+      m: ((typeof(firstPoints.m) === 'undefined') ? 0 : firstPoints.m.y.m)
     },
     lastPoint:  lastPoints,
     lastPrices: {
-      p: lastPoints.p.y.p,
-      m: lastPoints.m.y.m
+      p: ((typeof(lastPoints.p.y) === 'undefined') ? 0 : lastPoints.p.y.p),
+      m: ((typeof(lastPoints.m.y) === 'undefined') ? 0 : lastPoints.m.y.m)
     },
     minPoint:   minPoints,
     maxPoint:   maxPoints,
