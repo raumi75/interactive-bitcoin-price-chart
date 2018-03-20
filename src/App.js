@@ -526,7 +526,7 @@ App.defaultProps = {
   tweetPrice:  2244.265,            // USD/BTC on TweetDate
   targetDate:  '2020-12-31',        // Day McAfee predicted the price
   targetPrice: 1000000,             // revised prediction (1Million)
-  growthRate:  0.484095703431026  // daily growth rate to goal of 1.000.000 USD/BTC
+  growthRate:  0.4840957035           // daily growth rate to goal of 1.000.000 USD/BTC
 }
 
 export default App;
