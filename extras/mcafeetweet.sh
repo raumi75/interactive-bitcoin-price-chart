@@ -6,11 +6,11 @@ predictedprice=$(echo "scale=2; 1.0048409570343102^"$(( ($(date +%s) - $(date --
 closingprice=$(printf %.2f $(curl -s https://api.coindesk.com/v1/bpi/historical/close.json?for=yesterday | jq '.bpi' | jq '.[] | tonumber'))
 percentage=$(printf %.2f $(echo "scale=4; $float($closingprice / $predictedprice -1)*100" | bc -l))
 # No idea why this is negated.
-if ($(echo $predictedprice > $closingprice | bc -l));
+if ($(echo $predictedprice " > " $closingprice | bc -l));
 then
   aheadorbehind='ahead';
 else
-  aheadorbehind='behind';
+  aheadorbehind='below';
 fi;
 
 predictedprice_formatted=$(printf "%'.2f" $predictedprice)
