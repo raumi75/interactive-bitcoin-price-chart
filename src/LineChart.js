@@ -13,8 +13,8 @@ class LineChart extends Component {
     this.state = {
       hoverLoc: null,     // x-location of the hovering mouse
       activePoint: null,  // the data point closest to hovering mouse
-      svgWidth: window.innerWidth,
-      svgHeight: window.innerWidth/chartRatio
+      svgWidth: document.documentElement.clientWidth,
+      svgHeight: document.documentElement.clientWidth/chartRatio
     }
   }
 
@@ -139,35 +139,37 @@ class LineChart extends Component {
 
     return(
       <g className="linechart_label">
-        { (maxPoint.p === 0) ? null : this.makeLabelPrice(maxPoint.p.y, 'left', 'p') }
+        { (maxPoint.p === 0) ? null : this.makeLabelPrice(maxPoint.p.y, 'left', 'p', '') }
 
-        { (typeof(firstPrices.p) === 'undefined') ? null : this.makeLabelPrice(firstPrices, 'left', 'p') }
-        { (typeof(firstPrices.m) === 'undefined') ? null : this.makeLabelPrice(firstPrices, 'left', 'm') }
+        { (typeof(firstPrices.p) === 'undefined') ? null : this.makeLabelPrice(firstPrices, 'left', 'p', '') }
+        { (typeof(firstPrices.m) === 'undefined') ? null : this.makeLabelPrice(firstPrices, 'left', 'm', '') }
 
-        { (typeof(lastPrices.p) === 'undefined') ? null : this.makeLabelPrice(lastPrices, 'right', 'p') }
-        { (typeof(lastPrices.m) === 'undefined') ? null : this.makeLabelPrice(lastPrices, 'right', 'm') }
+        { (typeof(lastPrices.p) === 'undefined') ? null : this.makeLabelPrice(lastPrices, 'right', 'p', '') }
+        { (typeof(lastPrices.m) === 'undefined') ? null : this.makeLabelPrice(lastPrices, 'right', 'm', '') }
 
-        { this.makeLabelDate(minX) }
-        { this.makeLabelDate(maxX-1) }
+        { this.makeLabelDate(minX, '') }
+        { this.makeLabelDate(maxX-1, '') }
       </g>
     )
   }
 
   // Label on X-Axis (Date)
-  makeLabelDate(count) {
-    const {data, xLabelSize, yLabelSize} = this.props;
+  makeLabelDate(count, cssExtra) {
+    const {data, xLabelSize, yLabelSize, labelRadius} = this.props;
     const {svgHeight} = this.state;
     if ((count < data.length) && (count >= 0)) {
       return(
         <g>
-          <rect x={this.getSvgX(data[count].x)-yLabelSize/2}
+          <rect x={this.getSvgX(data[count].x)-yLabelSize/2-2}
                 y={svgHeight-xLabelSize+5}
-                height={xLabelSize}
+                height={xLabelSize-5}
                 width={yLabelSize}
-                className='linechart_label_x'
+                rx={labelRadius}   ry={labelRadius}
+                className={'linechart_label_x'+cssExtra}
                 />
-          <text transform={`translate(${this.getSvgX(data[count].x)},
-                                      ${svgHeight -2})`}
+          <text transform={`translate(${this.getSvgX(data[count].x)-2},
+                                      ${svgHeight -3})`}
+                                      className={'linechart_label_x'+cssExtra}
                                       textAnchor="middle">
             { data[count].d }
           </text>
@@ -209,12 +211,12 @@ class LineChart extends Component {
   }
 
   // Label on Y-Axis (Date)
-  makeLabelPrice(prices, position, pricetype) {
-    const {xLabelSize, yLabelSize} = this.props;
+  makeLabelPrice(prices, position, pricetype, cssExtra) {
+    const {xLabelSize, yLabelSize, labelRadius} = this.props;
     const {maxX} = this.props.boundaries;
     var xpos = 0;
     var ypos = this.getSvgY(prices[pricetype])+this.getOffsetLabelPrice(prices, pricetype);
-    
+
     if (position === 'right') {
       xpos = this.getSvgX(maxX);
     }
@@ -226,12 +228,14 @@ class LineChart extends Component {
                 y={ypos-xLabelSize+5}
                 height={xLabelSize}
                 width={yLabelSize}
-                className={'linechart_label_' + pricetype}
+                rx={labelRadius}   ry={labelRadius}
+                className={'linechart_label_' + pricetype + cssExtra}
                 />
-          <text transform={`translate(${xpos},
+          <text transform={`translate(${xpos+yLabelSize/2},
                                       ${ypos})`}
                                       fill="red"
-                                      className={'linechart_label_' + pricetype} >
+                                      textAnchor="middle"
+                                      className={'linechart_label_' + pricetype+cssExtra} >
             {formatDollar(prices[pricetype])}
           </text>
         </g>
@@ -328,6 +332,7 @@ class LineChart extends Component {
       return (null);
     }
   }
+
   // MAKE HOVER LINE
   createLine(){
     const {xLabelSize} = this.props;
@@ -356,11 +361,11 @@ class LineChart extends Component {
 
   // MAKE HOVER LINE
   makeActiveDate(){
-    return (this.makeLabelDate(this.state.activePoint.x));
+    return (this.makeLabelDate(this.state.activePoint.x, '_hover'));
   }
 
   makeActiveLabelPrice(pricetype, position){
-    return ( this.makeLabelPrice(this.state.activePoint.y, position, pricetype) );
+    return ( this.makeLabelPrice(this.state.activePoint.y, position, pricetype, '_hover') );
   }
 
   makeHover() {
@@ -405,6 +410,7 @@ class LineChart extends Component {
 LineChart.defaultProps = {
   data: [],
   pointRadius: 5,
+  labelRadius: 5,
   xLabelSize: 20,
   yLabelSize: 80
 }
