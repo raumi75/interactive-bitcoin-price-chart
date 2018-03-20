@@ -139,13 +139,13 @@ class LineChart extends Component {
 
     return(
       <g className="linechart_label">
-        { (maxPoint.p === 0) ? null : this.makeLabelPrice(maxPoint.p.y.p, 'left', 'p') }
+        { (maxPoint.p === 0) ? null : this.makeLabelPrice(maxPoint.p.y, 'left', 'p') }
 
-        { (typeof(firstPoint.p) === 'undefined') ? null : this.makeLabelPrice(firstPoint.p.y.p, 'left', 'p') }
-        { (typeof(firstPoint.m) === 'undefined') ? null : this.makeLabelPrice(firstPoint.m.y.m, 'left', 'm') }
+        { (typeof(firstPoint.p) === 'undefined') ? null : this.makeLabelPrice(firstPoint.p.y, 'left', 'p') }
+        { (typeof(firstPoint.m) === 'undefined') ? null : this.makeLabelPrice(firstPoint.m.y, 'left', 'm') }
 
-        { (typeof(lastPoint.p.y) === 'undefined') ? null : this.makeLabelPrice(lastPoint.p.y.p, 'right', 'p') }
-        { (typeof(lastPoint.m.y) === 'undefined') ? null : this.makeLabelPrice(lastPoint.m.y.m, 'right', 'm') }
+        { (typeof(lastPoint.p.y) === 'undefined') ? null : this.makeLabelPrice(lastPoint.p.y, 'right', 'p') }
+        { (typeof(lastPoint.m.y) === 'undefined') ? null : this.makeLabelPrice(lastPoint.m.y, 'right', 'm') }
 
         { this.makeLabelDate(minX) }
         { this.makeLabelDate(maxX-1) }
@@ -179,7 +179,7 @@ class LineChart extends Component {
   }
 
   // Label on Y-Axis (Date)
-  makeLabelPrice(y, position, pricetype) {
+  makeLabelPrice(prices, position, pricetype) {
     const {xLabelSize, yLabelSize} = this.props;
     const {maxX} = this.props.boundaries;
     var xpos = 0;
@@ -188,20 +188,20 @@ class LineChart extends Component {
       xpos = this.getSvgX(maxX);
     }
 
-    if (y > 0) {
+    if (prices[pricetype] > 0) {
       return(
         <g>
           <rect x={xpos}
-                y={this.getSvgY(y)-xLabelSize+5}
+                y={this.getSvgY(prices[pricetype])-xLabelSize+5}
                 height={xLabelSize}
                 width={yLabelSize}
                 className={'linechart_label_' + pricetype}
                 />
           <text transform={`translate(${xpos},
-                                      ${this.getSvgY(y)})`}
+                                      ${this.getSvgY(prices[pricetype])})`}
                                       fill="red"
                                       className={'linechart_label_' + pricetype} >
-            {formatDollar(y)}
+            {formatDollar(prices[pricetype])}
           </text>
         </g>
       );
@@ -329,7 +329,7 @@ class LineChart extends Component {
   }
 
   makeActiveLabelPrice(pricetype, position){
-    return ( this.makeLabelPrice(this.state.activePoint.y[pricetype], position, pricetype) );
+    return ( this.makeLabelPrice(this.state.activePoint.y, position, pricetype) );
   }
 
   makeHover() {
