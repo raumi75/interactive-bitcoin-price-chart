@@ -1,16 +1,14 @@
 #!/bin/bash
 
 # One day later than tweetDate because we want yesterdays price
-LC_NUMERIC="en_US.UTF-8" 
+LC_NUMERIC="en_US.UTF-8"
 predictedprice=$(echo "scale=2; 1.0048409570343102^"$(( ($(date +%s) - $(date --date="2017-07-18" +%s) )/(60*60*24) ))"*224426.5/100" | bc)
 closingprice=$(printf %.2f $(curl -s https://api.coindesk.com/v1/bpi/historical/close.json?for=yesterday | jq '.bpi' | jq '.[] | tonumber'))
 percentage=$(printf %.2f $(echo "scale=4; $float($closingprice / $predictedprice -1)*100" | bc -l))
 # No idea why this is negated.
-if ($(echo $predictedprice " > " $closingprice | bc -l));
-then
-  aheadorbehind='ahead';
-else
-  aheadorbehind='below';
+if (( $(echo "$predictedprice < $closingprice" | bc -l) ));
+  then aheadorbehind='ahead';
+  else aheadorbehind='below';
 fi;
 
 predictedprice_formatted=$(printf "%'.2f" $predictedprice)
