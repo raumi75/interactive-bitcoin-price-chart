@@ -198,7 +198,7 @@ class LineChart extends Component {
       // prices are too close
       if (distanceY < 0) {
         // this price is above the other
-        return xLabelSize*-0.25;
+        return xLabelSize*(-0.5);
       } else {
         // this price is below the other
         return xLabelSize*0.25;
