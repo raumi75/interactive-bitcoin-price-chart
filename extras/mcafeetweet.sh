@@ -16,7 +16,7 @@ fi;
 predictedprice_formatted=$(printf "%'.2f" $predictedprice)
 closingprice_formatted=$(printf "%'.2f" $closingprice)
 
-tweettext=$(echo 'The McAfee-Curve was $' $predictedprice_formatted 'at midnight UTC. #bitcoin closing price was $' $closingprice_formatted ' ('$percentage '%' $aheadorbehind'). See the chart and learn more on https://fnordprefekt.de')
+tweettext=$(echo "Daily update: McAfee-Curve was $" $predictedprice_formatted 'at midnight UTC while #bitcoin price was $' $closingprice_formatted ' ('${percentage#-}'%' $aheadorbehind'). See the chart and learn more on https://fnordprefekt.de')
 
 /home/jan/.rbenv/shims/t update "$tweettext"
 
