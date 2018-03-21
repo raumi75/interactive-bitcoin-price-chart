@@ -425,6 +425,16 @@ class App extends Component {
               <HelpBlock>Formula: log10(2)/log10(1+{this.state.growthRate}/100)</HelpBlock>
             </Col>
           </FormGroup>
+
+          <FormGroup controlId="formDoublingTime">
+            <Col componentClass={ControlLabel} sm={2}>
+              10-times after
+            </Col>
+            <Col sm={10}>
+              <FormControl.Static>{Math.round(Math.log10(10)/Math.log10(1+this.state.growthRate/100))} days</FormControl.Static>
+              <HelpBlock>Formula: log10(10)/log10(1+{this.state.growthRate}/100)</HelpBlock>
+            </Col>
+          </FormGroup>
         </Form>
 
         <Row>
