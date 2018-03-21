@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { Grid, Row , Col, Image, FormGroup, InputGroup, FormControl, Radio, Panel, Tabs, Tab } from 'react-bootstrap';
+import { Grid, Row , Col, Image, Form, FormGroup, InputGroup, FormControl, ControlLabel, Radio, Panel, Tabs, Tab, HelpBlock} from 'react-bootstrap';
 import './App.css';
 import LineChart from './LineChart';
 import ToolTip from './ToolTip';
@@ -388,23 +388,44 @@ class App extends Component {
           </Col>
         </Row>
 
-        <Row>
-          <Col xs={12} md={2}>
-          <label>Tinker with parameter</label>
-          </Col>
-          <Col xs={12} md={8}>
-            <FormGroup>
+        <Form horizontal>
+          <h3>Tinker with parameter</h3>
+
+          <FormGroup controlId="formGrowthRate">
+            <Col componentClass={ControlLabel} sm={2}>
+              percent per day
+            </Col>
+            <Col sm={8} md={5} lg={3}>
               <InputGroup>
-              <InputGroup.Addon>growth rate</InputGroup.Addon>
               <FormControl type="number"
                            value={this.state.growthRate}
                            onChange={this.handleGrowthRateChange}
                             />
-              <InputGroup.Addon>% per day</InputGroup.Addon>
+              <InputGroup.Addon>%</InputGroup.Addon>
               </InputGroup>
-            </FormGroup>
-          </Col>
-        </Row>
+            </Col>
+          </FormGroup>
+
+          <FormGroup controlId="formAnnual">
+            <Col componentClass={ControlLabel} sm={2}>
+              annual growth
+            </Col>
+            <Col sm={10}>
+              <FormControl.Static>{Math.pow((1+this.state.growthRate/100),365).toLocaleString('en-us', {style: 'percent', maximumSignificantDigits: 5}) } per year.</FormControl.Static>
+              <HelpBlock>Formula: (1+{this.state.growthRate}/100)<sup>365</sup></HelpBlock>
+            </Col>
+          </FormGroup>
+
+          <FormGroup controlId="formDoublingTime">
+            <Col componentClass={ControlLabel} sm={2}>
+              doubling time
+            </Col>
+            <Col sm={10}>
+              <FormControl.Static>{Math.round(Math.log10(2)/Math.log10(1+this.state.growthRate/100))} days</FormControl.Static>
+              <HelpBlock>Formula: log10(2)/log10(1+{this.state.growthRate}/100)</HelpBlock>
+            </Col>
+          </FormGroup>
+        </Form>
 
         <Row>
           <Col xs={12} md={6}>
