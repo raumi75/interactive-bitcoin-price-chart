@@ -411,8 +411,8 @@ class App extends Component {
               annual growth
             </Col>
             <Col sm={10}>
-              <FormControl.Static>{Math.pow((1+this.state.growthRate/100),365).toLocaleString('en-us', {style: 'percent', maximumSignificantDigits: 5}) } per year.</FormControl.Static>
-              <HelpBlock>Formula: (1+{this.state.growthRate}/100)<sup>365</sup></HelpBlock>
+              <FormControl.Static>{(Math.pow((1+this.state.growthRate/100),365)-1).toLocaleString('en-us', {style: 'percent', maximumSignificantDigits: 5}) } per year.</FormControl.Static>
+              <HelpBlock>Formula: ((1+{this.state.growthRate}/100)<sup>365</sup>-1)*100</HelpBlock>
             </Col>
           </FormGroup>
 
