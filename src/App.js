@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { Grid, Row , Col, Image, Form, FormGroup, InputGroup, FormControl, ControlLabel, Radio, Panel, Tabs, Tab, HelpBlock} from 'react-bootstrap';
+import { Grid, Row , Col, Image, Form, FormGroup, InputGroup, FormControl, ControlLabel, Radio, Panel, Tabs, Tab} from 'react-bootstrap';
 import './App.css';
 import LineChart from './LineChart';
 import ToolTip from './ToolTip';
@@ -10,6 +10,7 @@ import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import {formatDollar} from './formatting.js';
 import {getDataBoundaries} from './chartDataBoundaries.js';
+const MathJax = require('react-mathjax')
 
 const predictionDays = 1263;
 const donate_btc_address = "3B19wMMJD7Xjf9ajW2oRcfVfKjRprWmGrG";
@@ -305,6 +306,16 @@ class App extends Component {
 
   }
 
+  latexMathAnnualGrowth() {
+    const {growthRate} = this.state;
+    return `\\left( (1+\\frac{`+ growthRate + `}{100})^{365}-1 \\right)*100`;
+  }
+
+  latexMathDoublingTime(factor) {
+    const {growthRate} = this.state;
+    return `\\frac{\\log_{10}(`+factor+`)}{\\log_{10}(1+\\frac{`+ growthRate + `}{100})}`;
+  }
+
   render() {
     const growthRate = this.state.growthRate/100;
     const {tweetPrice} = this.props;
@@ -411,8 +422,10 @@ class App extends Component {
               annual growth
             </Col>
             <Col sm={10}>
-              <FormControl.Static>{(Math.pow((1+this.state.growthRate/100),365)-1).toLocaleString('en-us', {style: 'percent', maximumSignificantDigits: 5}) } per year.</FormControl.Static>
-              <HelpBlock>Formula: ((1+{this.state.growthRate}/100)<sup>365</sup>-1)*100</HelpBlock>
+              <FormControl.Static>
+                <strong>{(Math.pow((1+this.state.growthRate/100),365)-1).toLocaleString('en-us', {style: 'percent', maximumSignificantDigits: 5}) } per year</strong>
+                <MathJax.Context><MathJax.Node inline>{this.latexMathAnnualGrowth()}</MathJax.Node></MathJax.Context>
+              </FormControl.Static>
             </Col>
           </FormGroup>
 
@@ -421,8 +434,10 @@ class App extends Component {
               doubling time
             </Col>
             <Col sm={10}>
-              <FormControl.Static>{Math.round(Math.log10(2)/Math.log10(1+this.state.growthRate/100))} days</FormControl.Static>
-              <HelpBlock>Formula: log10(2)/log10(1+{this.state.growthRate}/100)</HelpBlock>
+              <FormControl.Static>
+                <strong>{Math.round(Math.log10(2)/Math.log10(1+this.state.growthRate/100))} days</strong>
+                <MathJax.Context><MathJax.Node inline>{this.latexMathDoublingTime(2)}</MathJax.Node></MathJax.Context>
+              </FormControl.Static>
             </Col>
           </FormGroup>
 
@@ -431,8 +446,10 @@ class App extends Component {
               10-times after
             </Col>
             <Col sm={10}>
-              <FormControl.Static>{Math.round(Math.log10(10)/Math.log10(1+this.state.growthRate/100))} days</FormControl.Static>
-              <HelpBlock>Formula: log10(10)/log10(1+{this.state.growthRate}/100)</HelpBlock>
+              <FormControl.Static>
+                <strong>{Math.round(Math.log10(10)/Math.log10(1+this.state.growthRate/100))} days</strong>
+                <MathJax.Context><MathJax.Node inline>{this.latexMathDoublingTime(10)}</MathJax.Node></MathJax.Context>
+              </FormControl.Static>
             </Col>
           </FormGroup>
         </Form>

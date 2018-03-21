@@ -8,6 +8,7 @@
     "react": "^15.6.2",
     "react-bootstrap": "^0.32.1",
     "react-dom": "^15.6.2",
+    "react-mathjax": "^0.1.1",
     "serve": "^6.5.3"
   },
   "devDependencies": {

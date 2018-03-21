@@ -48,3 +48,7 @@ quote {
 .footer p {
   text-align: center;
 }
+
+.mjx-math {
+  margin-left: 1em;
+}
