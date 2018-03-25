@@ -206,7 +206,7 @@ class App extends Component {
   }
 
   handleRangeExtend = () => {
-    var cr = [0, this.state.todayCount-1];
+    var cr = [0, predictionCount];
     this.setState( {
       rangeMin: 0,
       countRange: cr,
