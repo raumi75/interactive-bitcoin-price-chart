@@ -38,7 +38,8 @@ class App extends Component {
       historicalEnd: moment().format('YYYY-MM-DD'),
       scale: 'lin',
       growthRate: this.props.growthRate,
-      startPrice: 0
+      startPrice: 0,
+      startDate: this.props.startDate
     }
   }
 
@@ -68,11 +69,10 @@ class App extends Component {
   }
 
   loadData = () => {
-    const {tweetDate, targetDate} = this.props;
-    const {historicalStart}  = this.state;
-    const {historicalEnd}    = this.state;
-    predictionCount = moment(targetDate).diff(moment(tweetDate),'days');
-    offsetPrediction = moment(historicalStart).diff(moment(tweetDate),'days');
+    const {targetDate} = this.props;
+    const {startDate, historicalStart, historicalEnd}  = this.state;
+    predictionCount = moment(targetDate).diff(moment(startDate),'days');
+    offsetPrediction = moment(historicalStart).diff(moment(startDate),'days');
     const url = 'https://api.coindesk.com/v1/bpi/historical/close.json?start='+historicalStart+'&end='+historicalEnd;
     fetch(url).then( r => r.json())
       .then((bitcoinData) => {
@@ -96,7 +96,7 @@ class App extends Component {
       predictionCount = predictionCount-offsetPrediction;
       var mark = {};
       mark[0] = moment(historicalStart).format('YYYY-MM-DD');;
-      mark[0-offsetPrediction] = moment(tweetDate).format('YYYY-MM-DD');;
+      mark[0-offsetPrediction] = moment(startDate).format('YYYY-MM-DD');;
       mark[count-1] = 'yesterday';
       mark[predictionCount] = moment(targetDate).format('YYYY-MM-DD');
 
@@ -105,7 +105,7 @@ class App extends Component {
         countRange: [Math.max(-offsetPrediction,0), count-1],
         sliderMarks: mark,
         historicalEnd: moment().format('YYYY-MM-DD'),
-        startPrice: sortedData.find(function(data) { return data.d === tweetDate} ).y.p
+        startPrice: sortedData.find(function(data) { return data.d === startDate} ).y.p
       });
 
       for (count; count <= predictionCount; count++) {
@@ -293,8 +293,8 @@ class App extends Component {
   }
 
   getDaysSincePrediction(d) {
-    const {tweetDate} = this.props;
-    return moment(d).diff(moment(tweetDate),'days')
+    const {startDate} = this.state;
+    return moment(d).diff(moment(startDate),'days')
   }
 
   // Text that explains how to calculate the price on given day
@@ -337,7 +337,11 @@ class App extends Component {
         </Row>
 
         { !this.state.fetchingData ?
-        <InfoBox data={this.state.data} growthRate={this.state.growthRate} startPrice={this.state.startPrice} />
+        <InfoBox data={this.state.data}
+                 growthRate={this.state.growthRate}
+                 startPrice={this.state.startPrice}
+                 startDate ={this.state.startDate + ' 00:00:00'}
+                  />
         : 'Loading data from Coindesk ... ' }
 
         <Row>
@@ -575,7 +579,7 @@ class App extends Component {
 
 // DEFAULT PROPS
 App.defaultProps = {
-  tweetDate:  '2017-07-17',         // Date of first McAfee Tweet
+  startDate:  '2017-07-17',         // Date of first McAfee Tweet
   targetDate:  '2020-12-31',        // Day McAfee predicted the price
   targetPrice: 1000000,             // revised prediction (1Million)
   growthRate:  0.4840957035           // daily growth rate to goal of 1.000.000 USD/BTC
