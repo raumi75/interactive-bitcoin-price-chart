@@ -67,8 +67,8 @@ class InfoBox extends Component {
   // The price will be calculated for this moment.
   getMcAfeePriceNow(){
     const goalRate = 1+this.props.growthRate/100;
-    const {tweetPrice} = this.props;   // start rate USD/BTC at day of tweet
-    return Math.pow(goalRate, this.getDaysSincePrediction()) * tweetPrice;
+    const {startPrice} = this.props;   // start rate USD/BTC at day of tweet
+    return Math.pow(goalRate, this.getDaysSincePrediction()) * startPrice;
   }
 
   getAheadOrBehind() {
@@ -104,7 +104,7 @@ class InfoBox extends Component {
 // DEFAULT PROPS
 InfoBox.defaultProps = {
   tweetDate:  '2017-07-17 00:00:00',         // Date of first McAfee Tweet
-  tweetPrice:  2244.265,            // USD/BTC on TweetDate
+  startPrice: 2000,
   data: null
 }
 
