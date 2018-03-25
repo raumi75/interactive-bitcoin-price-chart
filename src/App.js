@@ -36,7 +36,8 @@ class App extends Component {
       historicalStart: minHistoricalStart, //'2017-01-01',
       historicalEnd: moment().format('YYYY-MM-DD'),
       scale: 'lin',
-      growthRate: this.props.growthRate
+      growthRate: this.props.growthRate,
+      startPrice: 0
     }
   }
 
@@ -78,13 +79,14 @@ class App extends Component {
       const sortedData = [];
       let count = 0;
 
+      // load historical prices
       for (let date in bitcoinData.bpi){
         sortedData.push({
           d: moment(date).format('YYYY-MM-DD'),
           x: count, //previous days
           s: (count + offsetPrediction), // Days since McAfee Tweet
           y: {p: bitcoinData.bpi[date], // historical price on date
-              m: this.getMcAfeeRate(count + offsetPrediction) } // predicted price for date
+              m: 0} // predicted price for date
         });
         count++;
       }
@@ -101,7 +103,8 @@ class App extends Component {
         todayCount: count,
         countRange: [Math.max(-offsetPrediction,0), count-1],
         sliderMarks: mark,
-        historicalEnd: moment().format('YYYY-MM-DD')
+        historicalEnd: moment().format('YYYY-MM-DD'),
+        startPrice: sortedData.find(function(data) { return data.d === tweetDate} ).y.p
       });
 
       for (count; count <= predictionCount; count++) {
@@ -110,7 +113,7 @@ class App extends Component {
           x: count, //previous days
           s: (count + offsetPrediction), // Days since McAfee Tweet
           y: {p: 0, // historical price on date
-              m: this.getMcAfeeRate(count + offsetPrediction)}
+              m: 0}
         });
       }
 
@@ -120,11 +123,13 @@ class App extends Component {
         fetchingData: false
       });
 
+      this.addMcAfeeRates();
+
       this.cutData(this.state.countRange);
 
     })
     .catch((e) => {
-      console.log(e);
+      console.log('Error when loading price data from coinbase' + e);
     });
   }
 
@@ -260,9 +265,9 @@ class App extends Component {
   // USD/BTC according to John McAfee's Tweet (1.000.000 by 2020)
   getMcAfeeRate = (s) => {
     const goalRate = 1+(this.state.growthRate/100);
-    const {tweetPrice} = this.props;   // start rate USD/BTC at day of tweet
+    const {startPrice} = this.state;   // start rate USD/BTC at day of tweet
     if (s >= 0) {
-      return Math.pow(goalRate, s) * tweetPrice;
+      return Math.pow(goalRate, s) * startPrice;
     } else {
       return 0;
     }
@@ -294,12 +299,12 @@ class App extends Component {
   // Text that explains how to calculate the price on given day
   explainPriceOn(d) {
     const growthRate = this.state.growthRate/100;
-    const {tweetPrice} = this.props;   // start rate USD/BTC at day of tweet
+    const {startPrice} = this.state;   // start rate USD/BTC at day of tweet
 
     return (
       <Panel className="panelFormula">
         <Panel.Heading>By the end of {moment(d).format('YYYY-MM-DD')}, the prediction is {this.getDaysSincePrediction(d)} days old</Panel.Heading>
-        <Panel.Body>{1+growthRate}<sup><strong>{this.getDaysSincePrediction(d)}</strong></sup> * { formatDollar(tweetPrice, 3) } = { formatDollar(this.getMcAfeeRate(this.getDaysSincePrediction(d)),2) }</Panel.Body>
+        <Panel.Body>{1+growthRate}<sup><strong>{this.getDaysSincePrediction(d)}</strong></sup> * { formatDollar(startPrice, 3) } = { formatDollar(this.getMcAfeeRate(this.getDaysSincePrediction(d)),2) }</Panel.Body>
       </Panel>
     );
 
@@ -317,7 +322,7 @@ class App extends Component {
 
   render() {
     const growthRate = this.state.growthRate/100;
-    const {tweetPrice} = this.props;
+    const {startPrice} = this.state;
 
     return (
 
@@ -331,7 +336,7 @@ class App extends Component {
         </Row>
 
         { !this.state.fetchingData ?
-        <InfoBox data={this.state.data} growthRate={this.state.growthRate} />
+        <InfoBox data={this.state.data} growthRate={this.state.growthRate} startPrice={this.state.startPrice} />
         : 'Loading data from Coindesk ... ' }
 
         <Row>
@@ -457,7 +462,7 @@ class App extends Component {
           <Col xs={12} md={6}>
             <h2>It started with a tweet</h2>
             <p className="lead explanation">
-              John McAfee made a bet on July 17th 2017: One single Bitcoin would be worth { formatDollar(500000) } in three years. The closing price according to CoinDesk was { formatDollar(tweetPrice, 3) } that day. He later revised his bet and <a href="https://twitter.com/officialmcafee/status/935900326007328768">predicted $ 1 million by the end of 2020</a>.
+              John McAfee made a bet on July 17th 2017: One single Bitcoin would be worth { formatDollar(500000) } in three years. The closing price according to CoinDesk was { formatDollar(startPrice, 3) } that day. He later revised his bet and <a href="https://twitter.com/officialmcafee/status/935900326007328768">predicted $ 1 million by the end of 2020</a>.
             </p>
           </Col>
           <Col xs={12} md={6}>
@@ -570,7 +575,6 @@ class App extends Component {
 // DEFAULT PROPS
 App.defaultProps = {
   tweetDate:  '2017-07-17',         // Date of first McAfee Tweet
-  tweetPrice:  2244.265,            // USD/BTC on TweetDate
   targetDate:  '2020-12-31',        // Day McAfee predicted the price
   targetPrice: 1000000,             // revised prediction (1Million)
   growthRate:  0.4840957035           // daily growth rate to goal of 1.000.000 USD/BTC
