@@ -12,7 +12,6 @@ import {formatDollar} from './formatting.js';
 import {getDataBoundaries} from './chartDataBoundaries.js';
 var Latex = require('react-latex');
 
-const predictionDays = 1263;
 const donate_btc_address = "3B19wMMJD7Xjf9ajW2oRcfVfKjRprWmGrG";
 var predictionCount = 1263;
 var offsetPrediction = 0;
@@ -91,7 +90,7 @@ class App extends Component {
       }
 
       // Labels on range-slider below chart
-      predictionCount = predictionDays-offsetPrediction;
+      predictionCount = predictionCount-offsetPrediction;
       var mark = {};
       mark[0] = moment(historicalStart).format('YYYY-MM-DD');;
       mark[0-offsetPrediction] = moment(tweetDate).format('YYYY-MM-DD');;
