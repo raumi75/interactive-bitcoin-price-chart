@@ -3,7 +3,7 @@
   "version": "1.4.0",
   "dependencies": {
     "moment": "^2.21.0",
-    "npm": "^5.7.1",
+    "npm": "^5.8.0",
     "rc-slider": "^8.6.1",
     "react": "^16.2.0",
     "react-bootstrap": "^0.32.1",
