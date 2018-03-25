@@ -59,8 +59,8 @@ class InfoBox extends Component {
   // I know this is inconsitent. This way, the prdicted price will reach the
   // targetPrice on 2020-12-31 at 0:00 am, which is not exactly end of the year, but who cares...
   getDaysSincePrediction() {
-    const tweetDate = this.props.tweetDate + '+0000';
-    return moment().utc().diff(moment(tweetDate),'days', true)-1;
+    const startDate = this.props.startDate + '+0000';
+    return moment().utc().diff(moment(startDate),'days', true)-1;
   }
 
   // No Paramter because this is realtime
@@ -103,8 +103,8 @@ class InfoBox extends Component {
 
 // DEFAULT PROPS
 InfoBox.defaultProps = {
-  tweetDate:  '2017-07-17 00:00:00',         // Date of first McAfee Tweet
   startPrice: 2000,
+  startDate:  '2017-07-17 00:00:00',         // Date of first McAfee Tweet
   data: null
 }
 
