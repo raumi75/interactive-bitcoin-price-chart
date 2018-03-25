@@ -13,8 +13,8 @@ import {getDataBoundaries} from './chartDataBoundaries.js';
 var Latex = require('react-latex');
 
 const donate_btc_address = "3B19wMMJD7Xjf9ajW2oRcfVfKjRprWmGrG";
-var predictionCount = 1263;
-var offsetPrediction = 0;
+var predictionCount = 1263;   // days startDate to targetDate (2020-12-31)
+var offsetPrediction = -2389; // days startDate to minHistoricalStart
 const minSliderDistance = 29;
 const minHistoricalStart = '2011-01-01';  // Coindesk API requires historicalStart >= 2010-07-17
 const defaultRangeMin = moment('2017-01-01').diff(moment(minHistoricalStart), 'days'); // left slider can go
@@ -67,10 +67,10 @@ class App extends Component {
   }
 
   loadData = () => {
-    const {tweetDate} = this.props;
-    const {targetDate} = this.props;
+    const {tweetDate, targetDate} = this.props;
     const {historicalStart}  = this.state;
     const {historicalEnd}    = this.state;
+    predictionCount = moment(targetDate).diff(moment(tweetDate),'days');
     offsetPrediction = moment(historicalStart).diff(moment(tweetDate),'days');
     const url = 'https://api.coindesk.com/v1/bpi/historical/close.json?start='+historicalStart+'&end='+historicalEnd;
     fetch(url).then( r => r.json())
