@@ -499,12 +499,7 @@ class App extends Component {
         <Row>
           <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
             <h2>Similar sites</h2>
-            <p>You probably know the popular site <a href="https://diegorod.github.io/WillMcAfeeEatHisOwnDick/">diegorod.github.io/WillMcAfeeEatHisOwnDick/</a>.</p>
-            <p>I was asked why my prediction is different.
-            The reason is, that DiegoRod counts to $ 1 million by <em>July 17th 2020</em>, <mark>but McAfee wrote 'by the end of 2020'</mark>.</p>
-            <p>If you change the <em>end date to 2020-12-31</em>
-            by calling <a href="https://diegorod.github.io/Bitcoin-Price-Predictor/?startDate=2017-07-17&endDate=2020-12-31&bpiPrediction=1000000">diegorod.github.io/Bitcoin-Price-Predictor/?startDate=2017-07-17&endDate=2020-12-31&bpiPrediction=1000000</a>,
-            his red predicted price should match the one for today by midnight: { formatDollar(this.getMcAfeeRate(this.getDaysSincePrediction(Date.now())),2) } (see explanation above).</p>
+            <p>The popular site <a href="https://diegorod.github.io/WillMcAfeeEatHisOwnDick/">diegorod.github.io/WillMcAfeeEatHisOwnDick/</a> does a great job showing the current state of the prediction.</p>
           </Col>
         </Row>
 
