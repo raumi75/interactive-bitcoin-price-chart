@@ -350,6 +350,7 @@ class App extends Component {
     const growthRate = this.state.growthRate/100;
     const {startDate, startPrice, targetDate, customPrediction} = this.state;
 
+
     return (
 
       <Grid fluid={true} >
@@ -358,7 +359,7 @@ class App extends Component {
           <Col xs={12}>
             <h1>Bitcoin Price Prediction Tracker</h1>
             { customPrediction ?
-              <p>Will bitcoin grow {growthRate} % per day from {formatDollar(startPrice)} on {startDate} to {formatDollar(this.getTargetPrice())} on {targetDate} ?</p>
+              <p>Will bitcoin be {formatDollar(this.getTargetPrice())} on {moment(targetDate).format('MMMM Do YYYY')}?</p>
             :
               <p>John McAfee says: By the end of 2020 Bitcoin will be worth $&nbsp;1&nbsp;Million. Is he losing his bet?</p>
             }
