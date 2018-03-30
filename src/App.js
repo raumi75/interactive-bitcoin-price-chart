@@ -41,7 +41,7 @@ class App extends Component {
       growthRate: getParameterByName('percent') || this.props.growthRate,
       customPrediction: (getParameterByName('percent') !== null),
       startPrice: 0,
-      startDate: this.props.startDate,
+      startDate: getParameterByName('startdate') || this.props.startDate,
       targetDate: this.props.targetDate
     }
   }
@@ -87,7 +87,6 @@ class App extends Component {
         sortedData.push({
           d: moment(date).format('YYYY-MM-DD'),
           x: count, //previous days
-          s: (count + offsetPrediction), // Days since McAfee Tweet
           y: {p: bitcoinData.bpi[date], // historical price on date
               m: 0} // predicted price for date
         });
@@ -96,16 +95,10 @@ class App extends Component {
 
       // Labels on range-slider below chart
       predictionCount = predictionCount-offsetPrediction;
-      var mark = {};
-      mark[0] = moment(historicalStart).format('YYYY-MM-DD');;
-      mark[0-offsetPrediction] = moment(startDate).format('YYYY-MM-DD');;
-      mark[count-1] = 'yesterday';
-      mark[predictionCount] = moment(targetDate).format('YYYY-MM-DD');
 
       this.setState({
         todayCount: count,
         countRange: [Math.max(-offsetPrediction,0), count-1],
-        sliderMarks: mark,
         historicalEnd: moment().format('YYYY-MM-DD'),
         startPrice: sortedData.find(function(data) { return data.d === startDate} ).y.p
       });
@@ -114,7 +107,6 @@ class App extends Component {
         sortedData.push({
           d: moment(historicalStart).add(count, 'days').format('YYYY-MM-DD'),
           x: count, //previous days
-          s: (count + offsetPrediction), // Days since McAfee Tweet
           y: {p: 0, // historical price on date
               m: 0}
         });
@@ -127,7 +119,7 @@ class App extends Component {
       });
 
       this.addMcAfeeRates();
-
+      this.setSliderMarks();
       this.cutData(this.state.countRange);
 
     })
@@ -150,6 +142,19 @@ class App extends Component {
     }, this.cutData([pos[0], pos[1]]));
   };
 
+  setSliderMarks = () => {
+    const {historicalStart, startDate, targetDate} = this.state;
+    console.log((moment(historicalStart).diff(moment(targetDate),'days')));
+    var mark = {};
+    mark[0] = moment(historicalStart).format('YYYY-MM-DD');;
+    mark[(moment(startDate).diff(moment(historicalStart),'days'))] = moment(startDate).format('YYYY-MM-DD');;
+    mark[(moment(Date.now()).diff(moment(historicalStart),'days')-1)] = 'yesterday';
+    mark[(moment(targetDate).diff(moment(historicalStart),'days'))] = moment(targetDate).format('YYYY-MM-DD');
+    this.setState ({
+      sliderMarks: mark
+    });
+  }
+
   cutData(pos) {
     var dataCut = this.state.dataComplete.slice(pos[0],pos[1]+1);
 
@@ -159,7 +164,6 @@ class App extends Component {
           d: val.d,
           y: val.y,
           x: val.x-pos[0], //previous days
-          s: val.s, // Days since McAfee Tweet
         }
       });
     }
@@ -198,12 +202,17 @@ class App extends Component {
   }
 
   handleRangeReset = () => {
+    this.setRangeDefault();
+    this.setState({
+      scale: 'lin',
+      activeTabKey: 2});
+  }
+
+  setRangeDefault = () => {
     var cr = [Math.max(-offsetPrediction,0), this.state.todayCount-1]
     this.setState({
-      rangeMin: defaultRangeMin,
+      rangeMin: Math.min(defaultRangeMin, -offsetPrediction),
       countRange: cr,
-      scale: 'lin',
-      activeTabKey: 2
     });
     this.cutData(cr);
   }
@@ -266,6 +275,34 @@ class App extends Component {
     );
   }
 
+  // User entered a new start date
+  handleStartDateChange = (e) => {
+    const {dataComplete, historicalStart} = this.state;
+    let inputDate = moment(e.target.value).format('YYYY-MM-DD');
+    let dataStartDate = dataComplete.find(function(data) { return data.d === inputDate} )
+    let price = 0;
+    if (typeof(dataStartDate) !== 'undefined') {
+      price = dataStartDate.y.p;
+      offsetPrediction = moment(historicalStart).diff(moment(inputDate),'days');
+      this.setState(
+        {
+          customPrediction: true,
+          startDate: inputDate,
+          startPrice: price,
+        }
+        , () => {
+            this.setRangeDefault();
+            this.setSliderMarks();
+            this.addMcAfeeRates();                  }
+      );
+    } else {
+      // even if date is invalid, set it so user can keep typing
+      // Some browsers like Safari still don't have a datepicker
+      this.setState({startDate: e.target.value});
+    }
+
+  }
+
   // USD/BTC according to John McAfee's Tweet (1.000.000 by 2020)
   getMcAfeeRate = (s) => {
     const goalRate = 1+(this.state.growthRate/100);
@@ -289,9 +326,8 @@ class App extends Component {
       return {
         d: val.d,
         x: val.x, //previous days
-        s: val.s, // Days since McAfee Tweet
         y: {p: val.y.p,
-            m: this.getMcAfeeRate(val.s) }
+            m: this.getMcAfeeRate(val.x+offsetPrediction) }
       }
     });
     this.setState ({ dataComplete: newDataComplete },
@@ -348,9 +384,10 @@ class App extends Component {
 
   getUrl() {
     const FQDN = 'https://fnordprefekt.de';
-    const {growthRate} = this.state;
-    return FQDN + '?percent=' + growthRate;
+    const {growthRate, startDate} = this.state;
+    return FQDN + '?percent=' + growthRate + '&startdate=' + startDate;
   }
+
   render() {
     const growthRate = this.state.growthRate/100;
     const {targetDate, customPrediction} = this.state;
@@ -445,6 +482,20 @@ class App extends Component {
 
         <Form horizontal>
           <h3>Make your own prediction</h3>
+
+          <FormGroup controlId="formStartDate">
+            <Col componentClass={ControlLabel} sm={2}>
+              Start Date
+            </Col>
+            <Col sm={8} md={5} lg={3}>
+              <InputGroup>
+              <FormControl type="date"
+                           value={this.state.startDate}
+                           onChange={this.handleStartDateChange}
+                            />
+              </InputGroup>
+            </Col>
+          </FormGroup>
 
           <FormGroup controlId="formGrowthRate">
             <Col componentClass={ControlLabel} sm={2}>
