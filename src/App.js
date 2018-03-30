@@ -348,7 +348,7 @@ class App extends Component {
 
   render() {
     const growthRate = this.state.growthRate/100;
-    const {startDate, startPrice, targetDate, customPrediction} = this.state;
+    const {targetDate, customPrediction} = this.state;
 
 
     return (
