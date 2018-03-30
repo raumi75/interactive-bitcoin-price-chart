@@ -5,9 +5,9 @@
     "moment": "^2.21.0",
     "npm": "^5.8.0",
     "rc-slider": "^8.6.1",
-    "react": "^16.2.0",
+    "react": "^16.3.0",
     "react-bootstrap": "^0.32.1",
-    "react-dom": "^16.2.0",
+    "react-dom": "^16.3.0",
     "react-latex": "^1.2.0",
     "serve": "^6.5.3"
   },
