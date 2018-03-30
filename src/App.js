@@ -346,6 +346,11 @@ class App extends Component {
     return `$\\frac{\\log_{10}(`+factor+`)}{\\log_{10}(1+\\frac{`+ growthRate + `}{100})}$`;
   }
 
+  getUrl() {
+    const FQDN = 'https://fnordprefekt.de';
+    const {growthRate} = this.state;
+    return FQDN + '?percent=' + growthRate;
+  }
   render() {
     const growthRate = this.state.growthRate/100;
     const {targetDate, customPrediction} = this.state;
@@ -425,7 +430,7 @@ class App extends Component {
 
               </div>
 
-              : null }
+              : 'creating Chart ... ' }
         </Row>
 
         <Row>
@@ -497,7 +502,12 @@ class App extends Component {
         ?
           this.explainMcAfeeTweet()
         :
-          <br />
+          <Row>
+            <Col xs={12}>
+              <p className="lead">Share or bookmark this link to your prediction: <br />
+              <a href={this.getUrl()}>{this.getUrl()}</a></p>
+            </Col>
+          </Row>
         }
 
         <Row>
@@ -584,7 +594,7 @@ class App extends Component {
           <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
             <h2>McAfee prediction</h2>
             <p>The founder of McAfee Antivirus, John McAfee bets his dick that bitcoin will be $1 million on December 31st 2020.
-            <a href="https:fnordprefekt.de" className="btn btn-primary">See how ths McAfee Prediction plays out.</a></p>
+            <a href="https://fnordprefekt.de" className="btn btn-primary">See how the McAfee Prediction plays out.</a></p>
           </Col>
         </Row>
 }
