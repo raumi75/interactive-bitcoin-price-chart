@@ -585,7 +585,7 @@ class App extends Component {
         <Row>
           <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
             <h2>Similar sites</h2>
-            <p>The popular site <a href="https://diegorod.github.io/WillMcAfeeEatHisOwnDick/">diegorod.github.io/WillMcAfeeEatHisOwnDick/</a> does a great job showing the current state of the prediction compared to the McAfee prediction. You can also make your own predictions.</p>
+            <p>The popular site <a href="https://diegorod.github.io/WillMcAfeeEatHisOwnDick/">diegorod.github.io/WillMcAfeeEatHisOwnDick/</a> does a great job showing the current state of the prediction compared to the McAfee prediction. You can also make your <a href="https://diegorod.github.io/Bitcoin-Price-Predictor/">own predictions</a>.</p>
           </Col>
         </Row>
 
