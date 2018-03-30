@@ -9,6 +9,7 @@ import InfoBox from './InfoBox';
 import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import {formatDollar} from './formatting.js';
+import {getParameterByName} from './getparameter.js';
 import {getDataBoundaries} from './chartDataBoundaries.js';
 var Latex = require('react-latex');
 
@@ -37,7 +38,7 @@ class App extends Component {
       historicalStart: minHistoricalStart, //'2011-01-01',
       historicalEnd: moment().format('YYYY-MM-DD'),
       scale: 'lin',
-      growthRate: this.props.growthRate,
+      growthRate: getParameterByName('percent') || this.props.growthRate,
       startPrice: 0,
       startDate: this.props.startDate
     }
