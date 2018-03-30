@@ -39,8 +39,10 @@ class App extends Component {
       historicalEnd: moment().format('YYYY-MM-DD'),
       scale: 'lin',
       growthRate: getParameterByName('percent') || this.props.growthRate,
+      customPrediction: (getParameterByName('percent') !== null),
       startPrice: 0,
-      startDate: this.props.startDate
+      startDate: this.props.startDate,
+      targetDate: this.props.targetDate
     }
   }
 
@@ -70,8 +72,7 @@ class App extends Component {
   }
 
   loadData = () => {
-    const {targetDate} = this.props;
-    const {startDate, historicalStart, historicalEnd}  = this.state;
+    const {startDate, targetDate, historicalStart, historicalEnd}  = this.state;
     predictionCount = moment(targetDate).diff(moment(startDate),'days');
     offsetPrediction = moment(historicalStart).diff(moment(startDate),'days');
     const url = 'https://api.coindesk.com/v1/bpi/historical/close.json?start='+historicalStart+'&end='+historicalEnd;
@@ -258,6 +259,7 @@ class App extends Component {
   handleGrowthRateChange = (e) => {
     this.setState(
       {
+        customPrediction: true,
         growthRate: e.target.value
       }
       , () => this.addMcAfeeRates()
@@ -273,6 +275,11 @@ class App extends Component {
     } else {
       return 0;
     }
+  }
+
+  getTargetPrice() {
+    const {startDate, targetDate} = this.state;
+    return this.getMcAfeeRate(moment(targetDate).diff(moment(startDate),'days'));
   }
 
   // Add predicted priced to sortedData Array
@@ -312,6 +319,23 @@ class App extends Component {
 
   }
 
+  explainMcAfeeTweet() {
+    const {startPrice} = this.state;
+    return (
+      <Row>
+        <Col xs={12} md={6}>
+          <h2>It started with a tweet</h2>
+          <p className="lead explanation">
+            John McAfee made a bet on July 17th 2017: One single Bitcoin would be worth { formatDollar(500000) } in three years. The closing price according to CoinDesk was { formatDollar(startPrice, 3) } that day. He later revised his bet and <a href="https://twitter.com/officialmcafee/status/935900326007328768">predicted $ 1 million by the end of 2020</a>.
+          </p>
+        </Col>
+        <Col xs={12} md={6}>
+          <p><a href="https://twitter.com/officialmcafee/status/935900326007328768"><Image src="tweet20171129.png" responsive /></a></p>
+        </Col>
+      </Row>
+    );
+  }
+
   latexMathAnnualGrowth() {
     const {growthRate} = this.state;
     return `$\\left( (1+\\frac{`+ growthRate + `}{100})^{365}-1 \\right)*100$`;
@@ -324,7 +348,7 @@ class App extends Component {
 
   render() {
     const growthRate = this.state.growthRate/100;
-    const {startPrice} = this.state;
+    const {startDate, startPrice, targetDate, customPrediction} = this.state;
 
     return (
 
@@ -333,7 +357,11 @@ class App extends Component {
         <Row className="header">
           <Col xs={12}>
             <h1>Bitcoin Price Prediction Tracker</h1>
-            <p>John McAfee says: By the end of 2020 Bitcoin will be worth $&nbsp;1&nbsp;Million. Is he losing his bet?</p>
+            { customPrediction ?
+              <p>Will bitcoin grow {growthRate} % per day from {formatDollar(startPrice)} on {startDate} to {formatDollar(this.getTargetPrice())} on {targetDate} ?</p>
+            :
+              <p>John McAfee says: By the end of 2020 Bitcoin will be worth $&nbsp;1&nbsp;Million. Is he losing his bet?</p>
+            }
           </Col>
         </Row>
 
@@ -401,7 +429,7 @@ class App extends Component {
 
         <Row>
           <Col xs={12} lg={6}>
-            <p className="lead redlineExplanation">The red line steadily grows to { formatDollar(1000000) } per BTC. Move the slider to zoom.</p>
+            <p className="lead redlineExplanation">The red line steadily grows to { formatDollar(this.getTargetPrice()) } per BTC. Move the slider to zoom.</p>
           </Col>
           <Col xs={12} lg={6}>
             <p id="coindesk" className="text-right">Data kindly provided by <a href="http://www.coindesk.com/price/">CoinDesk</a></p>
@@ -410,7 +438,7 @@ class App extends Component {
         </Row>
 
         <Form horizontal>
-          <h3>Tinker with parameter</h3>
+          <h3>Make your own prediction</h3>
 
           <FormGroup controlId="formGrowthRate">
             <Col componentClass={ControlLabel} sm={2}>
@@ -464,17 +492,12 @@ class App extends Component {
           </FormGroup>
         </Form>
 
-        <Row>
-          <Col xs={12} md={6}>
-            <h2>It started with a tweet</h2>
-            <p className="lead explanation">
-              John McAfee made a bet on July 17th 2017: One single Bitcoin would be worth { formatDollar(500000) } in three years. The closing price according to CoinDesk was { formatDollar(startPrice, 3) } that day. He later revised his bet and <a href="https://twitter.com/officialmcafee/status/935900326007328768">predicted $ 1 million by the end of 2020</a>.
-            </p>
-          </Col>
-          <Col xs={12} md={6}>
-            <p><a href="https://twitter.com/officialmcafee/status/935900326007328768"><Image src="tweet20171129.png" responsive /></a></p>
-          </Col>
-        </Row>
+        { !this.state.customPrediction
+        ?
+          this.explainMcAfeeTweet()
+        :
+          <br />
+        }
 
         <Row>
           <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
@@ -492,7 +515,7 @@ class App extends Component {
             <p>Still does not look like it is on target?</p>
             {this.explainPriceOn('2020-06-01')}
             <p>And finally,</p>
-            {this.explainPriceOn('2020-12-31')}
+            {this.explainPriceOn(targetDate)}
 
           </Col>
         </Row>
@@ -500,7 +523,7 @@ class App extends Component {
         <Row>
           <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
             <h2>Similar sites</h2>
-            <p>The popular site <a href="https://diegorod.github.io/WillMcAfeeEatHisOwnDick/">diegorod.github.io/WillMcAfeeEatHisOwnDick/</a> does a great job showing the current state of the prediction.</p>
+            <p>The popular site <a href="https://diegorod.github.io/WillMcAfeeEatHisOwnDick/">diegorod.github.io/WillMcAfeeEatHisOwnDick/</a> does a great job showing the current state of the prediction compared to the McAfee prediction. You can also make your own predictions.</p>
           </Col>
         </Row>
 
@@ -546,6 +569,8 @@ class App extends Component {
           </Col>
         </Row>
 
+        { !this.state.customPrediction ?
+
         <Row>
           <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
             <h2>Who is that John McAfee guy?</h2>
@@ -553,7 +578,15 @@ class App extends Component {
             <p className="lead">This is not about McAfee. It is about comparing the price to a prediction that sounds too good to be true.</p>
           </Col>
         </Row>
-
+        :
+        <Row>
+          <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
+            <h2>McAfee prediction</h2>
+            <p>The founder of McAfee Antivirus, John McAfee bets his dick that bitcoin will be $1 million on December 31st 2020.
+            <a href="https:fnordprefekt.de" className="btn btn-primary">See how ths McAfee Prediction plays out.</a></p>
+          </Col>
+        </Row>
+}
         <Row className="footer">
           <Col xs={12}>
             <p>Source: <a href="https://github.com/raumi75/mcafeetracker">raumi75@github</a></p>
@@ -577,7 +610,6 @@ class App extends Component {
 App.defaultProps = {
   startDate:  '2017-07-17',         // Date of first McAfee Tweet
   targetDate:  '2020-12-31',        // Day McAfee predicted the price
-  targetPrice: 1000000,             // revised prediction (1Million)
   growthRate:  0.4840957035           // daily growth rate to goal of 1.000.000 USD/BTC
 }
 
