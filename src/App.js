@@ -12,6 +12,7 @@ import {formatDollar} from './formatting.js';
 import {getParameterByName} from './getparameter.js';
 import {getDataBoundaries} from './chartDataBoundaries.js';
 var Latex = require('react-latex');
+var DatePicker = require("react-bootstrap-date-picker");
 
 const donate_btc_address = "3B19wMMJD7Xjf9ajW2oRcfVfKjRprWmGrG";
 var predictionCount = 1263;   // days startDate to targetDate (2020-12-31)
@@ -144,7 +145,6 @@ class App extends Component {
 
   setSliderMarks = () => {
     const {historicalStart, startDate, targetDate} = this.state;
-    console.log((moment(historicalStart).diff(moment(targetDate),'days')));
     var mark = {};
     mark[0] = moment(historicalStart).format('YYYY-MM-DD');;
     mark[(moment(startDate).diff(moment(historicalStart),'days'))] = moment(startDate).format('YYYY-MM-DD');;
@@ -276,12 +276,20 @@ class App extends Component {
   }
 
   // User entered a new start date
-  handleStartDateChange = (e) => {
+  handleStartDateChange = (value) => {
     const {dataComplete, historicalStart} = this.state;
-    let inputDate = moment(e.target.value).format('YYYY-MM-DD');
+    let inputDate = moment(value).format('YYYY-MM-DD');
+    if (moment(inputDate).isAfter(moment(Date.now()).subtract(1, 'week'))) {
+      inputDate = moment(Date.now()).subtract(1, 'week').format('YYYY-MM-DD');
+    }
+    if (moment(inputDate).isBefore(moment(historicalStart))) {
+      inputDate = historicalStart;
+    }
     let dataStartDate = dataComplete.find(function(data) { return data.d === inputDate} )
     let price = 0;
-    if (typeof(dataStartDate) !== 'undefined') {
+
+    if (typeof(dataStartDate)     !== 'undefined' ||
+        typeof(dataStartDate.y.p) !== 'undefined' ) {
       price = dataStartDate.y.p;
       offsetPrediction = moment(historicalStart).diff(moment(inputDate),'days');
       this.setState(
@@ -295,12 +303,7 @@ class App extends Component {
             this.setSliderMarks();
             this.addMcAfeeRates();                  }
       );
-    } else {
-      // even if date is invalid, set it so user can keep typing
-      // Some browsers like Safari still don't have a datepicker
-      this.setState({startDate: e.target.value});
     }
-
   }
 
   // USD/BTC according to John McAfee's Tweet (1.000.000 by 2020)
@@ -391,7 +394,6 @@ class App extends Component {
   render() {
     const growthRate = this.state.growthRate/100;
     const {targetDate, customPrediction} = this.state;
-
 
     return (
 
@@ -489,10 +491,14 @@ class App extends Component {
             </Col>
             <Col sm={8} md={5} lg={3}>
               <InputGroup>
-              <FormControl type="date"
-                           value={this.state.startDate}
-                           onChange={this.handleStartDateChange}
-                            />
+              <DatePicker id="startdatepicker"
+                value={this.state.startDate}
+                onChange={this.handleStartDateChange}
+                minDate={this.state.historicalStart}
+                maxDate={moment(this.state.historicalEnd).subtract(1, 'week').format('YYYY-MM-DD')}
+                showClearButton={false}
+                dateFormat="YYYY-MM-DD"
+                />
               </InputGroup>
             </Col>
           </FormGroup>
