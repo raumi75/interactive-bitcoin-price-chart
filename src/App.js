@@ -401,8 +401,8 @@ class App extends Component {
 
   getUrl() {
     const FQDN = 'https://fnordprefekt.de';
-    const {growthRate, startDate} = this.state;
-    return FQDN + '?percent=' + growthRate + '&startdate=' + startDate;
+    const {growthRate, startDate, startPrice} = this.state;
+    return FQDN + '?percent=' + growthRate + '&startdate=' + startDate + '&startprice=' + startPrice;
   }
 
   render() {
