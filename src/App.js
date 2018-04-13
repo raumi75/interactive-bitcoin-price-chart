@@ -19,6 +19,7 @@ var predictionCount = 1263;   // days startDate to targetDate (2020-12-31)
 var offsetPrediction = -2389; // days startDate to minHistoricalStart
 const minSliderDistance = 29;
 const minHistoricalStart = '2011-01-01';     // Coindesk API requires historicalStart >= 2010-07-17
+const maxTargetDate = '2030-01-01';
 const defaultHistoricalStart = '2017-01-01'; // show historical Data starting this day by default
 const defaultRangeMin = moment(defaultHistoricalStart).diff(moment(minHistoricalStart), 'days'); // left slider can go
 
@@ -42,8 +43,8 @@ class App extends Component {
       growthRate: getParameterByName('percent') || this.props.growthRate,
       customPrediction: (getParameterByName('percent') !== null),
       startPrice: 0,
-      startDate: getParameterByName('startdate') || this.props.startDate,
-      targetDate: this.props.targetDate
+      startDate:  getParameterByName('startdate')  || this.props.startDate,
+      targetDate: getParameterByName('targetdate') || this.props.targetDate
     }
   }
 
@@ -74,7 +75,7 @@ class App extends Component {
 
   loadData = () => {
     const {startDate, targetDate, historicalStart, historicalEnd}  = this.state;
-    predictionCount = moment(targetDate).diff(moment(startDate),'days');
+    predictionCount = moment(maxTargetDate).diff(moment(startDate),'days');
     offsetPrediction = moment(historicalStart).diff(moment(startDate),'days');
     const url = 'https://api.coindesk.com/v1/bpi/historical/close.json?start='+historicalStart+'&end='+historicalEnd;
     fetch(url).then( r => r.json())
@@ -112,6 +113,8 @@ class App extends Component {
               m: 0}
         });
       }
+
+      predictionCount = moment(targetDate).diff(moment(startDate),'days')-offsetPrediction;
 
       this.setState({
         dataComplete: sortedData,
@@ -306,6 +309,30 @@ class App extends Component {
     }
   }
 
+  handleTargetDateChange = (value) => {
+    const {startDate} = this.state;
+    let inputDate = moment(value).format('YYYY-MM-DD');
+    if (moment(inputDate).isBefore(moment(Date.now()).add(1, 'month'))) {
+      inputDate = moment(Date.now()).add(1, 'month').format('YYYY-MM-DD');
+    }
+    if (moment(inputDate).isAfter(moment(maxTargetDate))) {
+      inputDate = maxTargetDate;
+    }
+    this.setState(
+      {
+        customPrediction: true,
+        targetDate: inputDate
+      }, () => {
+          predictionCount = moment(inputDate).diff(moment(startDate),'days')-offsetPrediction;
+
+          this.setRangeDefault();
+          this.setSliderMarks();
+          this.addMcAfeeRates();                  }
+    );
+  }
+
+
+
   handleStartPriceChange = (e) => {
     let price = parseFloat(e.target.value);
     this.setState(
@@ -401,8 +428,8 @@ class App extends Component {
 
   getUrl() {
     const FQDN = 'https://fnordprefekt.de';
-    const {growthRate, startDate, startPrice} = this.state;
-    return FQDN + '?percent=' + growthRate + '&startdate=' + startDate + '&startprice=' + startPrice;
+    const {growthRate, startDate, targetDate, startPrice} = this.state;
+    return FQDN + '?percent=' + growthRate + '&startdate=' + startDate + '&targetdate=' + targetDate + '&startprice=' + startPrice;
   }
 
   render() {
@@ -543,6 +570,24 @@ class App extends Component {
                            onChange={this.handleGrowthRateChange}
                             />
               <InputGroup.Addon>%</InputGroup.Addon>
+              </InputGroup>
+            </Col>
+          </FormGroup>
+
+          <FormGroup controlId="formTargetDate">
+            <Col componentClass={ControlLabel} sm={2}>
+              Start Date
+            </Col>
+            <Col sm={8} md={5} lg={3}>
+              <InputGroup>
+              <DatePicker id="targetdatepicker"
+                value={this.state.targetDate}
+                onChange={this.handleTargetDateChange}
+                minDate={moment(this.state.historicalEnd).add(1, 'month').format('YYYY-MM-DD')}
+                maxDate={maxTargetDate}
+                showClearButton={false}
+                dateFormat="YYYY-MM-DD"
+                />
               </InputGroup>
             </Col>
           </FormGroup>
