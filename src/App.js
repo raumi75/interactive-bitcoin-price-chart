@@ -101,7 +101,7 @@ class App extends Component {
         todayCount: count,
         countRange: [Math.max(-offsetPrediction,0), count-1],
         historicalEnd: moment().format('YYYY-MM-DD'),
-        startPrice: sortedData.find(function(data) { return data.d === startDate} ).y.p
+        startPrice: parseFloat(getParameterByName('startprice')) || sortedData.find(function(data) { return data.d === startDate} ).y.p
       });
 
       for (count; count <= predictionCount; count++) {
@@ -306,6 +306,20 @@ class App extends Component {
     }
   }
 
+  handleStartPriceChange = (e) => {
+    let price = parseFloat(e.target.value);
+    this.setState(
+      {
+        customPrediction: true,
+        startPrice: price
+      }
+      , () => {
+          this.setRangeDefault();
+          this.setSliderMarks();
+          this.addMcAfeeRates();                  }
+    );
+  }
+
   // USD/BTC according to John McAfee's Tweet (1.000.000 by 2020)
   getMcAfeeRate = (s) => {
     const goalRate = 1+(this.state.growthRate/100);
@@ -499,6 +513,21 @@ class App extends Component {
                 showClearButton={false}
                 dateFormat="YYYY-MM-DD"
                 />
+              </InputGroup>
+            </Col>
+          </FormGroup>
+
+          <FormGroup controlId="formStartPrice">
+            <Col componentClass={ControlLabel} sm={2}>
+              Start Price
+            </Col>
+            <Col sm={8} md={5} lg={3}>
+              <InputGroup>
+              <InputGroup.Addon>US$</InputGroup.Addon>
+              <FormControl type="number"
+                           value={this.state.startPrice}
+                           onChange={this.handleStartPriceChange}
+                            />
               </InputGroup>
             </Col>
           </FormGroup>
