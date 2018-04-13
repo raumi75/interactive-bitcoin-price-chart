@@ -576,7 +576,7 @@ class App extends Component {
 
           <FormGroup controlId="formTargetDate">
             <Col componentClass={ControlLabel} sm={2}>
-              Start Date
+              Target Date
             </Col>
             <Col sm={8} md={5} lg={3}>
               <InputGroup>
