@@ -2,15 +2,15 @@
   "name": "BitcoinPricePredictionTracker",
   "version": "1.4.0",
   "dependencies": {
-    "moment": "^2.21.0",
+    "moment": "^2.22.1",
     "npm": "^5.8.0",
     "rc-slider": "^8.6.1",
-    "react": "^16.3.0",
+    "react": "^16.3.2",
     "react-bootstrap": "^0.32.1",
     "react-bootstrap-date-picker": "github:maxaggedon/react-bootstrap-date-picker",
-    "react-dom": "^16.3.0",
+    "react-dom": "^16.3.2",
     "react-latex": "^1.2.0",
-    "serve": "^6.5.3"
+    "serve": "^6.5.5"
   },
   "devDependencies": {
     "react-scripts": "1.0.10"
