@@ -15,6 +15,7 @@ import {getDataBoundaries} from './chartDataBoundaries.js';
 import RadioLinLog from './RadioLinLog.js';
 import FormCustomPrediction from './FormCustomPrediction.js';
 import ExplainPriceOn from './ExplainPriceOn.js';
+import PageHead from './PageHead.js';
 import PageFoot from './PageFoot.js';
 
 var predictionCount = 1263;   // days startDate to targetDate (2020-12-31)
@@ -420,16 +421,11 @@ class App extends Component {
 
       <Grid fluid={true} >
 
-        <Row className="header">
-          <Col xs={12}>
-            <h1>Bitcoin Price Prediction Tracker</h1>
-            { customPrediction ?
-              <p>Will bitcoin be {formatDollar(this.getTargetPrice())} on {moment(targetDate).format('MMMM Do YYYY')}?</p>
-            :
-              <p>John McAfee says: By the end of 2020 Bitcoin will be worth $&nbsp;1&nbsp;Million. Is he losing his bet?</p>
-            }
-          </Col>
-        </Row>
+        <PageHead
+          customPrediction={this.state.customPrediction}
+          targetDate={this.state.targetDate}
+          targetPrice={this.getTargetPrice()}
+        />
 
         { !this.state.fetchingData ?
         <InfoBox data={this.state.data}
