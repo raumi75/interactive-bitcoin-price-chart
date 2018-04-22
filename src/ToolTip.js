@@ -18,7 +18,7 @@ class ToolTip extends Component {
 
     if (activePoint.y.p>0 && activePoint.y.m>0) {
       return (
-        <div className={'hover hover-'+this.getAheadOrBehind()} style={ placementStyles }>
+        <div className={'hover hover-'+this.getAboveOrBelow()} style={ placementStyles }>
           <div className='mcafee'>{(activePoint.y.p/activePoint.y.m-1).toLocaleString('en-us', { style: 'percent', maximumSignificantDigits: 3})}</div>
         </div>
       );
@@ -28,13 +28,13 @@ class ToolTip extends Component {
 
   }
 
-  // is the price ahead or behind the prediction.
+  // is the price above or below the prediction.
   // css className will color the percentage accordingly
-  getAheadOrBehind() {
+  getAboveOrBelow() {
     const {activePoint} = this.props;
 
     if (activePoint.y.p>activePoint.y.m)
-    { return ('ahead'); } else { return 'behind' ; }
+    { return ('above'); } else { return 'below' ; }
   }
 
 }
