@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { Grid, Row , Col, Image, Form, FormGroup, InputGroup, FormControl, ControlLabel, Radio, Panel, Tabs, Tab} from 'react-bootstrap';
+import { Grid, Row , Col, Image, Form, FormGroup, InputGroup, FormControl, ControlLabel, Radio, Tabs, Tab} from 'react-bootstrap';
 import './App.css';
 import LineChart from './LineChart';
 import ToolTip from './ToolTip';
@@ -11,7 +11,9 @@ import 'rc-slider/assets/index.css';
 import {formatDollar} from './formatting.js';
 import {getParameterByName} from './getparameter.js';
 import {getDataBoundaries} from './chartDataBoundaries.js';
+import ExplainPriceOn from './ExplainPriceOn.js';
 import PageFoot from './PageFoot.js';
+
 var Latex = require('react-latex');
 var DatePicker = require("react-bootstrap-date-picker");
 
@@ -385,20 +387,6 @@ class App extends Component {
     return moment(d).diff(moment(startDate),'days')
   }
 
-  // Text that explains how to calculate the price on given day
-  explainPriceOn(d) {
-    const growthRate = this.state.growthRate/100;
-    const {startPrice} = this.state;   // start rate USD/BTC at day of tweet
-
-    return (
-      <Panel className="panelFormula">
-        <Panel.Heading>By the end of {moment(d).format('YYYY-MM-DD')}, the prediction is {this.getDaysSincePrediction(d)} days old</Panel.Heading>
-        <Panel.Body>{1+growthRate}<sup><strong>{this.getDaysSincePrediction(d)}</strong></sup> * { formatDollar(startPrice, 3) } = { formatDollar(this.getMcAfeeRate(this.getDaysSincePrediction(d)),2) }</Panel.Body>
-      </Panel>
-    );
-
-  }
-
   explainMcAfeeTweet() {
     const {startPrice} = this.state;
     return (
@@ -483,7 +471,10 @@ class App extends Component {
             { !this.state.fetchingData ?
               <div className='chart'>
 
-              <LineChart data={this.state.data} scale={this.state.scale} boundaries={getDataBoundaries(this.state.data)} onChartHover={ (a,b) => this.handleChartHover(a,b) }/>
+              <LineChart data={this.state.data}
+                         scale={this.state.scale}
+                         boundaries={getDataBoundaries(this.state.data)}
+                         onChartHover={ (a,b) => this.handleChartHover(a,b) }/>
 
               <Col xs={12} className='range'>
                 <Range
@@ -641,6 +632,8 @@ class App extends Component {
           </Row>
         }
 
+        { !this.state.fetchingData ?
+
         <Row>
           <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
             <h2 id="explainmath">The math behind it</h2>
@@ -651,16 +644,18 @@ class App extends Component {
             <p>Grab a calculator and try it yourself:</p>
 
             <p>Today,</p>
-            {this.explainPriceOn(Date.now())}
-            {this.explainPriceOn('2018-12-31')}
-            {this.explainPriceOn('2019-12-31')}
+            <ExplainPriceOn date={Date.now()} startDate={this.state.startDate} growthRate={this.state.growthRate} startPrice={this.state.startPrice} />
+            <ExplainPriceOn date='2018-12-31' startDate={this.state.startDate} growthRate={this.state.growthRate} startPrice={this.state.startPrice} />
+            <ExplainPriceOn date={'2019-12-31'} startDate={this.state.startDate} growthRate={this.state.growthRate} startPrice={this.state.startPrice} />
             <p>Still does not look like it is on target?</p>
-            {this.explainPriceOn('2020-06-01')}
+            <ExplainPriceOn date={'2020-06-01'} startDate={this.state.startDate} growthRate={this.state.growthRate} startPrice={this.state.startPrice} />
             <p>And finally,</p>
-            {this.explainPriceOn(targetDate)}
+            <ExplainPriceOn date={targetDate} startDate={this.state.startDate} growthRate={this.state.growthRate} startPrice={this.state.startPrice} />
 
           </Col>
         </Row>
+
+        : <p>please wait</p>}
 
         <Row>
           <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
