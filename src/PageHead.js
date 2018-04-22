@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { Row , Col, Image } from 'react-bootstrap';
+import { Row , Col } from 'react-bootstrap';
 import {formatDollar} from './formatting.js';
 import './PageHead.css';
 
