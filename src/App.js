@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { Grid, Row , Col, Image, Form, FormGroup, InputGroup, FormControl, ControlLabel, Radio, Tabs, Tab} from 'react-bootstrap';
+import { Grid, Row , Col, Image, Form, FormGroup, InputGroup, FormControl, ControlLabel, Tabs, Tab} from 'react-bootstrap';
 import './App.css';
 import LineChart from './LineChart';
 import ToolTip from './ToolTip';
@@ -8,9 +8,11 @@ import InfoBox from './InfoBox';
 // eslint-disable-next-line
 import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
+
 import {formatDollar} from './formatting.js';
 import {getParameterByName} from './getparameter.js';
 import {getDataBoundaries} from './chartDataBoundaries.js';
+import RadioLinLog from './RadioLinLog.js';
 import ExplainPriceOn from './ExplainPriceOn.js';
 import PageFoot from './PageFoot.js';
 
@@ -178,9 +180,11 @@ class App extends Component {
     });
 
   }
-  handleScaleChange = (changeEvent) => {
+
+  // expecting 'lin' or 'log'
+  handleScaleChange = (value) => {
     this.setState({
-      scale: changeEvent.target.value
+      scale: value
     });
   }
 
@@ -489,14 +493,9 @@ class App extends Component {
               </Col>
 
               <Col xs={9} sm={5} smOffset={1}>
-                <FormGroup>
-                  <Radio name="radioGroup" value="lin" checked={this.state.scale === 'lin'} onChange={this.handleScaleChange} >
-                    Linear scale (1, 2, 3)
-                  </Radio>{' '}
-                  <Radio name="radioGroup" value="log" checked={this.state.scale === 'log'} onChange={this.handleScaleChange} >
-                    Logarithmic scale (1, 10, 100)
-                  </Radio>
-                </FormGroup>
+                <RadioLinLog
+                  scale={this.state.scale}
+                  onChange={ (scale) => this.handleScaleChange(scale) } />
               </Col>
 
               </div>
