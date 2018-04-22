@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import { Panel } from 'react-bootstrap';
 import { formatDollar } from './formatting.js';
+import './ExplainPriceOn.css';
 
 // Text that explains how to calculate the price on given day
 class ExplainPriceOn extends Component {
