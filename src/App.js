@@ -465,15 +465,15 @@ class App extends Component {
           </Col>
         </Row>
 
-        <Row>
-          <div className='popup'>
-            {this.state.hoverLoc ? <ToolTip hoverLoc={this.state.hoverLoc} activePoint={this.state.activePoint}/> : null}
-          </div>
+        <Row className="popup">
+          {this.state.hoverLoc ?
+            <ToolTip hoverLoc={this.state.hoverLoc} activePoint={this.state.activePoint}/>
+            : null
+          }
         </Row>
 
-        <Row>
-            { !this.state.fetchingData ?
-              <div className='chart'>
+        { !this.state.fetchingData ?
+          <Row className='chart'>
 
               <LineChart data={this.state.data}
                          scale={this.state.scale}
@@ -497,19 +497,13 @@ class App extends Component {
                   scale={this.state.scale}
                   onChange={ (scale) => this.handleScaleChange(scale) } />
               </Col>
+            </Row>
 
-              </div>
-
-              : 'creating Chart ... ' }
-        </Row>
+          : null }
 
         <Row>
-          <Col xs={12} lg={6}>
+          <Col xs={12}>
             <p className="lead redlineExplanation">The red line steadily grows to { formatDollar(this.getTargetPrice()) } per BTC. Move the slider to zoom.</p>
-          </Col>
-          <Col xs={12} lg={6}>
-            <p id="coindesk" className="text-right">Data kindly provided by <a href="http://www.coindesk.com/price/">CoinDesk</a></p>
-            <p id="acknowledgement"  className="text-right">Chart based on Brandon Morellis <a href="https://codeburst.io/how-i-built-an-interactive-30-day-bitcoin-price-graph-with-react-and-an-api-6fe551c2ab1d">Tutorial</a></p>
           </Col>
         </Row>
 
@@ -654,7 +648,7 @@ class App extends Component {
           </Col>
         </Row>
 
-        : <p>please wait</p>}
+        : null }
 
         <Row>
           <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
