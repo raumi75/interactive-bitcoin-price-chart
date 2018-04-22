@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { Grid, Row , Col, Image, Form, FormGroup, InputGroup, FormControl, ControlLabel, Tabs, Tab} from 'react-bootstrap';
+import { Grid, Row , Col, Image, Tabs, Tab} from 'react-bootstrap';
 import './App.css';
 import LineChart from './LineChart';
 import ToolTip from './ToolTip';
@@ -13,11 +13,9 @@ import {formatDollar} from './formatting.js';
 import {getParameterByName} from './getparameter.js';
 import {getDataBoundaries} from './chartDataBoundaries.js';
 import RadioLinLog from './RadioLinLog.js';
+import FormCustomPrediction from './FormCustomPrediction.js';
 import ExplainPriceOn from './ExplainPriceOn.js';
 import PageFoot from './PageFoot.js';
-
-var Latex = require('react-latex');
-var DatePicker = require("react-bootstrap-date-picker");
 
 var predictionCount = 1263;   // days startDate to targetDate (2020-12-31)
 var offsetPrediction = -2389; // days startDate to minHistoricalStart
@@ -408,16 +406,6 @@ class App extends Component {
     );
   }
 
-  latexMathAnnualGrowth() {
-    const {growthRate} = this.state;
-    return `$\\left( (1+\\frac{`+ growthRate + `}{100})^{365}-1 \\right)*100$`;
-  }
-
-  latexMathDoublingTime(factor) {
-    const {growthRate} = this.state;
-    return `$\\frac{\\log_{10}(`+factor+`)}{\\log_{10}(1+\\frac{`+ growthRate + `}{100})}$`;
-  }
-
   getUrl() {
     const FQDN = 'https://fnordprefekt.de';
     const {growthRate, startDate, targetDate, startPrice} = this.state;
@@ -507,111 +495,24 @@ class App extends Component {
           </Col>
         </Row>
 
-        <Form horizontal>
-          <h3>Make your own prediction</h3>
+        <FormCustomPrediction
+          startDate={this.state.startDate}
+          onStartDateChange={this.handleStartDateChange}
 
-          <FormGroup controlId="formStartDate">
-            <Col componentClass={ControlLabel} sm={2}>
-              Start Date
-            </Col>
-            <Col sm={8} md={5} lg={3}>
-              <InputGroup>
-              <DatePicker id="startdatepicker"
-                value={this.state.startDate}
-                onChange={this.handleStartDateChange}
-                minDate={this.state.historicalStart}
-                maxDate={moment(this.state.historicalEnd).subtract(1, 'week').format('YYYY-MM-DD')}
-                showClearButton={false}
-                dateFormat="YYYY-MM-DD"
-                />
-              </InputGroup>
-            </Col>
-          </FormGroup>
+          historicalStart={this.state.historicalStart}
+          historicalEnd={this.state.historicalEnd}
+          maxTargetDate={maxTargetDate}
 
-          <FormGroup controlId="formStartPrice">
-            <Col componentClass={ControlLabel} sm={2}>
-              Start Price
-            </Col>
-            <Col sm={8} md={5} lg={3}>
-              <InputGroup>
-              <InputGroup.Addon>US$</InputGroup.Addon>
-              <FormControl type="number"
-                           value={this.state.startPrice}
-                           onChange={this.handleStartPriceChange}
-                            />
-              </InputGroup>
-            </Col>
-          </FormGroup>
+          startPrice={this.state.startPrice}
+          onStartPriceChange={this.handleStartPriceChange}
 
-          <FormGroup controlId="formGrowthRate">
-            <Col componentClass={ControlLabel} sm={2}>
-              percent per day
-            </Col>
-            <Col sm={8} md={5} lg={3}>
-              <InputGroup>
-              <FormControl type="number"
-                           value={this.state.growthRate}
-                           onChange={this.handleGrowthRateChange}
-                            />
-              <InputGroup.Addon>%</InputGroup.Addon>
-              </InputGroup>
-            </Col>
-          </FormGroup>
+          growthRate={this.state.growthRate}
+          onGrowthRateChange={this.handleGrowthRateChange}
 
-          <FormGroup controlId="formTargetDate">
-            <Col componentClass={ControlLabel} sm={2}>
-              Target Date
-            </Col>
-            <Col sm={8} md={5} lg={3}>
-              <InputGroup>
-              <DatePicker id="targetdatepicker"
-                value={this.state.targetDate}
-                onChange={this.handleTargetDateChange}
-                minDate={moment(this.state.historicalEnd).add(1, 'month').format('YYYY-MM-DD')}
-                maxDate={maxTargetDate}
-                showClearButton={false}
-                dateFormat="YYYY-MM-DD"
-                />
-              </InputGroup>
-            </Col>
-          </FormGroup>
+          targetDate={this.state.targetDate}
+          onTargetDateChange={this.handleTargetDateChange}
 
-          <FormGroup controlId="formAnnual">
-            <Col componentClass={ControlLabel} sm={2}>
-              annual growth
-            </Col>
-            <Col sm={10}>
-              <FormControl.Static>
-                <strong>{(Math.pow((1+this.state.growthRate/100),365)-1).toLocaleString('en-us', {style: 'percent', maximumSignificantDigits: 5}) } per year</strong>
-                <Latex>{this.latexMathAnnualGrowth()}</Latex>
-              </FormControl.Static>
-            </Col>
-          </FormGroup>
-
-          <FormGroup controlId="formDoublingTime">
-            <Col componentClass={ControlLabel} sm={2}>
-              doubling time
-            </Col>
-            <Col sm={10}>
-              <FormControl.Static>
-                <strong>{Math.round(Math.log10(2)/Math.log10(1+this.state.growthRate/100))} days</strong>
-                <Latex>{this.latexMathDoublingTime(2)}</Latex>
-              </FormControl.Static>
-            </Col>
-          </FormGroup>
-
-          <FormGroup controlId="formDoublingTime">
-            <Col componentClass={ControlLabel} sm={2}>
-              10-times after
-            </Col>
-            <Col sm={10}>
-              <FormControl.Static>
-                <strong>{Math.round(Math.log10(10)/Math.log10(1+this.state.growthRate/100))} days</strong>
-                <Latex>{this.latexMathDoublingTime(10)}</Latex>
-              </FormControl.Static>
-            </Col>
-          </FormGroup>
-        </Form>
+        />
 
         { !this.state.customPrediction
         ?
