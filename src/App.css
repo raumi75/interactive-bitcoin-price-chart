@@ -6,19 +6,6 @@ body, html{
   color: red;
 }
 
-#coindesk {
-  font-weight: 300;
-}
-
-#coindesk a {
-  text-decoration: none;
-  color: inherit;
-}
-
-quote {
-  font-weight: bold;
-}
-
 #rangeTab {
   margin-top: 3em;
 }
@@ -27,8 +14,4 @@ quote {
   margin-left:7%;
   width:82%;
   margin-bottom: 1em;
-}
-
-.panelFormula {
-  max-width: 30em;
 }
