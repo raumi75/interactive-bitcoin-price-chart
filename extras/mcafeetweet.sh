@@ -7,14 +7,14 @@ closingprice=$(printf %.2f $(curl -s https://api.coindesk.com/v1/bpi/historical/
 percentage=$(printf %.2f $(echo "scale=4; $float($closingprice / $predictedprice -1)*100" | bc -l))
 # No idea why this is negated.
 if (( $(echo "$predictedprice < $closingprice" | bc -l) ));
-  then aheadorbehind='ahead';
-  else aheadorbehind='below';
+  then aboveorbelow='above';
+  else aboveorbelow='below';
 fi;
 
 predictedprice_formatted=$(printf "%'.2f" $predictedprice)
 closingprice_formatted=$(printf "%'.2f" $closingprice)
 
-tweettext=$(echo "Daily update: McAfee-Curve was $" $predictedprice_formatted 'at midnight UTC while #bitcoin price was $' $closingprice_formatted ' ('${percentage#-}'%' $aheadorbehind'). See the chart and learn more on https://fnordprefekt.de')
+tweettext=$(echo "Daily update: McAfee-Curve was $" $predictedprice_formatted 'at midnight UTC while #bitcoin price was $' $closingprice_formatted ' ('${percentage#-}'%' $aboveorbelow'). See the chart and learn more on https://fnordprefekt.de')
 
 /home/jan/.rbenv/shims/t update "$tweettext"
 
