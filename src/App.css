@@ -37,18 +37,6 @@ quote {
   text-align: center;
 }
 
-.footer {
-  padding: 2em 0em 2em 0em;
-  border-top-style: solid;
-  border-top-width: thin;
-  border-top-color: darkgrey;
-  background-color: lightgrey;
-}
-
-.footer p {
-  text-align: center;
-}
-
 .katex {
   margin-left: 1em;
 }
