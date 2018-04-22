@@ -14,7 +14,7 @@ import {getParameterByName} from './getparameter.js';
 import {getDataBoundaries} from './chartDataBoundaries.js';
 import RadioLinLog from './RadioLinLog.js';
 import FormCustomPrediction from './FormCustomPrediction.js';
-import ExplainPriceOn from './ExplainPriceOn.js';
+import ExplainMath from './ExplainMath.js';
 import PageHead from './PageHead.js';
 import PageFoot from './PageFoot.js';
 
@@ -414,8 +414,7 @@ class App extends Component {
   }
 
   render() {
-    const growthRate = this.state.growthRate/100;
-    const {targetDate, customPrediction} = this.state;
+    const {growthRate, startPrice, startDate, targetDate } = this.state;
 
     return (
 
@@ -423,15 +422,15 @@ class App extends Component {
 
         <PageHead
           customPrediction={this.state.customPrediction}
-          targetDate={this.state.targetDate}
+          targetDate={targetDate}
           targetPrice={this.getTargetPrice()}
         />
 
         { !this.state.fetchingData ?
         <InfoBox data={this.state.data}
-                 growthRate={this.state.growthRate}
-                 startPrice={this.state.startPrice}
-                 startDate ={this.state.startDate + ' 00:00:00'}
+                 growthRate={growthRate}
+                 startPrice={startPrice}
+                 startDate ={startDate + ' 00:00:00'}
                   />
         : 'Loading data from Coindesk ... ' }
 
@@ -459,31 +458,30 @@ class App extends Component {
         { !this.state.fetchingData ?
           <Row className='chart'>
 
-              <LineChart data={this.state.data}
-                         scale={this.state.scale}
-                         boundaries={getDataBoundaries(this.state.data)}
-                         onChartHover={ (a,b) => this.handleChartHover(a,b) }/>
+            <LineChart data={this.state.data}
+                       scale={this.state.scale}
+                       boundaries={getDataBoundaries(this.state.data)}
+                       onChartHover={ (a,b) => this.handleChartHover(a,b) }/>
 
-              <Col xs={12} className='range'>
-                <Range
-                  allowCross={false}
-                  min={this.state.rangeMin}
-                  max={predictionCount}
-                  marks={this.state.sliderMarks}
-                  onChange={this.handleLineChartLength}
-                  value={this.state.countRange}
-                  pushable={minSliderDistance+1} />
-                  <br />
-              </Col>
+            <Col xs={12} className='range'>
+              <Range
+                allowCross={false}
+                min={this.state.rangeMin}
+                max={predictionCount}
+                marks={this.state.sliderMarks}
+                onChange={this.handleLineChartLength}
+                value={this.state.countRange}
+                pushable={minSliderDistance+1} />
+                <br />
+            </Col>
 
-              <Col xs={9} sm={5} smOffset={1}>
-                <RadioLinLog
-                  scale={this.state.scale}
-                  onChange={ (scale) => this.handleScaleChange(scale) } />
-              </Col>
-            </Row>
-
-          : null }
+            <Col xs={9} sm={5} smOffset={1}>
+              <RadioLinLog
+                scale={this.state.scale}
+                onChange={ (scale) => this.handleScaleChange(scale) } />
+            </Col>
+          </Row>
+        : null }
 
         <Row>
           <Col xs={12}>
@@ -524,26 +522,12 @@ class App extends Component {
 
         { !this.state.fetchingData ?
 
-        <Row>
-          <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
-            <h2 id="explainmath">The math behind it</h2>
-
-            <p>Is this really possible? Bitcoin needs to grow at a rate of <strong>{ growthRate*100 } % per day</strong>. That is the red line on the above chart. As long as the blue line is above the red line, we are on target. Hover over the chart to get daily prices.</p>
-            <p>Compared to the enormous price changes, half a percent does not sound like much to you? This is the magic of exponential growth.</p>
-
-            <p>Grab a calculator and try it yourself:</p>
-
-            <p>Today,</p>
-            <ExplainPriceOn date={Date.now()} startDate={this.state.startDate} growthRate={this.state.growthRate} startPrice={this.state.startPrice} />
-            <ExplainPriceOn date='2018-12-31' startDate={this.state.startDate} growthRate={this.state.growthRate} startPrice={this.state.startPrice} />
-            <ExplainPriceOn date={'2019-12-31'} startDate={this.state.startDate} growthRate={this.state.growthRate} startPrice={this.state.startPrice} />
-            <p>Still does not look like it is on target?</p>
-            <ExplainPriceOn date={'2020-06-01'} startDate={this.state.startDate} growthRate={this.state.growthRate} startPrice={this.state.startPrice} />
-            <p>And finally,</p>
-            <ExplainPriceOn date={targetDate} startDate={this.state.startDate} growthRate={this.state.growthRate} startPrice={this.state.startPrice} />
-
-          </Col>
-        </Row>
+        <ExplainMath
+          growthRate={this.state.growthRate}
+          startPrice={this.state.startPrice}
+          startDate={this.state.startDate}
+          targetDate={this.state.targetDate}
+          />
 
         : null }
 
