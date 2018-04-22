@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { Grid, Row , Col, Image, Tabs, Tab} from 'react-bootstrap';
+import { Grid, Row , Col, Tabs, Tab} from 'react-bootstrap';
 import './App.css';
 import LineChart from './LineChart';
 import ToolTip from './ToolTip';
@@ -14,6 +14,7 @@ import {getParameterByName} from './getparameter.js';
 import {getDataBoundaries} from './chartDataBoundaries.js';
 import RadioLinLog from './RadioLinLog.js';
 import FormCustomPrediction from './FormCustomPrediction.js';
+import ExplainMcAfeeTweet from './ExplainMcAfeeTweet.js';
 import ExplainMath from './ExplainMath.js';
 import PageHead from './PageHead.js';
 import PageFoot from './PageFoot.js';
@@ -363,6 +364,7 @@ class App extends Component {
     }
   }
 
+  // predicted Price on targetDate
   getTargetPrice() {
     const {startDate, targetDate} = this.state;
     return this.getMcAfeeRate(moment(targetDate).diff(moment(startDate),'days'));
@@ -388,23 +390,6 @@ class App extends Component {
   getDaysSincePrediction(d) {
     const {startDate} = this.state;
     return moment(d).diff(moment(startDate),'days')
-  }
-
-  explainMcAfeeTweet() {
-    const {startPrice} = this.state;
-    return (
-      <Row>
-        <Col xs={12} md={6}>
-          <h2>It started with a tweet</h2>
-          <p className="lead explanation">
-            John McAfee made a bet on July 17th 2017: One single Bitcoin would be worth { formatDollar(500000) } in three years. The closing price according to CoinDesk was { formatDollar(startPrice, 3) } that day. He later revised his bet and <a href="https://twitter.com/officialmcafee/status/935900326007328768">predicted $ 1 million by the end of 2020</a>.
-          </p>
-        </Col>
-        <Col xs={12} md={6}>
-          <p><a href="https://twitter.com/officialmcafee/status/935900326007328768"><Image src="tweet20171129.png" responsive /></a></p>
-        </Col>
-      </Row>
-    );
   }
 
   getUrl() {
@@ -510,7 +495,7 @@ class App extends Component {
 
         { !this.state.customPrediction
         ?
-          this.explainMcAfeeTweet()
+          <ExplainMcAfeeTweet startPrice={this.state.startPrice} />
         :
           <Row>
             <Col xs={12}>
