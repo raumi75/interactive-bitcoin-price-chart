@@ -1,4 +1,13 @@
 
+.about {
+  text-align: center;
+  color: darkgrey;
+}
+
+h1.header {
+  margin-top: 0.1em;
+}
+
 .header {
   text-align: center;
 }
