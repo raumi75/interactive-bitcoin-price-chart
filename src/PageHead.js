@@ -10,10 +10,16 @@ class PageHead extends Component {
     const {customPrediction, targetPrice, targetDate} = this.props;
 
     return (
+    <div>
+    <Row className="about">
+      <Col xs={12}>
+        <small>made by a bitcoin fan - <a href="#pagefoot">Feedback or tips</a>.</small>
+      </Col>
+    </Row>
 
     <Row className="header">
       <Col xs={12}>
-        <h1>Bitcoin Price Prediction Tracker</h1>
+        <h1 className="header">Bitcoin Price Prediction Tracker</h1>
         { customPrediction ?
           <p>Will bitcoin be {formatDollar(targetPrice)} on {moment(targetDate).format('MMMM Do YYYY')}?</p>
         :
@@ -21,6 +27,7 @@ class PageHead extends Component {
         }
       </Col>
     </Row>
+    </div>
     );
   }
 
