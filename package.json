@@ -10,7 +10,7 @@
     "react-bootstrap-date-picker": "github:maxaggedon/react-bootstrap-date-picker",
     "react-dom": "^16.3.2",
     "react-latex": "^1.2.0",
-    "serve": "^6.5.5"
+    "serve": "^6.5.6"
   },
   "devDependencies": {
     "react-scripts": "1.0.10"
