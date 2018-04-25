@@ -513,13 +513,17 @@ class App extends Component {
 
         { !this.state.fetchingData ?
 
-        <ExplainMath
-          growthRate={this.state.growthRate}
-          startPrice={this.state.startPrice}
-          startDate={this.state.startDate}
-          targetDate={this.state.targetDate}
-          />
-
+        <Row>
+          <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
+            <ExplainMath
+              growthRate={this.state.growthRate}
+              startPrice={this.state.startPrice}
+              startDate={this.state.startDate}
+              targetDate={this.state.targetDate}
+              />
+          </Col>
+        </Row>
+        
         : null }
 
         <Row>

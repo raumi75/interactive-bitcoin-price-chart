@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Row , Col } from 'react-bootstrap';
 import ExplainPriceOn from './ExplainPriceOn.js';
 
 class ExplainMath extends Component {
@@ -8,8 +7,7 @@ class ExplainMath extends Component {
     const {startDate, growthRate, startPrice, targetDate} = this.props;
 
     return (
-    <Row>
-      <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
+      <div>
         <h2 id="explainmath">The math behind it</h2>
 
         <p>Is this really possible? Bitcoin needs to grow at a rate of <strong>{ growthRate } % per day</strong>.
@@ -28,9 +26,7 @@ class ExplainMath extends Component {
         <ExplainPriceOn date={'2020-06-01'} startDate={startDate} growthRate={growthRate} startPrice={startPrice} />
         <p>And finally,</p>
         <ExplainPriceOn date={targetDate} startDate={startDate} growthRate={growthRate} startPrice={startPrice} />
-
-      </Col>
-    </Row>
+      </div>
     );
   }
 }
