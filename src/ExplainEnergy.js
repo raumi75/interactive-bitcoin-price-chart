@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Row , Col } from 'react-bootstrap';
 
 export default class ExplainEnergy extends Component {
 
@@ -12,7 +11,7 @@ render() { return (
       and what makes the ledger tamper resistant.</p>
     <p>Bitcoin is both a currency and a ledger for storing all transactions.
       Gold would not have much value if it were easy to find or if it were cheap to create.
-      A ledger that was easy to tamper with would be trustworthy.</p>
+      A ledger that was easy to tamper with would not be trustworthy.</p>
     <p>The bitcoin ledger is called blockchain and the entries are bundled into so
       called blocks. Supercomputers all over the world are competing to find the next block.</p>
 

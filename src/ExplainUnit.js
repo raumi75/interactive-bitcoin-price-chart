@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Row , Col } from 'react-bootstrap';
 import {formatDollar} from './formatting.js';
 
 export default class ExplainUnit extends Component {
