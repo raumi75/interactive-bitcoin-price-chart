@@ -574,13 +574,12 @@ class App extends Component {
               and what makes the ledger tamper resistant.</p>
             <p>Bitcoin is both a currency and a ledger for storing all transactions.
               Gold would not have much value if it were easy to find or if it were cheap to create.
-              A ledger that was easy to tamper with would be worthless.</p>
-            <p>The bitcoin ledger is called blockchain and each entry is called a block.
-              Supercomputers all over the world are competing to find the next block.
-              The winner gets the so called block reward and the transaction fees.
-              On average they find one every 10 minutes.</p>
-            <p>All these miners do not trust each other. They reject invalid blocks and
-              attempts to rewrite history. Someone trying to tamper with the ledger would
+              A ledger that was easy to tamper with would be trustworthy.</p>
+            <p>The bitcoin ledger is called blockchain and the entries are bundled into so
+              called blocks. Supercomputers all over the world are competing to find the next block.</p>
+
+            <p>All these miners do not trust each other and reject invalid blocks.
+              Someone trying to tamper with the blockchain would
               need an incredible amount of computing power and electricity to overpower
               all the others.</p>
 
@@ -590,7 +589,7 @@ class App extends Component {
               than building more power lines.</p>
 
             <p>Still not convinced? Think for a minute how complicated the current
-              fiat banking system is and you will agree that bitcoin is a lot more effient.</p>
+              fiat banking system is and you will agree that bitcoin is a lot more efficient.</p>
           </Col>
         </Row>
 
