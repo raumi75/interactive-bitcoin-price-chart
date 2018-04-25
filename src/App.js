@@ -16,6 +16,12 @@ import RadioLinLog from './RadioLinLog.js';
 import FormCustomPrediction from './FormCustomPrediction.js';
 import ExplainMcAfeeTweet from './ExplainMcAfeeTweet.js';
 import ExplainMath from './ExplainMath.js';
+import ExplainSupply from './ExplainSupply.js';
+import ExplainGrowth from './ExplainGrowth.js';
+import ExplainUnit from './ExplainUnit.js';
+import ExplainRisk from './ExplainRisk.js';
+import ExplainEnergy from './ExplainEnergy.js';
+
 import PageHead from './PageHead.js';
 import PageFoot from './PageFoot.js';
 
@@ -518,78 +524,31 @@ class App extends Component {
 
         <Row>
           <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
-            <h2>Similar sites</h2>
-            <p>The popular site <a href="https://diegorod.github.io/WillMcAfeeEatHisOwnDick/">diegorod.github.io/WillMcAfeeEatHisOwnDick/</a> does a great job showing the current state of the prediction compared to the McAfee prediction. You can also make your <a href="https://diegorod.github.io/Bitcoin-Price-Predictor/">own predictions</a>.</p>
+            <ExplainSupply />
           </Col>
         </Row>
 
         <Row>
           <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
-            <h2>Why would it grow?</h2>
-            <p>Bitcoin is scarce. There will only be 21 Million BTC. If every Millionaire in the world wants one, there are not enough for every one to have a whole BTC.</p>
-            <p>More people adopting and buying bitcoin will raise the price.</p>
-            <p>This technology is still at a relatively early stage. Think the internet in the mid-nineties when the majority thought it was only for nerds and had no real use.</p>
-            <p>The market capitalization of bitcoin is still tiny, <a href="http://money.visualcapitalist.com/worlds-money-markets-one-visualization-2017/">compared to</a> gold, credit cards or the stock market.</p>
+            <ExplainGrowth />
           </Col>
         </Row>
 
         <Row>
           <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
-            <h2>That parabolic curve - seriously?</h2>
-            <p>When you zoom out, the curve gets steeper and steeper.
-            Relax! Growth curves look like that. Take the Dow Jones, a savings account
-            with interest or bacteria growing in a petri dish.</p>
-            <p>With a fixed percentage per time, rising from 1 to 10 takes as long as
-            from 100,000 to 1,000,000. Both is the growth by a factor of 10.</p>
-            <p>That is why many analysts like to look at charts with a <strong>logarithmic
-            scale</strong> where the y-axis scales in orders of magnitude.</p>
+            <ExplainUnit />
           </Col>
         </Row>
 
         <Row>
           <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
-            <h2>Such an expensive currency!</h2>
-            <p>You can buy and spend fractions of a bitcoin.</p>
-            <p>Sooner or later, it will make sense to use a <a href="https://en.bitcoin.it/wiki/Units">unit</a> like microbitcoin aka bits (One Millionth of a Bitcoin) and Satoshis (One hundredth of a bit). Then a bit will be a Dollar and a Satoshi will be a Cent.</p>
-            <p>How does something like <em>'1 μBTC is {formatDollar(1.07)}'</em> or <em>'1 Satoshi is {formatDollar(0.01)}'</em> sound to you? A lot less expensive, right?</p>
-            <p>Maybe people will start calling a microbitcoin just bitcoin. No big deal. When we say calorie, we actually mean a kilocalorie.</p>
+            <ExplainRisk />
           </Col>
         </Row>
 
         <Row>
           <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
-            <h2>What can go wrong?</h2>
-            <p>Though bitcoin has proven to be secure and many people put their trust in it, there is still a
-            lot that can go wrong. Do not invest more than you can afford to lose!</p>
-            <p>Bitcoin could go to zero and <a href="https://99bitcoins.com/bitcoinobituaries/">many people think so.</a></p>
-          </Col>
-        </Row>
-
-        <Row>
-          <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
-            <h2>Is bitcoin wasting electricity?</h2>
-
-            <p>Mining bitcoin is hard <strong>on purpose</strong>.
-              The so called <strong>proof of work</strong> is what controls the money supply
-              and what makes the ledger tamper resistant.</p>
-            <p>Bitcoin is both a currency and a ledger for storing all transactions.
-              Gold would not have much value if it were easy to find or if it were cheap to create.
-              A ledger that was easy to tamper with would be trustworthy.</p>
-            <p>The bitcoin ledger is called blockchain and the entries are bundled into so
-              called blocks. Supercomputers all over the world are competing to find the next block.</p>
-
-            <p>All these miners do not trust each other and reject invalid blocks.
-              Someone trying to tamper with the blockchain would
-              need an incredible amount of computing power and electricity to overpower
-              all the others.</p>
-
-            <p>What about CO<sub>2</sub>-emissions? Many miners are located in places with a
-              surplus of electricity (geothermal power in Iceland, hydroelectric or solar power
-              in the middle of nowhere). It is cheaper to send a bitcoin-block over the internet
-              than building more power lines.</p>
-
-            <p>Still not convinced? Think for a minute how complicated the current
-              fiat banking system is and you will agree that bitcoin is a lot more efficient.</p>
+            <ExplainEnergy />
           </Col>
         </Row>
 
