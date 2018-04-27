@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import { Grid, Row , Col, Tabs, Tab} from 'react-bootstrap';
+import './bootstrap.css';
 import './App.css';
 import LineChart from './LineChart';
 import ToolTip from './ToolTip';
@@ -523,7 +524,7 @@ class App extends Component {
               />
           </Col>
         </Row>
-        
+
         : null }
 
         <Row>
