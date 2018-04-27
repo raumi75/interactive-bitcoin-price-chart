@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import { Col, Form, FormGroup, InputGroup, FormControl, ControlLabel, } from 'react-bootstrap';
 import './FormCustomPrediction.css';
+import './katex.css'; // https://github.com/Khan/KaTeX/releases/tag/v0.8.3
 var Latex = require('react-latex');
 var DatePicker = require("react-bootstrap-date-picker");
 
