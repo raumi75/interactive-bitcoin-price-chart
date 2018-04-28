@@ -71,6 +71,10 @@ class App extends Component {
     this.refresh = setInterval(() => this.reloadData(), 60*5000);
   }
 
+  componentWillUnmount(){
+    clearInterval(this.refresh);
+  }
+
   // If the chart was last updated yesterday, reload it.
   reloadData = () => {
     if (this.chartDataAge() > 25) { // hours
