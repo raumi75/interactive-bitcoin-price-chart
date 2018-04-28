@@ -40,12 +40,17 @@ class InfoBox extends Component {
         });
     }
     this.getData();
-    this.refresh = setInterval(() => this.getData(), 60000);
-    this.refresh = setInterval(() => this.refreshMcAfeePrice(), 1000);
+
+    // reload the current price every 60 seconds
+    this.refreshChart = setInterval(() => this.getData(), 60000);
+
+    // refresh Prediction every Second
+    this.refreshPrice = setInterval(() => this.refreshMcAfeePrice(), 1000);
   }
 
   componentWillUnmount(){
-    clearInterval(this.refresh);
+    clearInterval(this.refreshChart);
+    clearInterval(this.refreshPrice);
   }
 
   refreshMcAfeePrice() {
