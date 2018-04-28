@@ -424,18 +424,21 @@ class App extends Component {
         />
 
         { !this.state.fetchingData ?
-        <InfoBox data={this.state.data}
-                 growthRate={growthRate}
-                 startPrice={startPrice}
-                 startDate ={startDate + ' 00:00:00'}
-                  />
+          <InfoBox
+            data={this.state.data}
+            growthRate={growthRate}
+            startPrice={startPrice}
+            startDate ={startDate + ' 00:00:00'}
+          />
         : 'Loading data from Coindesk ... ' }
 
         <Row>
           <Col xs={12}>
-            <Tabs activeKey={this.state.activeTabKey}
-                  onSelect={this.handleSelectRangeTab}
-                  id="rangeTab" >
+            <Tabs
+              activeKey={this.state.activeTabKey}
+              onSelect={this.handleSelectRangeTab}
+              id="rangeTab"
+            >
               <Tab eventKey={1} title="all (log)"></Tab>
               <Tab eventKey={2} title="prediction"></Tab>
               <Tab eventKey={3} title="1m"></Tab>
@@ -447,18 +450,22 @@ class App extends Component {
 
         <Row className="popup">
           {this.state.hoverLoc ?
-            <ToolTip hoverLoc={this.state.hoverLoc} activePoint={this.state.activePoint}/>
-            : null
+            <ToolTip
+              hoverLoc={this.state.hoverLoc}
+              activePoint={this.state.activePoint} />
+          : null
           }
         </Row>
 
         { !this.state.fetchingData ?
           <Row className='chart'>
 
-            <LineChart data={this.state.data}
-                       scale={this.state.scale}
-                       boundaries={getDataBoundaries(this.state.data)}
-                       onChartHover={ (a,b) => this.handleChartHover(a,b) }/>
+            <LineChart
+              data={this.state.data}
+              scale={this.state.scale}
+              boundaries={getDataBoundaries(this.state.data)}
+              onChartHover={ (a,b) => this.handleChartHover(a,b) }
+            />
 
             <Col xs={12} className='range'>
               <Range
@@ -469,7 +476,7 @@ class App extends Component {
                 onChange={this.handleLineChartLength}
                 value={this.state.countRange}
                 pushable={minSliderDistance+1} />
-                <br />
+              <br />
             </Col>
 
             <Col xs={9} sm={5} smOffset={1}>
@@ -505,31 +512,28 @@ class App extends Component {
 
         />
 
-        { !this.state.customPrediction
-        ?
+        { !this.state.customPrediction ?
           <ExplainMcAfeeTweet startPrice={this.state.startPrice} />
         :
-          <Row>
-            <Col xs={12}>
-              <p className="lead">Share or bookmark this link to your prediction: <br />
+        <Row>
+          <Col xs={12}>
+            <p className="lead">Share or bookmark this link to your prediction: <br />
               <a href={this.getUrl()}>{this.getUrl()}</a></p>
-            </Col>
-          </Row>
+          </Col>
+        </Row>
         }
 
         { !this.state.fetchingData ?
-
-        <Row>
-          <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
-            <ExplainMath
-              growthRate={this.state.growthRate}
-              startPrice={this.state.startPrice}
-              startDate={this.state.startDate}
-              targetDate={this.state.targetDate}
+          <Row>
+            <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
+              <ExplainMath
+                growthRate={this.state.growthRate}
+                startPrice={this.state.startPrice}
+                startDate={this.state.startDate}
+                targetDate={this.state.targetDate}
               />
-          </Col>
-        </Row>
-
+            </Col>
+          </Row>
         : null }
 
         <Row>

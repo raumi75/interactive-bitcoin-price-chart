@@ -84,23 +84,23 @@ class InfoBox extends Component {
   render(){
     return (
       <Row>
-          <Col xs={4} md={2} mdOffset={3} height={"5em"}>
-            <div className="subtext">Predicted</div>
-            <div className="heading predicted">{ this.state.mcAfeePrice ? formatDollar(this.state.mcAfeePrice) : 'loading...' }</div>
-            <div className="subtext">steady growth</div>
-          </Col>
+        <Col xs={4} md={2} mdOffset={3} height={"5em"}>
+          <div className="subtext">Predicted</div>
+          <div className="heading predicted">{ this.state.mcAfeePrice ? formatDollar(this.state.mcAfeePrice) : 'loading...' }</div>
+          <div className="subtext">steady growth</div>
+        </Col>
 
-          <Col xs={4} md={2} height={"5em"}>
-            <div className="subtext">Actual</div>
-            <div className="heading actual">{ this.state.currentPrice ? formatDollar(this.state.currentPrice) : 'loading...' }</div>
-            <div className="subtext">{ this.state.updatedAt ? moment(this.state.updatedAt).format('YYYY-MM-DD hh:mm A') : null }</div>
-          </Col>
+        <Col xs={4} md={2} height={"5em"}>
+          <div className="subtext">Actual</div>
+          <div className="heading actual">{ this.state.currentPrice ? formatDollar(this.state.currentPrice) : 'loading...' }</div>
+          <div className="subtext">{ this.state.updatedAt ? moment(this.state.updatedAt).format('YYYY-MM-DD hh:mm A') : null }</div>
+        </Col>
 
-          <Col xs={4} md={2} height={"5em"}>
-            <div className="subtext">Bitcoin is</div>
-            <div className={"heading "+this.getAboveOrBelow() }>{ this.state.currentPrice ? (Math.abs(this.state.currentPrice/this.state.mcAfeePrice-1)).toLocaleString('en-us', {style: 'percent', maximumSignificantDigits: 4}) : '...' }</div>
-            <div className={"subtext "+this.getAboveOrBelow() }>{this.getAboveOrBelow()}</div>
-          </Col>
+        <Col xs={4} md={2} height={"5em"}>
+          <div className="subtext">Bitcoin is</div>
+          <div className={"heading "+this.getAboveOrBelow() }>{ this.state.currentPrice ? (Math.abs(this.state.currentPrice/this.state.mcAfeePrice-1)).toLocaleString('en-us', {style: 'percent', maximumSignificantDigits: 4}) : '...' }</div>
+          <div className={"subtext "+this.getAboveOrBelow() }>{this.getAboveOrBelow()}</div>
+        </Col>
       </Row>
     );
   }

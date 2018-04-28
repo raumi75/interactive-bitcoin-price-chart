@@ -20,7 +20,11 @@ class ExplainMcAfeeTweet extends Component {
           </p>
         </Col>
         <Col xs={12} md={6}>
-          <p className="lead">He later <strong>revised</strong> his bet and <a href="https://twitter.com/officialmcafee/status/935900326007328768">predicted $ 1 million by the end of 2020</a>.</p>
+          <p className="lead">
+            He later <strong>revised</strong> his bet and
+            <a href="https://twitter.com/officialmcafee/status/935900326007328768">predicted
+            $ 1 million by the end of 2020</a>.
+          </p>
           <p><a href="https://twitter.com/officialmcafee/status/935900326007328768"><Image src="tweet20171129.png" responsive /></a></p>
         </Col>
       </Row>
