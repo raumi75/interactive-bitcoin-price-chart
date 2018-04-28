@@ -107,13 +107,13 @@ class LineChart extends Component {
           x1={this.getSvgX(minX) - yLabelSize} y1={this.getSvgY(minY)}
           x2={this.getSvgX(maxX)} y2={this.getSvgY(minY)}
           strokeDasharray="5"
-          className="linechart_axis_low" />
+        className="linechart_axis_low" />
         {this.makeLineMaxYP()}
         <line
           x1={this.getSvgX(minX)} y1={this.getSvgY(maxY)}
           x2={this.getSvgX(maxX)} y2={this.getSvgY(maxY)}
           strokeDasharray="9"
-          className="linechart_axis_x" />
+        className="linechart_axis_x" />
       </g>
     );
   }
@@ -126,9 +126,9 @@ class LineChart extends Component {
     } else {
       return (
         <line
-        x1={this.getSvgX(minX)} y1={this.getSvgY(maxPoint.p.y.p)}
-        x2={this.getSvgX(maxX)} y2={this.getSvgY(maxPoint.p.y.p)}
-        strokeDasharray="9"
+          x1={this.getSvgX(minX)} y1={this.getSvgY(maxPoint.p.y.p)}
+          x2={this.getSvgX(maxX)} y2={this.getSvgY(maxPoint.p.y.p)}
+          strokeDasharray="9"
         className="linechart_axis_high" />
       )
     }
@@ -160,17 +160,20 @@ class LineChart extends Component {
     if ((count < data.length) && (count >= 0)) {
       return(
         <g>
-          <rect x={this.getSvgX(data[count].x)-yLabelSize/2-2}
-                y={svgHeight-xLabelSize+5}
-                height={xLabelSize-5}
-                width={yLabelSize}
-                rx={labelRadius}   ry={labelRadius}
-                className={'linechart_label_x'+cssExtra}
-                />
-          <text transform={`translate(${this.getSvgX(data[count].x)-2},
-                                      ${svgHeight -3})`}
-                                      className={'linechart_label_x'+cssExtra}
-                                      textAnchor="middle">
+          <rect
+            x={this.getSvgX(data[count].x)-yLabelSize/2-2}
+            y={svgHeight-xLabelSize+5}
+            height={xLabelSize-5}
+            width={yLabelSize}
+            rx={labelRadius}   ry={labelRadius}
+            className={'linechart_label_x'+cssExtra}
+          />
+          <text
+            transform={`translate(${this.getSvgX(data[count].x)-2},
+                                  ${svgHeight -3})`}
+            className={'linechart_label_x'+cssExtra}
+            textAnchor="middle"
+          >
             { data[count].d }
           </text>
         </g>
@@ -224,18 +227,21 @@ class LineChart extends Component {
     if (prices[pricetype] > 0) {
       return(
         <g>
-          <rect x={xpos}
-                y={ypos-xLabelSize+5}
-                height={xLabelSize}
-                width={yLabelSize}
-                rx={labelRadius}   ry={labelRadius}
-                className={'linechart_label_' + pricetype + cssExtra}
-                />
-          <text transform={`translate(${xpos+yLabelSize/2},
+          <rect
+            x={xpos}
+            y={ypos-xLabelSize+5}
+            height={xLabelSize}
+            width={yLabelSize}
+            rx={labelRadius}   ry={labelRadius}
+            className={'linechart_label_' + pricetype + cssExtra}
+          />
+          <text
+            transform={`translate(${xpos+yLabelSize/2},
                                       ${ypos})`}
-                                      fill="red"
-                                      textAnchor="middle"
-                                      className={'linechart_label_' + pricetype+cssExtra} >
+            fill="red"
+            textAnchor="middle"
+            className={'linechart_label_' + pricetype+cssExtra}
+          >
             {formatDollar(prices[pricetype])}
           </text>
         </g>
@@ -337,7 +343,8 @@ class LineChart extends Component {
   createLine(){
     const {xLabelSize} = this.props;
     return (
-      <line className='hoverLine'
+      <line
+        className='hoverLine'
         x1={this.state.hoverLoc} y1={-8}
         x2={this.state.hoverLoc} y2={this.state.svgHeight - xLabelSize} />
     )
@@ -353,7 +360,8 @@ class LineChart extends Component {
     var svgY = this.getSvgY(activePoint.y[pricetype]);
 
     return (
-      <line className='hoverLine'
+      <line
+        className='hoverLine'
         x1={yLabelSize}            y1={svgY}
         x2={svgWidth - yLabelSize} y2={svgY} />
     )
@@ -371,15 +379,15 @@ class LineChart extends Component {
   makeHover() {
     return (
           <g id="hoverData">
-           {this.createLine()}
-           {this.makeActivePoint()}
-           {this.makeActiveDate()}
-           {this.createHorizontalLine('p')}
-           {this.createHorizontalLine('m')}
-           {this.makeActiveLabelPrice('p', 'left')}
-           {this.makeActiveLabelPrice('m', 'left')}
-           {this.makeActiveLabelPrice('p', 'right')}
-           {this.makeActiveLabelPrice('m', 'right')}
+            {this.createLine()}
+            {this.makeActivePoint()}
+            {this.makeActiveDate()}
+            {this.createHorizontalLine('p')}
+            {this.createHorizontalLine('m')}
+            {this.makeActiveLabelPrice('p', 'left')}
+            {this.makeActiveLabelPrice('m', 'left')}
+            {this.makeActiveLabelPrice('p', 'right')}
+            {this.makeActiveLabelPrice('m', 'right')}
           </g>
          );
   }
@@ -387,13 +395,17 @@ class LineChart extends Component {
   render() {
     const {svgHeight, svgWidth, hoverLoc} = this.state
     return (
-      <svg  width={this.state.svgWidth} height={svgHeight} viewBox={`0 0 ${svgWidth} ${svgHeight}`} className={'linechart'}
-            onMouseLeave= { () => this.stopHover() }
-            onMouseMove = { (e) => this.getMouseCoords(e) }
-            onTouchMove = { (e) => this.getTouchCoords(e) }
-            onTouchStart= { (e) => this.getTouchCoords(e) }
-            onMouseDown = { (e) => this.getMouseCoords(e) } >
-
+      <svg
+        width={this.state.svgWidth}
+        height={svgHeight}
+        viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+        className={'linechart'}
+        onMouseLeave= { () => this.stopHover() }
+        onMouseMove = { (e) => this.getMouseCoords(e) }
+        onTouchMove = { (e) => this.getTouchCoords(e) }
+        onTouchStart= { (e) => this.getTouchCoords(e) }
+        onMouseDown = { (e) => this.getMouseCoords(e) }
+      >
         <g>
           {this.makeAxis()}
           {this.makePath('p', false)}

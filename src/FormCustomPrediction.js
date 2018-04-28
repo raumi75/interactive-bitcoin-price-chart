@@ -21,13 +21,13 @@ class FormCustomPrediction extends Component {
         </Col>
         <Col sm={8} md={5} lg={3}>
           <InputGroup>
-          <DatePicker id="startdatepicker"
-            value={startDate}
-            onChange={this.props.onStartDateChange}
-            minDate={historicalStart}
-            maxDate={moment(historicalEnd).subtract(1, 'week').format('YYYY-MM-DD')}
-            showClearButton={false}
-            dateFormat="YYYY-MM-DD"
+            <DatePicker id="startdatepicker"
+              value={startDate}
+              onChange={this.props.onStartDateChange}
+              minDate={historicalStart}
+              maxDate={moment(historicalEnd).subtract(1, 'week').format('YYYY-MM-DD')}
+              showClearButton={false}
+              dateFormat="YYYY-MM-DD"
             />
           </InputGroup>
         </Col>
@@ -39,11 +39,11 @@ class FormCustomPrediction extends Component {
         </Col>
         <Col sm={8} md={5} lg={3}>
           <InputGroup>
-          <InputGroup.Addon>US$</InputGroup.Addon>
-          <FormControl type="number"
-                       value={startPrice}
-                       onChange={this.props.onStartPriceChange}
-                        />
+            <InputGroup.Addon>US$</InputGroup.Addon>
+            <FormControl type="number"
+              value={startPrice}
+              onChange={this.props.onStartPriceChange}
+            />
           </InputGroup>
         </Col>
       </FormGroup>
@@ -54,11 +54,11 @@ class FormCustomPrediction extends Component {
         </Col>
         <Col sm={8} md={5} lg={3}>
           <InputGroup>
-          <FormControl type="number"
-                       value={growthRate}
-                       onChange={this.props.onGrowthRateChange}
-                        />
-          <InputGroup.Addon>%</InputGroup.Addon>
+            <FormControl type="number"
+              value={growthRate}
+              onChange={this.props.onGrowthRateChange}
+            />
+            <InputGroup.Addon>%</InputGroup.Addon>
           </InputGroup>
         </Col>
       </FormGroup>
@@ -69,13 +69,13 @@ class FormCustomPrediction extends Component {
         </Col>
         <Col sm={8} md={5} lg={3}>
           <InputGroup>
-          <DatePicker id="targetdatepicker"
-            value={targetDate}
-            onChange={this.props.onTargetDateChange}
-            minDate={moment(historicalEnd).add(1, 'month').format('YYYY-MM-DD')}
-            maxDate={maxTargetDate}
-            showClearButton={false}
-            dateFormat="YYYY-MM-DD"
+            <DatePicker id="targetdatepicker"
+              value={targetDate}
+              onChange={this.props.onTargetDateChange}
+              minDate={moment(historicalEnd).add(1, 'month').format('YYYY-MM-DD')}
+              maxDate={maxTargetDate}
+              showClearButton={false}
+              dateFormat="YYYY-MM-DD"
             />
           </InputGroup>
         </Col>
