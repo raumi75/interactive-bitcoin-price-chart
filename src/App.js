@@ -22,6 +22,7 @@ import ExplainGrowth from './ExplainGrowth.js';
 import ExplainUnit from './ExplainUnit.js';
 import ExplainRisk from './ExplainRisk.js';
 import ExplainEnergy from './ExplainEnergy.js';
+import ExplainMcAfeePerson from './ExplainMcAfeePerson.js';
 
 import PageHead from './PageHead.js';
 import PageFoot from './PageFoot.js';
@@ -561,24 +562,12 @@ class App extends Component {
           </Col>
         </Row>
 
-        { !this.state.customPrediction ?
+        <Row>
+          <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
+            <ExplainMcAfeePerson customPrediction={this.state.customPrediction} />
+          </Col>
+        </Row>
 
-        <Row>
-          <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
-            <h2>Who is that John McAfee guy?</h2>
-            <p>The founder of McAfee Antivirus. Some say he is a genius. Some say he is a lunatic. But that does not matter.</p>
-            <p className="lead">This is not about McAfee. It is about comparing the price to a prediction that sounds too good to be true.</p>
-          </Col>
-        </Row>
-        :
-        <Row>
-          <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
-            <h2>McAfee prediction</h2>
-            <p>The founder of McAfee Antivirus, John McAfee bets his dick that bitcoin will be $1 million on December 31st 2020.
-            <a href="https://fnordprefekt.de" className="btn btn-primary">See how the McAfee Prediction plays out.</a></p>
-          </Col>
-        </Row>
-}
         <PageFoot />
       </Grid>
     );
