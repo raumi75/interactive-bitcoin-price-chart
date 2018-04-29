@@ -20,7 +20,7 @@ class ExplainPriceOn extends Component {
 
   getDaysSincePrediction(d) {
     const {startDate} = this.props;
-    return moment(d).diff(moment(startDate),'days')
+    return moment(d).diff(moment(startDate),'days');
   }
 
   getMcAfeeRate = (s) => {

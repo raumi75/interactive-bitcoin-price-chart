@@ -12,8 +12,7 @@ export default class PageHead extends Component {
     if (customPrediction) {
       return (
         <p>
-          Will bitcoin be {formatDollar(targetPrice)}
-          on {moment(targetDate).format('MMMM Do YYYY')}?
+          Will bitcoin be {formatDollar(targetPrice)} on {moment(targetDate).format('MMMM Do YYYY')}?
         </p>
       )
     } else {
