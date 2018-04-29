@@ -8,8 +8,8 @@ render() { return (
     <h2>Such an expensive currency!</h2>
     <p>You can buy and spend fractions of a bitcoin.</p>
     <p>
-      Sooner or later, it will make sense to use a
-      <a href="https://en.bitcoin.it/wiki/Units">unit</a> like microbitcoin
+      Sooner or later, it will make sense to use
+      a <a href="https://en.bitcoin.it/wiki/Units">unit</a> like microbitcoin
       aka bits (One Millionth of a Bitcoin) and Satoshis (One hundredth of a bit).
       Then a bit will be a Dollar and a Satoshi will be a Cent.
     </p>

@@ -22,8 +22,8 @@ export default class ExplainMcAfeePerson extends Component {
           <h2>McAfee prediction</h2>
           <p>
             The founder of McAfee Antivirus, John McAfee bets his dick that
-            bitcoin will be $1 million on December 31st 2020.
-            <a href="https://fnordprefekt.de" className="btn btn-primary">See
+            bitcoin will be $1 million on December 31st 2020. <a
+            href="https://fnordprefekt.de" className="btn btn-primary">See
             how the McAfee Prediction plays out.</a>
           </p>
         </div>

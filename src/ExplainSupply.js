@@ -17,8 +17,8 @@ render() { return (
       no real use.
     </p>
     <p>
-      The market capitalization of bitcoin is still tiny,
-      <a href="http://money.visualcapitalist.com/worlds-money-markets-one-visualization-2017/">compared
+      The market capitalization of bitcoin is still
+      tiny, <a href="http://money.visualcapitalist.com/worlds-money-markets-one-visualization-2017/">compared
       to</a> gold, credit cards or the stock market.
     </p>
   </div>

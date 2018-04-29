@@ -11,8 +11,8 @@ render() { return (
       you can afford to lose!
     </p>
     <p>
-      Bitcoin could go to zero and
-      <a href="https://99bitcoins.com/bitcoinobituaries/">many people think so.</a>
+      Bitcoin could go to zero and <a
+      href="https://99bitcoins.com/bitcoinobituaries/">many people think so.</a>
     </p>
   </div>
     );
