@@ -10,27 +10,18 @@ class InfoBox extends Component {
     super(props);
     this.state = {
       currentPrice: null,
-      monthChangeD: null,
-      monthChangeP: null,
       updatedAt: null,
       mcAfeePrice: null
     }
   }
   componentDidMount(){
     this.getData = () => {
-      const {data} = this.props;
       const url = 'https://api.coindesk.com/v1/bpi/currentprice.json';
 
       fetch(url).then(r => r.json())
         .then((bitcoinData) => {
-          const price = bitcoinData.bpi.USD.rate_float;
-          const change = price - data[0].y;
-          const changeP = (price - data[0].y) / data[0].y * 100;
-
           this.setState({
             currentPrice: bitcoinData.bpi.USD.rate_float,
-            monthChangeD: formatDollar(change),
-            monthChangeP: changeP.toFixed(2) + '%',
             updatedAt: bitcoinData.time.updatedISO,
             mcAfeePrice: this.getMcAfeePriceNow()
           })
@@ -109,8 +100,7 @@ class InfoBox extends Component {
 // DEFAULT PROPS
 InfoBox.defaultProps = {
   startPrice: 2000,
-  startDate:  '2017-07-17 00:00:00',         // Date of first McAfee Tweet
-  data: null
+  startDate:  '2017-07-17 00:00:00'   // Date of first McAfee Tweet
 }
 
 export default InfoBox;

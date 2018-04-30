@@ -425,7 +425,6 @@ class App extends Component {
 
         { !this.state.fetchingData ?
           <InfoBox
-            data={this.state.data}
             growthRate={growthRate}
             startPrice={startPrice}
             startDate ={startDate + ' 00:00:00'}
