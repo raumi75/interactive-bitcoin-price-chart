@@ -55,6 +55,8 @@ class App extends Component {
       growthRate: getParameterByName('percent') || this.props.growthRate,
       customPrediction: (getParameterByName('percent') !== null),
       startPrice: 0,
+      predictionPriceNow: 10,
+      actualPriceNow: 11,
       startDate:  getParameterByName('startdate')  || this.props.startDate,
       targetDate: getParameterByName('targetdate') || this.props.targetDate
     }
@@ -69,11 +71,19 @@ class App extends Component {
 
   componentDidMount(){
     this.loadData();
-    this.refresh = setInterval(() => this.reloadData(), 60*5000);
+    this.loadActualPriceNow();
+    this.timerChart = setInterval(() => this.reloadData(), 60*5000);
+    // refresh prediction price every seconds
+    this.timerPredictionPriceNow = setInterval(() => this.refreshPredictionPriceNow(), 1000);
+    // load actual price every 60 seconds
+    this.timerActualPriceNow = setInterval(() => this.loadActualPriceNow(), 60000);
+
   }
 
   componentWillUnmount(){
-    clearInterval(this.refresh);
+    clearInterval(this.timerChart);
+    clearInterval(this.timerPredictionPriceNow);
+    clearInterval(this.timerActualPriceNow);
   }
 
   // If the chart was last updated yesterday, reload it.
@@ -146,6 +156,22 @@ class App extends Component {
     .catch((e) => {
       console.log('Error when loading price data from coinbase' + e);
     });
+  }
+
+  // Load current bitcoin price from coindesk
+  loadActualPriceNow = () => {
+    const url = 'https://api.coindesk.com/v1/bpi/currentprice.json';
+
+    fetch(url).then(r => r.json())
+      .then((bitcoinData) => {
+        this.setState({
+          actualPriceNow: bitcoinData.bpi.USD.rate_float,
+          updatedAt: bitcoinData.time.updatedISO,
+        })
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   }
 
   handleLineChartLength = (pos) => {
@@ -376,6 +402,18 @@ class App extends Component {
     }
   }
 
+  refreshPredictionPriceNow() {
+    this.setState({
+      predictionPriceNow: this.getPredictionPriceNow()
+    });
+  }
+
+  // No Paramter because this is realtime
+  // The price will be calculated for this moment.
+  getPredictionPriceNow(){
+    return this.getMcAfeeRate(this.getDaysFloatSincePrediction());
+  }
+
   // predicted Price on targetDate
   getTargetPrice() {
     const {startDate, targetDate} = this.state;
@@ -399,9 +437,18 @@ class App extends Component {
 
   }
 
+  // count days between given date and prediction
+  // @return integer
   getDaysSincePrediction(d) {
     const {startDate} = this.state;
     return moment(d).diff(moment(startDate),'days')
+  }
+
+  // Days (with decimals) between prediction and now
+  // @return float
+  getDaysFloatSincePrediction() {
+    const {startDate} = this.state;
+    return moment().utc().diff(moment(startDate + ' 00:00 +0000', 'YYYY-MM-DD HH:mm Z'),'days', true) -1;
   }
 
   getUrl() {
@@ -411,7 +458,7 @@ class App extends Component {
   }
 
   render() {
-    const {growthRate, startPrice, startDate, targetDate } = this.state;
+    const {targetDate } = this.state;
 
     return (
 
@@ -425,9 +472,9 @@ class App extends Component {
 
         { !this.state.fetchingData ?
           <InfoBox
-            growthRate={growthRate}
-            startPrice={startPrice}
-            startDate ={startDate + ' 00:00:00'}
+            predictionPriceNow = {this.state.predictionPriceNow }
+            actualPriceNow={this.state.actualPriceNow}
+            updatedAt={this.state.updatedAt}
           />
         : 'Loading data from Coindesk ... ' }
 
