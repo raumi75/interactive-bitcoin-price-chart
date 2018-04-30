@@ -55,8 +55,8 @@ class App extends Component {
       growthRate: getParameterByName('percent') || this.props.growthRate,
       customPrediction: (getParameterByName('percent') !== null),
       startPrice: 0,
-      predictionPriceNow: 10,
-      actualPriceNow: 11,
+      predictionPriceNow: 1,
+      actualPriceNow: 1,
       startDate:  getParameterByName('startdate')  || this.props.startDate,
       targetDate: getParameterByName('targetdate') || this.props.targetDate
     }
@@ -71,13 +71,15 @@ class App extends Component {
 
   componentDidMount(){
     this.loadData();
-    this.loadActualPriceNow();
+    // wait 2 seconds before you load the actual price to prevent race condition
+    setTimeout( function() { this.refreshActualPriceNow(); }.bind(this), 2000)
+    // reload the chart after midnight.
+    // check every 5 minutes
     this.timerChart = setInterval(() => this.reloadData(), 60*5000);
-    // refresh prediction price every seconds
+    // refresh prediction price every 5 seconds
     this.timerPredictionPriceNow = setInterval(() => this.refreshPredictionPriceNow(), 1000);
-    // load actual price every 60 seconds
-    this.timerActualPriceNow = setInterval(() => this.loadActualPriceNow(), 60000);
-
+    // refresh actual price every 60 seconds
+    this.timerActualPriceNow = setInterval(() => this.refreshActualPriceNow(), 60000);
   }
 
   componentWillUnmount(){
@@ -107,7 +109,7 @@ class App extends Component {
     fetch(url).then( r => r.json())
       .then((bitcoinData) => {
 
-      const sortedData = [];
+      let sortedData = [];
       let count = 0;
 
       // load historical prices
@@ -126,7 +128,7 @@ class App extends Component {
 
       this.setState({
         todayCount: count,
-        countRange: [Math.max(-offsetPrediction,0), count-1],
+        countRange: [Math.max(-offsetPrediction,0), count],
         historicalEnd: moment().format('YYYY-MM-DD'),
         startPrice: parseFloat(getParameterByName('startprice')) || sortedData.find(function(data) { return data.d === startDate} ).y.p
       });
@@ -146,12 +148,11 @@ class App extends Component {
         dataComplete: sortedData,
         data: sortedData,
         fetchingData: false
-      });
+      },
+        () => this.addMcAfeeRates()
+      );
 
-      this.addMcAfeeRates();
       this.setSliderMarks();
-      this.cutData(this.state.countRange);
-
     })
     .catch((e) => {
       console.log('Error when loading price data from coinbase' + e);
@@ -159,19 +160,30 @@ class App extends Component {
   }
 
   // Load current bitcoin price from coindesk
-  loadActualPriceNow = () => {
+  // and update the state
+  refreshActualPriceNow = () => {
     const url = 'https://api.coindesk.com/v1/bpi/currentprice.json';
 
     fetch(url).then(r => r.json())
       .then((bitcoinData) => {
         this.setState({
           actualPriceNow: bitcoinData.bpi.USD.rate_float,
-          updatedAt: bitcoinData.time.updatedISO,
-        })
+          updatedAt: bitcoinData.time.updatedISO
+        });
+        this.setActualPriceNow(bitcoinData.bpi.USD.rate_float);
       })
       .catch((e) => {
         console.log(e);
       });
+  }
+
+  setActualPriceNow = (pNow) => {
+    let newDataComplete = this.state.dataComplete;
+    newDataComplete[this.state.todayCount].y.p = pNow;
+
+    this.setState ({ dataComplete: newDataComplete },
+      () => this.cutData(this.state.countRange)
+    );
   }
 
   handleLineChartLength = (pos) => {
@@ -193,7 +205,7 @@ class App extends Component {
     var mark = {};
     mark[0] = moment(historicalStart).format('YYYY-MM-DD');;
     mark[(moment(startDate).diff(moment(historicalStart),'days'))] = moment(startDate).format('YYYY-MM-DD');;
-    mark[(moment(Date.now()).diff(moment(historicalStart),'days')-1)] = 'yesterday';
+    mark[(moment(Date.now()).diff(moment(historicalStart),'days'))] = 'today';
     mark[(moment(targetDate).diff(moment(historicalStart),'days'))] = moment(targetDate).format('YYYY-MM-DD');
     this.setState ({
       sliderMarks: mark
@@ -256,7 +268,7 @@ class App extends Component {
   }
 
   setRangeDefault = () => {
-    var cr = [Math.max(-offsetPrediction,0), this.state.todayCount-1]
+    var cr = [Math.max(-offsetPrediction,0), this.state.todayCount]
     this.setState({
       rangeMin: Math.min(defaultRangeMin, -offsetPrediction),
       countRange: cr,
@@ -277,7 +289,7 @@ class App extends Component {
   }
 
   handleRange1m = () => {
-    var cr = [this.state.todayCount-32, this.state.todayCount-1];
+    var cr = [this.state.todayCount-31, this.state.todayCount];
     this.setState( {
       rangeMin: defaultRangeMin,
       countRange: cr,
@@ -289,7 +301,7 @@ class App extends Component {
   }
 
   handleRange3m = () => {
-    var cr = [this.state.todayCount-92, this.state.todayCount-1];
+    var cr = [this.state.todayCount-91, this.state.todayCount];
     this.setState( {
       rangeMin: defaultRangeMin,
       countRange: cr,
@@ -301,7 +313,7 @@ class App extends Component {
   }
 
   handleRange1y = () => {
-    var cr = [this.state.todayCount-367, this.state.todayCount-1];
+    var cr = [this.state.todayCount-366, this.state.todayCount];
     this.setState( {
       rangeMin: defaultRangeMin,
       countRange: cr,
@@ -348,7 +360,8 @@ class App extends Component {
         , () => {
             this.setRangeDefault();
             this.setSliderMarks();
-            this.addMcAfeeRates();                  }
+            this.addMcAfeeRates();
+          }
       );
     }
   }
@@ -403,8 +416,20 @@ class App extends Component {
   }
 
   refreshPredictionPriceNow() {
+    const predictionNow = this.getPredictionPriceNow();
+
+    if (this.state.dataComplete[this.state.todayCount].y.m !== predictionNow) {
+      let newDataComplete = this.state.dataComplete;
+      newDataComplete[this.state.todayCount].y.m = predictionNow;
+      this.setState({
+        dataComplete: newDataComplete
+      },
+        () => this.cutData(this.state.countRange)
+      );
+    }
+
     this.setState({
-      predictionPriceNow: this.getPredictionPriceNow()
+      predictionPriceNow: predictionNow
     });
   }
 
@@ -431,6 +456,9 @@ class App extends Component {
             m: this.getMcAfeeRate(val.x+offsetPrediction) }
       }
     });
+
+    newDataComplete[this.state.todayCount].y.m = this.getPredictionPriceNow();
+
     this.setState ({ dataComplete: newDataComplete },
       () => this.cutData(this.state.countRange)
     );
