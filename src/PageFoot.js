@@ -10,7 +10,7 @@ class PageFoot extends Component {
     return (
     <Row className="footer" id="pagefoot">
       <Col xs={12}>
-        <p>Data kindly provided by <a href="http://www.coindesk.com/price/">CoinDesk</a></p>
+        <p>Data-Source: <strong>Powered by <a href="https://www.coindesk.com/price/">CoinDesk</a></strong></p>
         <p>Chart based on Brandon Morellis <a href="https://codeburst.io/how-i-built-an-interactive-30-day-bitcoin-price-graph-with-react-and-an-api-6fe551c2ab1d">Tutorial</a></p>
         <p>Source: <a href="https://github.com/raumi75/mcafeetracker">raumi75@github</a></p>
         <p><strong>Suggestions, Feedback, Ideas?</strong> Get in touch: <a href="https://reddit.com/u/raumi75/">/u/raumi75</a>, <a href="https://twitter.com/raumi75">@raumi75</a></p>
