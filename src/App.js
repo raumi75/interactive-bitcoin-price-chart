@@ -471,10 +471,10 @@ class App extends Component {
 
   refreshPredictionPriceNow() {
     const predictionNow = this.getPredictionPriceNow();
-    const predictionUpdatesMax = this.secondsPredictionOneCent();
-    console.log(predictionUpdatesMax);
+    let predictionUpdatesMax = this.state;
     if (this.state.dataComplete[this.state.todayCount].y.m !== predictionNow) {
       let newDataComplete = this.state.dataComplete;
+      predictionUpdatesMax = this.secondsPredictionOneCent();
       newDataComplete[this.state.todayCount].y.m = predictionNow;
       this.setState({
         dataComplete: newDataComplete,
