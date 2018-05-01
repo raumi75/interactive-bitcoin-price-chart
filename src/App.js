@@ -40,6 +40,7 @@ class App extends Component {
     super(props);
     this.state = {
       fetchingData: true,
+      loadingActualPrice: false,
       data: null,
       sortedData: null,
       hoverLoc: null,
@@ -57,6 +58,11 @@ class App extends Component {
       startPrice: 0,
       predictionPriceNow: 1,
       actualPriceNow: 1,
+      updatedChartAt: moment('2011-01-01 00:00:00'),
+      loadedChartAt:  moment('2011-01-01 00:00:00'),
+      lastHistoricalDate: moment('2011-01-01 00:00:00'),
+      loadedActualAt: moment('2011-01-01 00:00:00'),
+      updatedAt:      moment('2011-01-01 00:00:00'),
       startDate:  getParameterByName('startdate')  || this.props.startDate,
       targetDate: getParameterByName('targetdate') || this.props.targetDate
     }
@@ -71,46 +77,50 @@ class App extends Component {
 
   componentDidMount(){
     this.loadData();
-    // wait 2 seconds before you load the actual price to prevent race condition
-    setTimeout( function() { this.refreshActualPriceNow(); }.bind(this), 2000)
-    // reload the chart after midnight.
-    // check every 5 minutes
-    this.timerChart = setInterval(() => this.reloadData(), 60*5000);
-    // refresh prediction price every 5 seconds
-    this.timerPredictionPriceNow = setInterval(() => this.refreshPredictionPriceNow(), 1000);
-    // refresh actual price every 60 seconds
-    this.timerActualPriceNow = setInterval(() => this.refreshActualPriceNow(), 60000);
+    // update prices if necessary ever second
+    this.timerRefreshPrices = setInterval(() => this.refreshPrices(), 1000);
   }
 
   componentWillUnmount(){
-    clearInterval(this.timerChart);
-    clearInterval(this.timerPredictionPriceNow);
-    clearInterval(this.timerActualPriceNow);
+    clearInterval(this.timerRefreshPrices);
+    //clearInterval(this.timerPredictionPriceNow);
+    //clearInterval(this.timerActualPriceNow);
   }
 
-  // If the chart was last updated yesterday, reload it.
-  reloadData = () => {
-    if (this.chartDataAge() > 25) { // hours
-      // console.log('Chart data was last updated yesterday. reloading it now.');
-      this.loadData();
-    }
-  }
-
-  chartDataAge = () => {
-    const {historicalEnd}    = this.state;
-    return moment().utc().diff(moment(historicalEnd + ' 00:00 +0000', 'YYYY-MM-DD HH:mm Z'), 'hours', true);
+  // Should historical prices in the chart be refreshed?
+  // if the lastHistoricalDate is day before yesterday
+  //  todo maybe: (and chartdata is older than 24 hours and 5 minutes)
+  // @return boolean
+  isChartDataStale = () => {
+    const {lastHistoricalDate} = this.state;
+    const expectedReleaseTime = 'T02:00:00+0000';
+    const historicalAgeHours = moment().utc().diff(lastHistoricalDate + expectedReleaseTime, 'hours');
+    //console.log (lastHistoricalDate + ' historicalAgeHours ' + historicalAgeHours);
+    return (historicalAgeHours > 48);
   }
 
   loadData = () => {
     const {startDate, targetDate, historicalStart, historicalEnd}  = this.state;
+    const waitMinutesBeforeReload = 10;
+
     predictionCount = moment(maxTargetDate).diff(moment(startDate),'days');
     offsetPrediction = moment(historicalStart).diff(moment(startDate),'days');
     const url = 'https://api.coindesk.com/v1/bpi/historical/close.json?start='+historicalStart+'&end='+historicalEnd;
+    if (moment().diff(this.state.loadedChartAt, 'minutes') < waitMinutesBeforeReload ) {
+      // we do not load if an attempt has been made in the last 10 minutes
+      console.log('not reloading historical prices to prevent abusing coindesk');
+      return null;
+    } else {
+      // register the timestamp of this load
+      this.setState({loadedChartAt: moment()});
+    }
     fetch(url).then( r => r.json())
       .then((bitcoinData) => {
 
       let sortedData = [];
       let count = 0;
+
+      this.setState({updatedChartAt: bitcoinData.time.updatedISO});
 
       // load historical prices
       for (let date in bitcoinData.bpi){
@@ -129,6 +139,7 @@ class App extends Component {
       this.setState({
         todayCount: count,
         countRange: [Math.max(-offsetPrediction,0), count],
+        lastHistoricalDate: sortedData[count-1].d,
         historicalEnd: moment().format('YYYY-MM-DD'),
         startPrice: parseFloat(getParameterByName('startprice')) || sortedData.find(function(data) { return data.d === startDate} ).y.p
       });
@@ -159,18 +170,58 @@ class App extends Component {
     });
   }
 
+  refreshPrices = () => {
+    const {loadingActualPrice} = this.state;
+    const PriceAgeSeconds = moment().utc().diff(this.state.updatedAt, 'seconds');
+    this.refreshPredictionPriceNow();
+
+    if (loadingActualPrice) {
+      //this.setState({updatesIn: 0});
+    } else {
+      //this.setState({updatesIn: 90-PriceAgeSeconds});
+
+      // Do not refresh right when the price is 60 seconds old,
+      // because it is not ready yet. Refreshing 90 seconds old prices will
+      // effectively refresh every 60 seconds.
+      if (PriceAgeSeconds > 90) {
+        this.refreshActualPriceNow();
+      }
+    }
+
+    // reload the chart when it is 25 hours old to get the
+    // latest closing price
+    if (this.isChartDataStale()) {
+      // console.log('Chart data was last updated yesterday. reloading it now.');
+      console.log('reloading chart after midnight');
+      this.loadData();
+    }
+  }
+
   // Load current bitcoin price from coindesk
   // and update the state
   refreshActualPriceNow = () => {
     const url = 'https://api.coindesk.com/v1/bpi/currentprice.json';
+    const waitSecondsBeforeReload = 30;
+
+    if (moment().diff(this.state.loadedActualAt, 'seconds') < waitSecondsBeforeReload) {
+      // don't abuse Coindesk
+      return null;
+    }
+
+    this.setState({
+      loadedActualAt: moment(),
+      loadingActualPrice: true,
+    }); // don't call me twice
 
     fetch(url).then(r => r.json())
       .then((bitcoinData) => {
+        this.setActualPriceNow(bitcoinData.bpi.USD.rate_float);
+
         this.setState({
           actualPriceNow: bitcoinData.bpi.USD.rate_float,
-          updatedAt: bitcoinData.time.updatedISO
+          updatedAt: bitcoinData.time.updatedISO,
+          loadingActualPrice: false
         });
-        this.setActualPriceNow(bitcoinData.bpi.USD.rate_float);
       })
       .catch((e) => {
         console.log(e);
@@ -504,6 +555,7 @@ class App extends Component {
             predictionPriceNow = {this.state.predictionPriceNow }
             actualPriceNow={this.state.actualPriceNow}
             updatedAt={this.state.updatedAt}
+            //updatesIn={this.state.updatesIn}
           />
         : 'Loading data from Coindesk ... ' }
 
