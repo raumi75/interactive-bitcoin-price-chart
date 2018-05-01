@@ -10,8 +10,8 @@ export default class ExplainMath extends Component {
       <div>
         <h2 id="explainmath">The math behind it</h2>
         <p>
-          Is this really possible? Bitcoin needs to grow at a rate of
-          <strong>{ growthRate } % per day</strong>.
+          Is this really possible? Bitcoin needs to grow at a rate
+          of <strong>{ growthRate } % per day</strong>.
           That is the red line on the above chart. As long as the blue line is
           above the red line, we are on target. Hover over the chart to get
           daily prices.

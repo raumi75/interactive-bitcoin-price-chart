@@ -129,7 +129,7 @@ class App extends Component {
         sortedData.push({
           d: moment(date).format('YYYY-MM-DD'),
           x: count, //previous days
-          y: {p: bitcoinData.bpi[date], // historical price on date
+          y: {p: Math.round(bitcoinData.bpi[date]*100)/100, // historical price on date
               m: 0} // predicted price for date
         });
         count++;
@@ -728,7 +728,7 @@ class App extends Component {
 App.defaultProps = {
   startDate:  '2017-07-17',         // Date of first McAfee Tweet
   targetDate:  '2020-12-31',        // Day McAfee predicted the price
-  growthRate:  0.4840957035           // daily growth rate to goal of 1.000.000 USD/BTC
+  growthRate:  0.484095526          // daily growth rate to goal of 1.000.000 USD/BTC
 }
 
 export default App;
