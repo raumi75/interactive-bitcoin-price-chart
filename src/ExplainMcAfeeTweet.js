@@ -14,7 +14,7 @@ class ExplainMcAfeeTweet extends Component {
         <Col xs={12} md={6}>
           <p className="lead explanation">
             John McAfee made a bet on July 17th 2017: One single Bitcoin would be worth { formatDollar(500000) } in three years.
-            The closing price according to CoinDesk was { formatDollar(startPrice, 3) } that day.
+            The closing price according to CoinDesk was { formatDollar(startPrice) } that day.
             <strong> Look what is at stake:</strong>
             <a href="https://twitter.com/officialmcafee/status/887024683379544065"><Image src="tweet20170717.png" responsive /></a>
           </p>
