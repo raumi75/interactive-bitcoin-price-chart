@@ -56,6 +56,8 @@ class App extends Component {
       growthRate: getParameterByName('percent') || this.props.growthRate,
       customPrediction: (getParameterByName('percent') !== null),
       startPrice: 0,
+      predictionUpdatesMax: 10,
+      predictionUpdatesIn: 10,
       predictionPriceNow: 1,
       actualPriceNow: 1,
       updatedChartAt: moment('2011-01-01 00:00:00'),
@@ -469,20 +471,34 @@ class App extends Component {
 
   refreshPredictionPriceNow() {
     const predictionNow = this.getPredictionPriceNow();
-
+    const predictionUpdatesMax = this.secondsPredictionOneCent();
+    console.log(predictionUpdatesMax);
     if (this.state.dataComplete[this.state.todayCount].y.m !== predictionNow) {
       let newDataComplete = this.state.dataComplete;
       newDataComplete[this.state.todayCount].y.m = predictionNow;
       this.setState({
-        dataComplete: newDataComplete
+        dataComplete: newDataComplete,
+        predictionUpdatesMax: predictionUpdatesMax,
+        predictionUpdatesIn: predictionUpdatesMax
       },
         () => this.cutData(this.state.countRange)
       );
+    } else {
+      // count down to next prediction Price change
+      this.setState({
+        predictionUpdatesIn: this.state.predictionUpdatesIn-1
+      });
     }
 
     this.setState({
       predictionPriceNow: predictionNow
     });
+  }
+
+  secondsPredictionOneCent() {
+    const updateThreshold = 0.01; // One Cent
+    // Time it takes for prediciton to rise 1 Cent
+    return Math.ceil(updateThreshold/(this.state.predictionPriceNow*(this.state.growthRate/100)/60/60/24));
   }
 
   // No Paramter because this is realtime
@@ -554,8 +570,11 @@ class App extends Component {
           <InfoBox
             predictionPriceNow = {this.state.predictionPriceNow }
             actualPriceNow={this.state.actualPriceNow}
-            //updatedAt={this.state.updatedAt}
+
             actualUpdatesIn={this.state.updatesIn}
+
+            predictionUpdatesMax ={this.state.predictionUpdatesMax}
+            predictionUpdatesIn  ={this.state.predictionUpdatesIn}
           />
         : 'Loading data from Coindesk ... ' }
 

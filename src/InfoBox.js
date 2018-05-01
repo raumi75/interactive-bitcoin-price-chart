@@ -22,20 +22,20 @@ class InfoBox extends Component {
   }
 
   render(){
-    const {predictionPriceNow, actualUpdatesIn, actualPriceNow} = this.props;
+    const {predictionPriceNow, actualUpdatesIn, actualPriceNow, predictionUpdatesIn,predictionUpdatesMax} = this.props;
     const aboveOrBelow = this.getAboveOrBelow();
     return (
       <Row>
         <Col xs={4} md={2} mdOffset={3} height={"5em"}>
           <div className="subtext">Predicted</div>
           <div className="heading predicted">{formatDollar(predictionPriceNow)}</div>
-          <div className="subtext">steady growth</div>
+          <ProgressBar className="actualupdatesin" bsStyle="danger" now={predictionUpdatesIn} max={predictionUpdatesMax} />
         </Col>
 
         <Col xs={4} md={2} height={"5em"}>
           <div className="subtext">Actual</div>
           <div className="heading actual">{formatDollar(actualPriceNow)}</div>
-          <ProgressBar className="actualupdatesin" bsStyle="primary" now={actualUpdatesIn} max={60} />
+          <ProgressBar className="actualupdatesin" now={actualUpdatesIn} max={60} />
 
         </Col>
 
