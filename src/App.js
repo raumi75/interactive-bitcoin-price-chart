@@ -176,9 +176,9 @@ class App extends Component {
     this.refreshPredictionPriceNow();
 
     if (loadingActualPrice) {
-      //this.setState({updatesIn: 0});
+      this.setState({updatesIn: 0});
     } else {
-      //this.setState({updatesIn: 90-PriceAgeSeconds});
+      this.setState({updatesIn: 90-PriceAgeSeconds});
 
       // Do not refresh right when the price is 60 seconds old,
       // because it is not ready yet. Refreshing 90 seconds old prices will
@@ -218,7 +218,7 @@ class App extends Component {
         this.setActualPriceNow(bitcoinData.bpi.USD.rate_float);
 
         this.setState({
-          actualPriceNow: bitcoinData.bpi.USD.rate_float,
+          actualPriceNow: Math.round(bitcoinData.bpi.USD.rate_float*100)/100,
           updatedAt: bitcoinData.time.updatedISO,
           loadingActualPrice: false
         });
@@ -554,8 +554,8 @@ class App extends Component {
           <InfoBox
             predictionPriceNow = {this.state.predictionPriceNow }
             actualPriceNow={this.state.actualPriceNow}
-            updatedAt={this.state.updatedAt}
-            //updatesIn={this.state.updatesIn}
+            //updatedAt={this.state.updatedAt}
+            actualUpdatesIn={this.state.updatesIn}
           />
         : 'Loading data from Coindesk ... ' }
 

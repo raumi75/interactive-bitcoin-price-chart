@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import moment from 'moment';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, ProgressBar } from 'react-bootstrap';
 import formatDollar from './formatting.js';
 import './InfoBox.css';
 
 class InfoBox extends Component {
 
   getAboveOrBelow() {
-    if (this.props.actualPriceNow>this.props.predictionPriceNow)
+    if (this.props.actualPriceNow>=this.props.predictionPriceNow)
     { return ('above'); } else { return 'below' ; }
   }
 
@@ -21,9 +20,10 @@ class InfoBox extends Component {
   getStrPercent() {
     return this.getPercent().toLocaleString('en-us', {style: 'percent', maximumSignificantDigits: 4});
   }
-  
+
   render(){
-    const {predictionPriceNow, updatedAt, actualPriceNow} = this.props;
+    const {predictionPriceNow, actualUpdatesIn, actualPriceNow} = this.props;
+    const aboveOrBelow = this.getAboveOrBelow();
     return (
       <Row>
         <Col xs={4} md={2} mdOffset={3} height={"5em"}>
@@ -35,13 +35,14 @@ class InfoBox extends Component {
         <Col xs={4} md={2} height={"5em"}>
           <div className="subtext">Actual</div>
           <div className="heading actual">{formatDollar(actualPriceNow)}</div>
-          <div className="subtext">{moment(updatedAt).format('YYYY-MM-DD hh:mm A')}</div>
+          <ProgressBar className="actualupdatesin" bsStyle="primary" now={actualUpdatesIn} max={60} />
+
         </Col>
 
         <Col xs={4} md={2} height={"5em"}>
           <div className="subtext">Bitcoin is</div>
-          <div className={"heading "+this.getAboveOrBelow() }>{this.getStrPercent()}</div>
-          <div className={"subtext "+this.getAboveOrBelow() }>{this.getAboveOrBelow()}</div>
+          <div className={"heading "+aboveOrBelow }>{this.getStrPercent()}</div>
+          <div className={"subtext "+aboveOrBelow }>{aboveOrBelow}</div>
         </Col>
       </Row>
     );
