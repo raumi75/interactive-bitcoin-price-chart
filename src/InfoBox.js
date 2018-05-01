@@ -13,7 +13,7 @@ class InfoBox extends Component {
   // percentage
   // @return unsigned float
   getPercent() {
-    return (Math.abs(this.props.actualPriceNow/this.props.predictionPriceNow-1));
+    return (Math.round(Math.abs(this.props.actualPriceNow/this.props.predictionPriceNow-1)*100000)/100000);
   }
 
   // formatted percentage
