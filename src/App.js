@@ -405,11 +405,12 @@ class App extends Component {
   }
 
   // USD/BTC according to John McAfee's Tweet (1.000.000 by 2020)
+  // @return float with 2 decimal digits
   getMcAfeeRate = (s) => {
     const goalRate = 1+(this.state.growthRate/100);
     const {startPrice} = this.state;   // start rate USD/BTC at day of tweet
     if (s >= 0) {
-      return Math.pow(goalRate, s) * startPrice;
+      return Math.round(Math.pow(goalRate, s) * startPrice*100)/100;
     } else {
       return 0;
     }
