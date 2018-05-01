@@ -391,6 +391,7 @@
     "input-groups.less",
     "navs.less",
     "labels.less",
+    "progress-bars.less",
     "panels.less"
   ],
   "js": [],
