@@ -33,8 +33,8 @@ class InfoBox extends Component {
         </Col>
 
         <Col xs={4} md={2} height={"5em"}>
-          <div className="subtext">Actual</div>
-          <div className="heading actual">{formatDollar(actualPriceNow)}</div>
+          <div className="subtext"><a href="https://www.coindesk.com/price/" title="Powered by CoinDesk">Actual</a></div>
+          <div className="heading actual"><a href="https://www.coindesk.com/price/" title="Powered by CoinDesk">{formatDollar(actualPriceNow)}</a></div>
           <ProgressBar className="actualupdatesin" now={actualUpdatesIn} max={60} />
 
         </Col>
