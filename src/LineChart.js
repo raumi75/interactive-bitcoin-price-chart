@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import "./LineChart.css";
 import formatDollar from './formatting.js';
+import moment from 'moment';
 
 const chartRatio = 3; // Chart's height is 1/3 of width
 let stopHoverTimer;
@@ -158,6 +159,10 @@ class LineChart extends Component {
     const {data, xLabelSize, yLabelSize, labelRadius} = this.props;
     const {svgHeight} = this.state;
     if ((count < data.length) && (count >= 0)) {
+      let dateText = data[count].d;
+      if (dateText === moment().utc().format('YYYY-MM-DD') ) {
+        dateText = 'now';
+      }
       return(
         <g>
           <rect
@@ -174,7 +179,7 @@ class LineChart extends Component {
             className={'linechart_label_x'+cssExtra}
             textAnchor="middle"
           >
-            { data[count].d }
+            { dateText }
           </text>
         </g>
       );
