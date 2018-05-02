@@ -258,7 +258,7 @@ class App extends Component {
     var mark = {};
     mark[0] = moment(historicalStart).format('YYYY-MM-DD');;
     mark[(moment(startDate).diff(moment(historicalStart),'days'))] = moment(startDate).format('YYYY-MM-DD');;
-    mark[(moment(Date.now()).diff(moment(historicalStart),'days'))] = 'today';
+    mark[(moment(Date.now()).diff(moment(historicalStart),'days'))] = 'now';
     mark[(moment(targetDate).diff(moment(historicalStart),'days'))] = moment(targetDate).format('YYYY-MM-DD');
     this.setState ({
       sliderMarks: mark
