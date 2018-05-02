@@ -13,7 +13,7 @@ class ExplainPriceOn extends Component {
     return (
       <Panel className="panelFormula">
         <Panel.Heading>By the end of {moment(date).format('YYYY-MM-DD')}, the prediction is {this.getDaysSincePrediction(date)} days old</Panel.Heading>
-        <Panel.Body>{1+growthRate}<sup><strong>{this.getDaysSincePrediction(date)}</strong></sup> * { formatDollar(startPrice, 3) } = { formatDollar(this.getMcAfeeRate(this.getDaysSincePrediction(date)),2) }</Panel.Body>
+        <Panel.Body>{1+growthRate}<sup><strong>{this.getDaysSincePrediction(date)}</strong></sup> * { formatDollar(startPrice) } = { formatDollar(this.getMcAfeeRate(this.getDaysSincePrediction(date)),2) }</Panel.Body>
       </Panel>
     );
   }
