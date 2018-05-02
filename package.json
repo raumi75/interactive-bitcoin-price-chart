@@ -2,6 +2,7 @@
   "name": "BitcoinPricePredictionTracker",
   "version": "1.4.0",
   "dependencies": {
+    "babel-polyfill": "^6.26.0",
     "moment": "^2.22.1",
     "npm": "^5.8.0",
     "rc-slider": "^8.6.1",
