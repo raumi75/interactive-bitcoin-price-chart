@@ -1,0 +1,23 @@
+<IfModule mod_expires.c>
+
+  # Add correct content-type for fonts
+  AddType application/vnd.ms-fontobject .eot
+  AddType application/x-font-ttf .ttf
+  AddType application/x-font-opentype .otf
+  AddType application/x-font-woff .woff
+  AddType application/x-font-woff2 .woff2
+  AddType image/svg+xml .svg
+
+  # Compress compressible fonts
+  AddOutputFilterByType DEFLATE application/x-font-ttf application/x-font-opentype image/svg+xml
+
+  ExpiresActive on
+
+  # Add a far future Expires header for fonts
+  ExpiresByType application/vnd.ms-fontobject "access plus 1 year"
+  ExpiresByType application/x-font-ttf "access plus 1 year"
+  ExpiresByType application/x-font-opentype "access plus 1 year"
+  ExpiresByType application/x-font-woff "access plus 1 year"
+  ExpiresByType application/x-font-woff2 "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+</IfModule>
