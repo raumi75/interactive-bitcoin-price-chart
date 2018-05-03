@@ -24,6 +24,8 @@ class FormCustomPrediction extends Component {
             <DatePicker id="startdatepicker"
               value={startDate}
               onChange={this.props.onStartDateChange}
+              onFocus={this.props.pauseEvents}
+              onBlur={this.props.resumeEvents}
               minDate={historicalStart}
               maxDate={moment(historicalEnd).subtract(1, 'week').format('YYYY-MM-DD')}
               showClearButton={false}
@@ -74,6 +76,8 @@ class FormCustomPrediction extends Component {
               onChange={this.props.onTargetDateChange}
               minDate={moment(historicalEnd).add(1, 'month').format('YYYY-MM-DD')}
               maxDate={maxTargetDate}
+              onFocus={this.props.pauseEvents}
+              onBlur={this.props.resumeEvents}
               showClearButton={false}
               dateFormat="YYYY-MM-DD"
             />

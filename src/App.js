@@ -66,7 +66,8 @@ class App extends Component {
       loadedActualAt: moment('2011-01-01 00:00:00'),
       updatedAt:      moment('2011-01-01 00:00:00'),
       startDate:  getParameterByName('startdate')  || this.props.startDate,
-      targetDate: getParameterByName('targetdate') || this.props.targetDate
+      targetDate: getParameterByName('targetdate') || this.props.targetDate,
+      pausedAt: null
     }
   }
 
@@ -85,8 +86,14 @@ class App extends Component {
 
   componentWillUnmount(){
     clearInterval(this.timerRefreshPrices);
-    //clearInterval(this.timerPredictionPriceNow);
-    //clearInterval(this.timerActualPriceNow);
+  }
+
+  pauseTimer = () => {
+    this.setState({pausedAt: moment() });
+  }
+
+  resumeTimer = () => {
+    this.setState({pausedAt: null});
   }
 
   // Should historical prices in the chart be refreshed?
@@ -175,6 +182,17 @@ class App extends Component {
   refreshPrices = () => {
     const {loadingActualPrice} = this.state;
     const PriceAgeSeconds = moment().utc().diff(this.state.updatedAt, 'seconds');
+
+    // Don't refresh anything if paused because of user input
+    if (this.state.pausedAt !== null ) {
+      if (moment().diff(this.state.pausedAt, 'second') > 30) {
+        // force resume after 30 seconds
+        this.setState({pausedAt: null});
+      } else {
+        return null;
+      }
+    }
+
     this.refreshPredictionPriceNow();
 
     if (loadingActualPrice) {
@@ -656,6 +674,8 @@ class App extends Component {
           targetDate={this.state.targetDate}
           onTargetDateChange={this.handleTargetDateChange}
 
+          pauseEvents={this.pauseTimer}
+          resumeEvents={this.resumeTimer}
         />
 
         { !this.state.customPrediction ?
