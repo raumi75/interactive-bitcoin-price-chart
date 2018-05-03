@@ -392,7 +392,8 @@
     "navs.less",
     "labels.less",
     "progress-bars.less",
-    "panels.less"
+    "panels.less",
+    "popovers.less"
   ],
   "js": [],
   "customizerUrl": "<none>"
