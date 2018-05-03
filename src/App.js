@@ -224,7 +224,7 @@ class App extends Component {
     const waitSecondsBeforeReload = 30;
 
     if (moment().diff(this.state.loadedActualAt, 'seconds') < waitSecondsBeforeReload) {
-      // don't abuse Coindesk
+      //console.log("waiting. don't abuse Coindesk");
       return null;
     }
 
@@ -244,7 +244,11 @@ class App extends Component {
         });
       })
       .catch((e) => {
-        console.log(e);
+        console.log('error when loading current price ' + e);
+        this.setState({
+          loadedActualAt: moment(),
+          loadingActualPrice: false
+        });
       });
   }
 
