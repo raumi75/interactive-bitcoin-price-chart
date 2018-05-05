@@ -67,8 +67,8 @@ class LineChart extends Component {
     } else {
       // scale === 'log'
       return (
-              (svgHeight - 2*xLabelSize) * log_ZeroPossible(maxY)
-            - (svgHeight - 2*xLabelSize) * log_ZeroPossible(Math.max(y, minY)))  / (log_ZeroPossible(maxY) - log_ZeroPossible(minY))
+              (svgHeight - 2*xLabelSize) * log_ZeroPossible(scaleMaxY)
+            - (svgHeight - 2*xLabelSize) * log_ZeroPossible(y) ) / (log_ZeroPossible(scaleMaxY) - log_ZeroPossible(scaleMinY))
             + xLabelSize;
     }
   }
@@ -110,7 +110,7 @@ class LineChart extends Component {
 
   // dashed line from highest price to the point
   makeLineMaxYP() {
-    const {minX, maxX, maxPoint} = this.props.boundaries;
+    const {minX, maxPoint} = this.props.boundaries;
 
     if (maxPoint.p === 0) {
       return null;
@@ -148,13 +148,27 @@ class LineChart extends Component {
   }
 
   makeLabelTicks() {
+    const {scale} = this.props;
     const offset = 4; // pixel
     let ticks = [];
+    let tickY = 0;
+    let maxTicks = 0;
+    if (scale === 'lin') {
+      maxTicks = (scaleMaxY-scaleMinY)/tickSpacing;
+    } else {
+      maxTicks = Math.ceil(Math.log10(scaleMaxY));
+    }
+    for (var i = 0; i <= maxTicks ; i++) {
+      if (scale === 'lin') {
+        tickY = scaleMinY+tickSpacing*i;
+      } else {
+        // scale === 'log'
+        tickY = Math.pow(10,i);
+      }
 
-    for (var i = 0; i <= ((scaleMaxY-scaleMinY)/tickSpacing) ; i++) {
-      ticks.push (this.makeLabelPrice(scaleMinY+tickSpacing*i, offset, 'left',  's', '', 'p'+i));
-      ticks.push (this.makeLabelPrice(scaleMinY+tickSpacing*i, offset, 'right', 's', '', 'r'+i));
-      ticks.push (this.createHorizontalLine(scaleMinY+tickSpacing*i, 'tickline', 'l'+i));
+      ticks.push (this.makeLabelPrice(tickY, offset, 'left',  's', '', 'p'+i));
+      ticks.push (this.makeLabelPrice(tickY, offset, 'right', 's', '', 'r'+i));
+      ticks.push (this.createHorizontalLine(tickY, 'tickline', 'l'+i));
     }
     return (
       <g className="linechart_label">
