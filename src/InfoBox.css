@@ -21,9 +21,10 @@
 
 .subtext {
   text-align: center;
+  margin-top: -0.2em;
 }
 
 .actualupdatesin {
-  margin-top: 0.5em;
+  margin-top: 0.6em;
   height: 2px;
 }
