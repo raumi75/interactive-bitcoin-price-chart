@@ -38,7 +38,7 @@
   opacity: .2;
 }
 
-rect.linechart_label_p, rect.linechart_label_m, rect.linechart_label_x {
+rect.linechart_label_p, rect.linechart_label_m, rect.linechart_label_x, rect.linechart_label_s {
  fill: #FFF;
 }
 
@@ -54,12 +54,26 @@ rect.linechart_label_x_hover {
  fill: black;
 }
 
+text.linechart_label_x {
+  fill: black;
+}
+
+
+text.linechart_label_s {
+  fill: lightgrey;
+}
+
 text.linechart_label_p_hover, text.linechart_label_m_hover, text.linechart_label_x_hover {
  fill: white;
  font-weight: bold;
 }
 
-.hoverLine {
+.hoverline {
   stroke: #7D95B6;
+  stroke-width: 1;
+}
+
+.tickline {
+  stroke: lightgrey;
   stroke-width: 1;
 }
