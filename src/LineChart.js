@@ -496,11 +496,11 @@ class LineChart extends Component {
           <g id="hoverData">
             {this.createLine()}
             {this.makeActivePoint()}
-            {this.makeActiveDate()}
             {this.createHorizontalHoverLine('p')}
             {this.createHorizontalHoverLine('m')}
             {this.createHoverLineAhead()}
             {this.createHoverLineAbove()}
+            {this.makeActiveDate()}
             {this.makeActiveLabelPrice('p', 'left')}
             {this.makeActiveLabelPrice('m', 'left')}
             {this.makeActiveLabelPrice('p', 'right')}
