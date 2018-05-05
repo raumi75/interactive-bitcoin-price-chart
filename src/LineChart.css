@@ -69,6 +69,16 @@ text.linechart_label_p_hover, text.linechart_label_m_hover, text.linechart_label
   stroke-width: 1;
 }
 
+.hoverline_above {
+  stroke: green;
+  stroke-width: 4;
+}
+
+.hoverline_below {
+  stroke: red;
+  stroke-width: 4;
+}
+
 .tickline {
   stroke: #bdc3c7;
   stroke-width: 1;
