@@ -1,5 +1,4 @@
-
-function getDataBoundaries(data) {
+export default function getDataBoundaries(data) {
 
   let getFirstPoint = function(data, pricetype) {
     return data.find( function (v) { return v.y[pricetype] > 0; })
@@ -118,4 +117,3 @@ function getDataBoundaries(data) {
     minY:       getMinY(data),
   }
 }
-export {getDataBoundaries};
