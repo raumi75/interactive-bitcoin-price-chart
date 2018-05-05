@@ -12,7 +12,6 @@ import 'rc-slider/assets/index.css';
 
 import {formatDollar} from './formatting.js';
 import {getParameterByName} from './getparameter.js';
-import {getDataBoundaries} from './chartDataBoundaries.js';
 import RadioLinLog from './RadioLinLog.js';
 import FormCustomPrediction from './FormCustomPrediction.js';
 import ExplainMcAfeeTweet from './ExplainMcAfeeTweet.js';
@@ -631,7 +630,6 @@ class App extends Component {
             <LineChart
               data={this.state.data}
               scale={this.state.scale}
-              boundaries={getDataBoundaries(this.state.data)}
               onChartHover={ (a,b) => this.handleChartHover(a,b) }
             />
 
