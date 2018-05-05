@@ -491,16 +491,27 @@ class App extends Component {
   }
 
   // how many days does it take to reach this price?
-  getDaysAfterStart(p) {
+  getDaysAfterStart(price) {
     const goalRate = 1+(this.state.growthRate/100);
     const {startPrice} = this.state;
-    return Math.ceil(Math.log(p/startPrice)/Math.log(goalRate));
+    return Math.ceil(Math.log(price/startPrice)/Math.log(goalRate));
   }
 
-  // How many days between this price point and the prediction curve
-  getDaysAhead(pricePoint) {
+  // How many days between given price point and the prediction curve
+  getDaysAhead(price, date) {
     const {startDate} = this.state;
-    return this.getDaysAfterStart(pricePoint.y.p) - (moment(pricePoint.d).diff(moment(startDate), 'days'));
+    return this.getDaysAfterStart(price) - (date.diff(moment(startDate), 'days'));
+  }
+
+  // How many days between given price point and the prediction curve
+  getDaysAheadPoint(pricePoint) {
+    return this.getDaysAhead(pricePoint.y.p, moment(pricePoint.d));
+  }
+
+  // How many days between given price point and the prediction curve
+  getDaysAheadNow() {
+    const {actualPriceNow} = this.state;
+    return this.getDaysAhead(actualPriceNow, moment());
   }
 
   refreshPredictionPriceNow() {
@@ -633,7 +644,7 @@ class App extends Component {
             <ToolTip
               hoverLoc={this.state.hoverLoc}
               activePoint={this.state.activePoint}
-              daysPredictionAhead={this.getDaysAhead(this.state.activePoint)}
+              daysPredictionAhead={this.getDaysAheadPoint(this.state.activePoint)}
              />
           : null
           }
