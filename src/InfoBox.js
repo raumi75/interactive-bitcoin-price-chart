@@ -24,6 +24,10 @@ class InfoBox extends Component {
   render(){
     const {predictionPriceNow, actualUpdatesIn, actualPriceNow, predictionUpdatesIn,predictionUpdatesMax} = this.props;
     const aboveOrBelow = this.getAboveOrBelow();
+
+    document.title = formatDollar(actualPriceNow) + "/BTC ("
+              + this.getStrPercent() + " " + aboveOrBelow + " prediction)";
+
     return (
       <Row>
         <Col xs={4} md={2} mdOffset={3} height={"5em"}>
