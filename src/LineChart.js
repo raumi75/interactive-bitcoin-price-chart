@@ -450,7 +450,7 @@ class LineChart extends Component {
     const {svgHeight} = this.state;
 
     let maxTickSpacing = 2* xLabelSize;
-    let maxTicks = Math.floor(svgHeight /maxTickSpacing);
+    let maxTicks = Math.min(10,Math.floor(svgHeight /maxTickSpacing));
     let scale = new niceScale(minY, maxY, maxTicks);
 
     scaleMinY = scale.getNiceLowerBound();
