@@ -645,6 +645,7 @@ class App extends Component {
             <LineChart
               data={this.state.data}
               scale={this.state.scale}
+              daysPredictionAhead={this.state.hoverLoc ? this.getDaysAheadPoint(this.state.activePoint) : 0}
               onChartHover={ (a,b) => this.handleChartHover(a,b) }
             />
 
