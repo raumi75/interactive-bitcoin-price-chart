@@ -12,11 +12,10 @@ let tickSpacing = 0;
 const stopHoverMilliseconds = 2000; // Hover Tooltip disappears after 2 seconds (touch displays)
 
 function log_ZeroPossible(n) {
-  if (n === 0) {
-    return 0;
-  } else {
-    return Math.log(n);
-  }
+  // It is mathematically impossible to find an exponent that will result in zero
+  // We assume that the smallest order of magnitude we want to deal with is
+  // 0.10 which is 10 Cents.
+  return Math.log(Math.max(n,0.1));
 }
 
 class LineChart extends Component {
@@ -69,8 +68,8 @@ class LineChart extends Component {
     } else {
       // scale === 'log'
       return (
-              (svgHeight - 2*xLabelSize) * log_ZeroPossible(scaleMaxY)
-            - (svgHeight - 2*xLabelSize) * log_ZeroPossible(y) ) / (log_ZeroPossible(scaleMaxY) - log_ZeroPossible(scaleMinY))
+              (svgHeight - 2*xLabelSize) * Math.log(scaleMaxY)
+            - (svgHeight - 2*xLabelSize) * log_ZeroPossible(y) ) / (Math.log(scaleMaxY) - log_ZeroPossible(scaleMinY))
             + xLabelSize;
     }
   }
@@ -158,9 +157,13 @@ class LineChart extends Component {
     if (scale === 'lin') {
       maxTicks = (scaleMaxY-scaleMinY)/tickSpacing;
     } else {
-      maxTicks = Math.ceil(Math.log10(scaleMaxY));
+      // on a log scale:
+      // how many orders of magnitude to the maximum price?
+      maxTicks = Math.ceil(Math.log(scaleMaxY));
     }
-    for (var i = 0; i <= maxTicks ; i++) {
+
+    // i starts at -1 to start at $ 0.10 on a log scale
+    for (var i = -1; i <= maxTicks ; i++) {
       if (scale === 'lin') {
         tickY = scaleMinY+tickSpacing*i;
       } else {
