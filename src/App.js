@@ -604,7 +604,7 @@ class App extends Component {
           <InfoBox
             predictionPriceNow = {this.state.predictionPriceNow }
             actualPriceNow={this.state.actualPriceNow}
-
+            daysAhead={this.getDaysAheadNow()}
             actualUpdatesIn={this.state.updatesIn}
 
             predictionUpdatesMax ={this.state.predictionUpdatesMax}

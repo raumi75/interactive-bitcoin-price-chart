@@ -409,8 +409,33 @@ class LineChart extends Component {
   // horizontal line between hover point price and prediction curve price
   // to visualize how many days price is ahead or behind
   createHoverLineAhead(){
-    // TODO
-  }
+    const {activePoint, svgHeight} = this.state;
+    const {daysPredictionAhead, xLabelSize} = this.props;
+
+    if (activePoint.y.m === 0 || activePoint.y.p === 0) {
+      return (null);
+    } else {
+      let svgY = this.getSvgY(activePoint.y.p);
+      return (
+      <g>
+        <line
+          className={'hoverline_'+this.getAboveOrBelow()}
+          x1={this.getSvgX(activePoint.x)} y1={svgY}
+          x2={this.getSvgX(activePoint.x+daysPredictionAhead)} y2={svgY}
+          strokeDasharray="9"
+        />
+
+        <line
+          className={'hoverline'}
+          x1={this.getSvgX(activePoint.x+daysPredictionAhead)} y1={svgY}
+          x2={this.getSvgX(activePoint.x+daysPredictionAhead)} y2={svgHeight - xLabelSize}
+          strokeDasharray="9"
+        />
+
+        {this.makeLabelDate(activePoint.x+daysPredictionAhead, '')}
+      </g>
+      )
+    }  }
 
   // vertical line between hover point price and prediction curve price
   // to visualize how the price is above or below
@@ -420,11 +445,14 @@ class LineChart extends Component {
     if (activePoint.y.m === 0 || activePoint.y.p === 0) {
       return (null);
     } else {
+      let svgX = this.getSvgX(activePoint.x);
       return (
         <line
           className={'hoverline_'+this.getAboveOrBelow()}
-          x1={this.getSvgX(activePoint.x)} y1={this.getSvgY(activePoint.y.m)}
-          x2={this.getSvgX(activePoint.x)} y2={this.getSvgY(activePoint.y.p)} />
+          x1={svgX} y1={this.getSvgY(activePoint.y.m)}
+          x2={svgX} y2={this.getSvgY(activePoint.y.p)}
+          strokeDasharray="9"
+        />
       )
     }
   }
