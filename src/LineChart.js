@@ -351,7 +351,7 @@ class LineChart extends Component {
         hoverLoc: relativeLoc,
         activePoint: closestPoint
       });
-      this.props.onChartHover(relativeLoc, closestPoint);
+      this.props.onChartHover(  relativeLoc, closestPoint);
     } else {
       // Pointer is outside of chart
       this.stopHover();
@@ -383,18 +383,19 @@ class LineChart extends Component {
     }
   }
 
-  // MAKE HOVER LINE
+  // MAKE vertical HOVER LINE
   createLine(){
     const {xLabelSize} = this.props;
+    const {hoverLoc, svgHeight} = this.state;
     return (
       <line
         className='hoverline'
-        x1={this.state.hoverLoc} y1={-8}
-        x2={this.state.hoverLoc} y2={this.state.svgHeight - xLabelSize} />
+        x1={hoverLoc} y1={0-xLabelSize}
+        x2={hoverLoc} y2={svgHeight - xLabelSize} />
     )
   }
 
-  // MAKE HOVER LINE
+  // MAKE horizontal HOVER LINE
   createHorizontalHoverLine(pricetype){
     const {activePoint} = this.state;
 
@@ -403,7 +404,38 @@ class LineChart extends Component {
     } else {
       return (this.createHorizontalLine(activePoint.y[pricetype], 'hoverline'));
     }
+  }
 
+  // horizontal line between hover point price and prediction curve price
+  // to visualize how many days price is ahead or behind
+  createHoverLineAhead(){
+    // TODO
+  }
+
+  // vertical line between hover point price and prediction curve price
+  // to visualize how the price is above or below
+  createHoverLineAbove(){
+    const {activePoint} = this.state;
+
+    if (activePoint.y.m === 0 || activePoint.y.p === 0) {
+      return (null);
+    } else {
+      return (
+        <line
+          className={'hoverline_'+this.getAboveOrBelow()}
+          x1={this.getSvgX(activePoint.x)} y1={this.getSvgY(activePoint.y.m)}
+          x2={this.getSvgX(activePoint.x)} y2={this.getSvgY(activePoint.y.p)} />
+      )
+    }
+  }
+
+  // is the price above or below the prediction.
+  // css className will color the percentage accordingly
+  getAboveOrBelow() {
+    const {activePoint} = this.state;
+
+    if (activePoint.y.p>=activePoint.y.m)
+    { return ('above'); } else { return 'below' ; }
   }
 
   createHorizontalLine(price, className, key) {
@@ -421,11 +453,12 @@ class LineChart extends Component {
     )
   }
 
-  // MAKE HOVER LINE
+  // Label Date for HOVER LINE
   makeActiveDate(){
     return (this.makeLabelDate(this.state.activePoint.x, '_hover'));
   }
 
+  // Label Price for Hover Line
   makeActiveLabelPrice(pricetype, position){
     return ( this.makeLabelPricePoint(this.state.activePoint.y, position, pricetype, '_hover') );
   }
@@ -438,6 +471,8 @@ class LineChart extends Component {
             {this.makeActiveDate()}
             {this.createHorizontalHoverLine('p')}
             {this.createHorizontalHoverLine('m')}
+            {this.createHoverLineAhead()}
+            {this.createHoverLineAbove()}
             {this.makeActiveLabelPrice('p', 'left')}
             {this.makeActiveLabelPrice('m', 'left')}
             {this.makeActiveLabelPrice('p', 'right')}
