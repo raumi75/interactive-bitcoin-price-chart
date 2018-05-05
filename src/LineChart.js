@@ -108,30 +108,7 @@ class LineChart extends Component {
     );
   }
 
-  // BUILD GRID AXIS
-  makeAxis() {
-    const {yLabelSize} = this.props;
-    const {minX, minY, maxX, maxY} = this.props.boundaries;
-
-    return (
-      <g className="linechart_axis">
-        <line
-          x1={this.getSvgX(minX) - yLabelSize}
-          y1={this.getSvgY(scaleMinY)}
-          x2={this.getSvgX(maxX)}
-          y2={this.getSvgY(scaleMinY)}
-          strokeDasharray="5"
-        className="linechart_axis_low" />
-        {this.makeLineMaxYP()}
-        <line
-          x1={this.getSvgX(minX)} y1={this.getSvgY(scaleMaxY)}
-          x2={this.getSvgX(maxX)} y2={this.getSvgY(scaleMaxY)}
-          strokeDasharray="9"
-        className="linechart_axis_x" />
-      </g>
-    );
-  }
-
+  // dashed line from highest price to the point
   makeLineMaxYP() {
     const {minX, maxX, maxPoint} = this.props.boundaries;
 
@@ -139,12 +116,14 @@ class LineChart extends Component {
       return null;
     } else {
       return (
-        <line
-          x1={this.getSvgX(minX)} y1={this.getSvgY(maxPoint.p.y.p)}
-          x2={this.getSvgX(maxX)} y2={this.getSvgY(maxPoint.p.y.p)}
-          strokeDasharray="9"
-          className="linechart_axis_high"
-        />
+        <g>
+          <line
+            x1={this.getSvgX(minX)} y1={this.getSvgY(maxPoint.p.y.p)}
+            x2={this.getSvgX(maxPoint.p.x)} y2={this.getSvgY(maxPoint.p.y.p)}
+            strokeDasharray="9"
+            className="tickline"
+          />
+        </g>
       )
     }
   }
@@ -479,7 +458,8 @@ class LineChart extends Component {
         onMouseDown = { (e) => this.getMouseCoords(e) }
       >
         <g>
-          {this.makeAxis()}
+          {this.makeLineMaxYP()}
+
           {this.makeLabelTicks()}
 
           {this.makePath('p', false)}
