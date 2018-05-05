@@ -16,10 +16,6 @@
   stroke: #FF0000;
 }
 
-.linechart_axis {
-  stroke: #bdc3c7;
-}
-
 .linechart_point {
   fill: none;
   stroke-width: 3;
@@ -74,6 +70,6 @@ text.linechart_label_p_hover, text.linechart_label_m_hover, text.linechart_label
 }
 
 .tickline {
-  stroke: lightgrey;
+  stroke: #bdc3c7;
   stroke-width: 1;
 }
