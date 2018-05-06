@@ -9,7 +9,7 @@ import Latex from 'react-latex';
 
 class FormCustomPrediction extends Component {
   render() {
-    const {startDate, startPrice, growthRate, targetDate, maxTargetDate, historicalEnd, historicalStart} = this.props;
+    const {startDate, startPrice, growthRate, targetPrice, targetDate, maxTargetDate, historicalEnd, historicalStart} = this.props;
 
     return(
   <Well>
@@ -94,7 +94,7 @@ class FormCustomPrediction extends Component {
             <InputGroup.Addon>US$</InputGroup.Addon>
             <FormControl
               type="number"
-              value={this.props.targetPrice}
+              value={targetPrice}
               onChange={this.onTargetPriceChange}
             />
           </InputGroup>
