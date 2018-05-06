@@ -602,173 +602,183 @@ class App extends Component {
     const {targetDate } = this.state;
 
     return (
+      <div>
+        <Grid fluid={true} >
 
-      <Grid fluid={true} >
-
-        <PageHead
-          customPrediction={this.state.customPrediction}
-          targetDate={targetDate}
-          targetPrice={this.getTargetPrice()}
-        />
-
-        { !this.state.fetchingData ?
-          <InfoBox
-            predictionPriceNow = {this.state.predictionPriceNow }
-            actualPriceNow={this.state.actualPriceNow}
-            daysAhead={this.getDaysAheadNow()}
-            actualUpdatesIn={this.state.updatesIn}
-
-            predictionUpdatesMax ={this.state.predictionUpdatesMax}
-            predictionUpdatesIn  ={this.state.predictionUpdatesIn}
+          <PageHead
+            customPrediction={this.state.customPrediction}
+            targetDate={targetDate}
+            targetPrice={this.getTargetPrice()}
           />
-        : 'Loading data from Coindesk ... ' }
 
-        <Row>
-          <Col xs={12}>
-            <Tabs
-              activeKey={this.state.activeTabKey}
-              onSelect={this.handleSelectRangeTab}
-              id="rangeTab"
-            >
-              <Tab eventKey={1} title="all (log)"></Tab>
-              <Tab eventKey={2} title="prediction"></Tab>
-              <Tab eventKey={3} title="1m"></Tab>
-              <Tab eventKey={4} title="3m"></Tab>
-              <Tab eventKey={5} title="1y"></Tab>
-            </Tabs>
-          </Col>
-        </Row>
+          { !this.state.fetchingData ?
+            <InfoBox
+              predictionPriceNow = {this.state.predictionPriceNow }
+              actualPriceNow={this.state.actualPriceNow}
+              daysAhead={this.getDaysAheadNow()}
+              actualUpdatesIn={this.state.updatesIn}
 
-        <Row className="popup">
-          {this.state.hoverLoc ?
-            <ToolTip
-              hoverLoc={this.state.hoverLoc}
-              activePoint={this.state.activePoint}
-              daysPredictionAhead={this.getDaysAheadPoint(this.state.activePoint)}
-             />
-          : null
-          }
-        </Row>
-
-        { !this.state.fetchingData ?
-          <Row className='chart'>
-
-            <LineChart
-              data={this.state.data}
-              scale={this.state.scale}
-              daysPredictionAhead={this.state.hoverLoc ? this.getDaysAheadPoint(this.state.activePoint) : 0}
-              onChartHover={ (a,b) => this.handleChartHover(a,b) }
+              predictionUpdatesMax ={this.state.predictionUpdatesMax}
+              predictionUpdatesIn  ={this.state.predictionUpdatesIn}
             />
+          : 'Loading data from Coindesk ... ' }
 
-            <Col xs={12} className='range'>
-              <Range
-                allowCross={false}
-                min={this.state.rangeMin}
-                max={predictionCount}
-                marks={this.state.sliderMarks}
-                onChange={this.handleLineChartLength}
-                value={this.state.countRange}
-                pushable={minSliderDistance+1} />
-              <br />
-            </Col>
-
-            <Col xs={9} sm={5} smOffset={1}>
-              <RadioLinLog
-                scale={this.state.scale}
-                onChange={ (scale) => this.handleScaleChange(scale) } />
+          <Row>
+            <Col xs={12}>
+              <Tabs
+                activeKey={this.state.activeTabKey}
+                onSelect={this.handleSelectRangeTab}
+                id="rangeTab"
+              >
+                <Tab eventKey={1} title="all (log)"></Tab>
+                <Tab eventKey={2} title="prediction"></Tab>
+                <Tab eventKey={3} title="1m"></Tab>
+                <Tab eventKey={4} title="3m"></Tab>
+                <Tab eventKey={5} title="1y"></Tab>
+              </Tabs>
             </Col>
           </Row>
-        : null }
 
-        <Row>
-          <Col xs={12}>
-            <p className="lead redlineExplanation">The red line steadily grows to { formatDollar(this.getTargetPrice()) } per BTC. Move the slider to zoom.</p>
-          </Col>
-        </Row>
+          <Row className="popup">
+            {this.state.hoverLoc ?
+              <ToolTip
+                hoverLoc={this.state.hoverLoc}
+                activePoint={this.state.activePoint}
+                daysPredictionAhead={this.getDaysAheadPoint(this.state.activePoint)}
+              />
+            : null
+            }
+          </Row>
 
-        <FormCustomPrediction
-          startDate={this.state.startDate}
-          onStartDateChange={this.handleStartDateChange}
+          { !this.state.fetchingData ?
+            <Row className='chart'>
 
-          historicalStart={this.state.historicalStart}
-          historicalEnd={this.state.historicalEnd}
-          maxTargetDate={maxTargetDate}
+              <LineChart
+                data={this.state.data}
+                scale={this.state.scale}
+                daysPredictionAhead={this.state.hoverLoc ? this.getDaysAheadPoint(this.state.activePoint) : 0}
+                onChartHover={ (a,b) => this.handleChartHover(a,b) }
+              />
 
-          startPrice={this.state.startPrice}
-          onStartPriceChange={this.handleStartPriceChange}
+              <Col xs={12} className='range'>
+                <Range
+                  allowCross={false}
+                  min={this.state.rangeMin}
+                  max={predictionCount}
+                  marks={this.state.sliderMarks}
+                  onChange={this.handleLineChartLength}
+                  value={this.state.countRange}
+                  pushable={minSliderDistance+1} />
+                <br />
+              </Col>
 
-          growthRate={this.state.growthRate}
-          onGrowthRateChange={this.handleGrowthRateChange}
+              <Col xs={9} sm={5} smOffset={1}>
+                <RadioLinLog
+                  scale={this.state.scale}
+                  onChange={ (scale) => this.handleScaleChange(scale) } />
+              </Col>
+            </Row>
+          : null }
 
-          targetDate={this.state.targetDate}
-          onTargetDateChange={this.handleTargetDateChange}
-
-          pauseEvents={this.pauseTimer}
-          resumeEvents={this.resumeTimer}
-        />
-
-        { !this.state.customPrediction ?
-          <ExplainMcAfeeTweet startPrice={this.state.startPrice} />
-        :
-        <Row>
-          <Col xs={12}>
-            <p className="lead">Share or bookmark this link to your prediction: <br />
-              <a href={this.getUrl()}>{this.getUrl()}</a></p>
-          </Col>
-        </Row>
-        }
-
-        { !this.state.fetchingData ?
           <Row>
-            <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
-              <ExplainMath
-                growthRate={this.state.growthRate}
-                startPrice={this.state.startPrice}
+            <Col xs={12}>
+              <p className="lead redlineExplanation">The red line steadily grows to { formatDollar(this.getTargetPrice()) } per BTC. Move the slider to zoom.</p>
+            </Col>
+          </Row>
+        </Grid>
+        <Grid>
+
+          <Row>
+            <Col xs={12} lg={8} lgOffset={2}>
+              <FormCustomPrediction
                 startDate={this.state.startDate}
+                onStartDateChange={this.handleStartDateChange}
+
+                historicalStart={this.state.historicalStart}
+                historicalEnd={this.state.historicalEnd}
+                maxTargetDate={maxTargetDate}
+
+                startPrice={this.state.startPrice}
+                onStartPriceChange={this.handleStartPriceChange}
+
+                growthRate={this.state.growthRate}
+                onGrowthRateChange={this.handleGrowthRateChange}
+
                 targetDate={this.state.targetDate}
+                onTargetDateChange={this.handleTargetDateChange}
+
+                targetPrice={this.state.growthRate !== 0 ? this.getTargetPrice() : ''}
+
+                pauseEvents={this.pauseTimer}
+                resumeEvents={this.resumeTimer}
               />
             </Col>
           </Row>
-        : null }
 
-        <Row>
-          <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
-            <ExplainSupply />
-          </Col>
-        </Row>
+          { !this.state.customPrediction ?
+            <ExplainMcAfeeTweet startPrice={this.state.startPrice} />
+          :
+          <Row>
+            <Col xs={12}>
+              <p className="lead">Share or bookmark this link to your prediction: <br />
+                <a href={this.getUrl()}>{this.getUrl()}</a></p>
+            </Col>
+          </Row>
+          }
 
-        <Row>
-          <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
-            <ExplainGrowth />
-          </Col>
-        </Row>
+          { !this.state.fetchingData ?
+            <Row>
+              <Col xs={12} md={10} lg={8}>
+                <ExplainMath
+                  growthRate={this.state.growthRate}
+                  startPrice={this.state.startPrice}
+                  startDate={this.state.startDate}
+                  targetDate={this.state.targetDate}
+                />
+              </Col>
+            </Row>
+          : null }
 
-        <Row>
-          <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
-            <ExplainUnit />
-          </Col>
-        </Row>
+          <Row>
+            <Col xs={12} md={10} lg={8}>
+              <ExplainSupply />
+            </Col>
+          </Row>
 
-        <Row>
-          <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
-            <ExplainRisk />
-          </Col>
-        </Row>
+          <Row>
+            <Col xs={12} md={10} lg={8}>
+              <ExplainGrowth />
+            </Col>
+          </Row>
 
-        <Row>
-          <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
-            <ExplainEnergy />
-          </Col>
-        </Row>
+          <Row>
+            <Col xs={12} md={10} lg={8}>
+              <ExplainUnit />
+            </Col>
+          </Row>
 
-        <Row>
-          <Col xs={12} md={10} mdOffset={1} lg={8} lgOffset={2}>
-            <ExplainMcAfeePerson customPrediction={this.state.customPrediction} />
-          </Col>
-        </Row>
+          <Row>
+            <Col xs={12} md={10} lg={8}>
+              <ExplainRisk />
+            </Col>
+          </Row>
 
-        <PageFoot />
-      </Grid>
+          <Row>
+            <Col xs={12} md={10} lg={8}>
+              <ExplainEnergy />
+            </Col>
+          </Row>
+
+          <Row>
+            <Col xs={12} md={10} lg={8}>
+              <ExplainMcAfeePerson customPrediction={this.state.customPrediction} />
+            </Col>
+          </Row>
+        </Grid>
+        <Grid fluid={true}>
+          <PageFoot />
+        </Grid>
+      </div>
     );
   }
 }

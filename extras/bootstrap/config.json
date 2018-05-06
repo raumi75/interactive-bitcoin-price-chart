@@ -393,6 +393,7 @@
     "labels.less",
     "progress-bars.less",
     "panels.less",
+    "wells.less",
     "popovers.less"
   ],
   "js": [],

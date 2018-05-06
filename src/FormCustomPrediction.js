@@ -1,25 +1,25 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { Col, Form, FormGroup, InputGroup, FormControl, ControlLabel, } from 'react-bootstrap';
+import { Col, Form, FormGroup, InputGroup, FormControl, ControlLabel, Well } from 'react-bootstrap';
 import './FormCustomPrediction.css';
+import getGrowthRate from './growthRate.js';
 import './katex.css'; // https://github.com/Khan/KaTeX/releases/tag/v0.8.3
 import DatePicker from "react-bootstrap-date-picker";
 import Latex from 'react-latex';
 
 class FormCustomPrediction extends Component {
-
   render() {
     const {startDate, startPrice, growthRate, targetDate, maxTargetDate, historicalEnd, historicalStart} = this.props;
 
     return(
+  <Well>
     <Form horizontal>
-      <h3>Make your own prediction</h3>
-
+      <h2>Parameters <small>change them to make your own prediction</small></h2>
       <FormGroup controlId="formStartDate">
         <Col componentClass={ControlLabel} sm={2}>
           Start Date
         </Col>
-        <Col sm={8} md={5} lg={3}>
+        <Col sm={8} md={5}>
           <InputGroup>
             <DatePicker id="startdatepicker"
               value={startDate}
@@ -39,7 +39,7 @@ class FormCustomPrediction extends Component {
         <Col componentClass={ControlLabel} sm={2}>
           Start Price
         </Col>
-        <Col sm={8} md={5} lg={3}>
+        <Col sm={8} md={5}>
           <InputGroup>
             <InputGroup.Addon>US$</InputGroup.Addon>
             <FormControl type="number"
@@ -52,9 +52,9 @@ class FormCustomPrediction extends Component {
 
       <FormGroup controlId="formGrowthRate">
         <Col componentClass={ControlLabel} sm={2}>
-          percent per day
+          % per day
         </Col>
-        <Col sm={8} md={5} lg={3}>
+        <Col sm={8} md={5}>
           <InputGroup>
             <FormControl type="number"
               value={growthRate}
@@ -69,7 +69,7 @@ class FormCustomPrediction extends Component {
         <Col componentClass={ControlLabel} sm={2}>
           Target Date
         </Col>
-        <Col sm={8} md={5} lg={3}>
+        <Col sm={8} md={5}>
           <InputGroup>
             <DatePicker id="targetdatepicker"
               value={targetDate}
@@ -80,6 +80,22 @@ class FormCustomPrediction extends Component {
               onBlur={this.props.resumeEvents}
               showClearButton={false}
               dateFormat="YYYY-MM-DD"
+            />
+          </InputGroup>
+        </Col>
+      </FormGroup>
+
+      <FormGroup controlId="formTargetPrice">
+        <Col componentClass={ControlLabel} sm={2}>
+          Target Price
+        </Col>
+        <Col sm={8} md={5}>
+          <InputGroup>
+            <InputGroup.Addon>US$</InputGroup.Addon>
+            <FormControl
+              type="number"
+              value={this.props.targetPrice}
+              onChange={this.onTargetPriceChange}
             />
           </InputGroup>
         </Col>
@@ -121,7 +137,26 @@ class FormCustomPrediction extends Component {
         </Col>
       </FormGroup>
     </Form>
+  </Well>
     );
+  }
+
+  // Calculate the growthRate (percent value)  in the Form
+  onTargetPriceChange = (e) => {
+    const {startPrice} = this.props;
+    const targetPrice = Number(e.target.value);
+    let gR = 0
+    if ( targetPrice === 0 || isNaN(targetPrice) ) {
+      // input was deleted or 0
+    } else {
+      gR = getGrowthRate(startPrice, targetPrice, this.predictionDays())*100;
+    }
+    let fakeEvent = {target: {value: gR} };
+    this.props.onGrowthRateChange(fakeEvent);
+  }
+
+  predictionDays() {
+    return moment(this.props.targetDate).diff(moment(this.props.startDate), 'days');
   }
 
   latexMathAnnualGrowth() {
