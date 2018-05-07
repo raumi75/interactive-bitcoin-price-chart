@@ -24,11 +24,7 @@ export default class ExplainMath extends Component {
 
         <p>Today,</p>
         <ExplainPriceOn date={Date.now()} startDate={startDate} growthRate={growthRate} startPrice={startPrice} />
-        <ExplainPriceOn date='2018-12-31' startDate={startDate} growthRate={growthRate} startPrice={startPrice} />
-        <ExplainPriceOn date={'2019-12-31'} startDate={startDate} growthRate={growthRate} startPrice={startPrice} />
-        <p>Still does not look like it is on target?</p>
-        <ExplainPriceOn date={'2020-06-01'} startDate={startDate} growthRate={growthRate} startPrice={startPrice} />
-        <p>And finally,</p>
+        <p>At the target date</p>
         <ExplainPriceOn date={targetDate} startDate={startDate} growthRate={growthRate} startPrice={startPrice} />
       </div>
     );
