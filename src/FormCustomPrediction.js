@@ -162,7 +162,7 @@ class FormCustomPrediction extends Component {
 
   latexMathDoublingTime(factor) {
     const {growthRate} = this.props;
-    return `$\\frac{\\log_{10}(`+factor+`)}{\\log_{10}(1+\\frac{`+ growthRate + `}{100})}$`;
+    return `$\\frac{\\log(`+factor+`)}{\\log(1+\\frac{`+ growthRate + `}{100})}$`;
   }
 }
 
