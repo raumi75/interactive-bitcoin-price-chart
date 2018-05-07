@@ -14,8 +14,6 @@ import {formatDollar} from './formatting.js';
 import {getParameterByName} from './getparameter.js';
 import RadioLinLog from './RadioLinLog.js';
 import FormCustomPrediction from './FormCustomPrediction.js';
-import FormPredictionDateForPrice from './FormPredictionDateForPrice.js';
-
 import ExplainMcAfeeTweet from './ExplainMcAfeeTweet.js';
 import ExplainMath from './ExplainMath.js';
 import ExplainSupply from './ExplainSupply.js';
@@ -601,7 +599,7 @@ class App extends Component {
   }
 
   render() {
-    const {targetDate, startDate, startPrice, growthRate } = this.state;
+    const {targetDate } = this.state;
 
     return (
       <div>
@@ -729,17 +727,7 @@ class App extends Component {
           }
 
           { !this.state.fetchingData ?
-
             <Row>
-              <Col xs={12} md={10} lg={6}>
-                <FormPredictionDateForPrice
-                  startDate={startDate}
-                  startPrice={startPrice}
-                  growthRate={growthRate}
-                  targetPrice={this.getTargetPrice()}
-                />
-              </Col>
-
               <Col xs={12} md={10} lg={8}>
                 <ExplainMath
                   growthRate={this.state.growthRate}
@@ -748,8 +736,6 @@ class App extends Component {
                   targetDate={this.state.targetDate}
                 />
               </Col>
-
-
             </Row>
           : null }
 
