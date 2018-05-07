@@ -20,18 +20,16 @@ class FormCustomPrediction extends Component {
           Start Date
         </Col>
         <Col sm={8} md={5}>
-          <InputGroup>
-            <DatePicker id="startdatepicker"
-              value={startDate}
-              onChange={this.props.onStartDateChange}
-              onFocus={this.props.pauseEvents}
-              onBlur={this.props.resumeEvents}
-              minDate={historicalStart}
-              maxDate={moment(historicalEnd).subtract(1, 'week').format('YYYY-MM-DD')}
-              showClearButton={false}
-              dateFormat="YYYY-MM-DD"
-            />
-          </InputGroup>
+          <DatePicker id="startdatepicker"
+            value={startDate}
+            onChange={this.props.onStartDateChange}
+            onFocus={this.props.pauseEvents}
+            onBlur={this.props.resumeEvents}
+            minDate={historicalStart}
+            maxDate={moment(historicalEnd).subtract(1, 'week').format('YYYY-MM-DD')}
+            showClearButton={false}
+            dateFormat="YYYY-MM-DD"
+          />
         </Col>
       </FormGroup>
 
@@ -70,18 +68,16 @@ class FormCustomPrediction extends Component {
           Target Date
         </Col>
         <Col sm={8} md={5}>
-          <InputGroup>
-            <DatePicker id="targetdatepicker"
-              value={targetDate}
-              onChange={this.props.onTargetDateChange}
-              minDate={moment(historicalEnd).add(1, 'month').format('YYYY-MM-DD')}
-              maxDate={maxTargetDate}
-              onFocus={this.props.pauseEvents}
-              onBlur={this.props.resumeEvents}
-              showClearButton={false}
-              dateFormat="YYYY-MM-DD"
-            />
-          </InputGroup>
+          <DatePicker id="targetdatepicker"
+            value={targetDate}
+            onChange={this.props.onTargetDateChange}
+            minDate={moment(historicalEnd).add(1, 'month').format('YYYY-MM-DD')}
+            maxDate={maxTargetDate}
+            onFocus={this.props.pauseEvents}
+            onBlur={this.props.resumeEvents}
+            showClearButton={false}
+            dateFormat="YYYY-MM-DD"
+          />
         </Col>
       </FormGroup>
 
