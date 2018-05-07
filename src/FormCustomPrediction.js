@@ -43,6 +43,7 @@ class FormCustomPrediction extends Component {
             <FormControl type="number"
               value={startPrice}
               onChange={this.props.onStartPriceChange}
+              autoComplete="off"
             />
           </InputGroup>
         </Col>
@@ -57,6 +58,7 @@ class FormCustomPrediction extends Component {
             <FormControl type="number"
               value={growthRate}
               onChange={this.props.onGrowthRateChange}
+              autoComplete="off"
             />
             <InputGroup.Addon>%</InputGroup.Addon>
           </InputGroup>
@@ -92,6 +94,7 @@ class FormCustomPrediction extends Component {
               type="number"
               value={targetPrice}
               onChange={this.onTargetPriceChange}
+              autoComplete="off"
             />
           </InputGroup>
         </Col>
