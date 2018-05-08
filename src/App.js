@@ -623,7 +623,12 @@ class App extends Component {
               predictionUpdatesMax ={this.state.predictionUpdatesMax}
               predictionUpdatesIn  ={this.state.predictionUpdatesIn}
             />
-          : 'Loading data from Coindesk ... ' }
+          :
+          <div class="pleasewait text-center">
+            <h1>Powered by coindesk</h1>
+            <p>Loading data from coindesk ...</p>
+          </div>
+         }
 
           <Row>
             <Col xs={12}>
@@ -674,11 +679,17 @@ class App extends Component {
                 <br />
               </Col>
 
+
               <Col xs={9} sm={5} smOffset={1}>
                 <RadioLinLog
                   scale={this.state.scale}
                   onChange={ (scale) => this.handleScaleChange(scale) } />
               </Col>
+
+              <Col xs={3} md={6} className="text-right acknowledge-coindesk">
+                <span className="hidden-xs">price data </span>powered by <a href="https://www.coindesk.com/price/">coindesk</a>
+              </Col>
+
             </Row>
           : null }
 

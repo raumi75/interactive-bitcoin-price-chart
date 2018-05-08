@@ -30,20 +30,19 @@ class InfoBox extends Component {
 
     return (
       <Row>
-        <Col xs={4} md={2} mdOffset={3} height={"5em"}>
+        <Col xs={4} md={2} mdOffset={3} className="infobox">
           <div className="subtext">Predicted</div>
           <div className="heading predicted">{formatDollar(predictionPriceNow)}</div>
           <ProgressBar className="actualupdatesin" bsStyle="danger" now={predictionUpdatesIn} max={predictionUpdatesMax} />
         </Col>
 
-        <Col xs={4} md={2} height={"5em"}>
-          <div className="subtext"><a href="https://www.coindesk.com/price/" title="Powered by CoinDesk">Actual</a></div>
-          <div className="heading actual"><a href="https://www.coindesk.com/price/" title="Powered by CoinDesk">{formatDollar(actualPriceNow)}</a></div>
+        <Col xs={4} md={2} className="infobox">
+          <div className="subtext"><a href="https://www.coindesk.com/price/" title="Powered by coindesk">Actual</a></div>
+          <div className="heading actual"><a href="https://www.coindesk.com/price/" title="Powered by coindesk">{formatDollar(actualPriceNow)}</a></div>
           <ProgressBar className="actualupdatesin" now={actualUpdatesIn} max={60} />
-
         </Col>
 
-        <Col xs={4} md={2} height={"5em"}>
+        <Col xs={4} md={2} className="infobox">
           <div className="subtext">Bitcoin is</div>
           <div className={"heading "+aboveOrBelow }>{this.getStrPercent()}</div>
           <div className={"subtext "+aboveOrBelow }>{aboveOrBelow}</div>

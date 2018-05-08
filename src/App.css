@@ -15,3 +15,12 @@ body, html{
   width:82%;
   margin-bottom: 1em;
 }
+
+.pleasewait {
+  color: grey;
+  height: 5em;
+}
+
+.acknowledge-coindesk {
+  color: grey;
+}

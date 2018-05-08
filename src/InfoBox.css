@@ -3,6 +3,10 @@
   text-align: center;
 }
 
+.infobox {
+  height: 5em;
+}
+
 .actual {
   color: #2196F3;
 }
