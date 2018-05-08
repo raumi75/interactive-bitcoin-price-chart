@@ -8,8 +8,7 @@ export default class FormPredictionDateForPrice extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      price: 'default',
-      formPriceValidationState: ''
+      price: 'default'
     }
   }
 
@@ -18,12 +17,12 @@ export default class FormPredictionDateForPrice extends Component {
   }
 
   getDateForPrice = () => {
-    const {startDate, startPrice, targetPrice, growthRate} = this.props;
+    const {startDate, startPrice, growthRate} = this.props;
     let price = this.props.targetPrice;
     if (this.state.price !== 'default') {
       price = this.state.price;
     }
-    if (targetPrice >= price && price >= startPrice) {
+    if (this.isPriceInRange()) {
       return moment(startDate).add(Math.floor(Math.log(price/startPrice)/Math.log(1+growthRate/100)), 'days').format('YYYY-MM-DD, dddd');
     } else {
       return 'not on prediction curve';
@@ -31,16 +30,18 @@ export default class FormPredictionDateForPrice extends Component {
   }
 
   formPriceValidationState() {
+    if (!this.isPriceInRange()) {
+      return 'error';
+    }
+  }
+
+  isPriceInRange() {
     const {startPrice, targetPrice} = this.props;
     let price = this.props.targetPrice;
     if (this.state.price !== 'default') {
       price = this.state.price;
     }
-    if (targetPrice >= price && price >= startPrice) {
-      return '';
-    } else {
-      return 'error';
-    }
+    return (targetPrice >= price && price >= startPrice);
   }
 
   render() {
@@ -50,7 +51,6 @@ export default class FormPredictionDateForPrice extends Component {
     return(
   <Well>
     <Form horizontal>
-      <h2>When will the prediction be at...</h2>
       <FormGroup
         controlId="formPrice"
         validationState={this.formPriceValidationState()}

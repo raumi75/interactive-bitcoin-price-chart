@@ -10,11 +10,12 @@ import InfoBox from './InfoBox';
 import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
-import {formatDollar} from './formatting.js';
+import formatDollar from './formatting.js';
 import {getParameterByName} from './getparameter.js';
 import RadioLinLog from './RadioLinLog.js';
 import FormCustomPrediction from './FormCustomPrediction.js';
 import FormPredictionDateForPrice from './FormPredictionDateForPrice.js';
+import FormPredictionPriceForDate from './FormPredictionPriceForDate.js';
 
 import ExplainMcAfeeTweet from './ExplainMcAfeeTweet.js';
 import ExplainMath from './ExplainMath.js';
@@ -624,7 +625,7 @@ class App extends Component {
               predictionUpdatesIn  ={this.state.predictionUpdatesIn}
             />
           :
-          <div class="pleasewait text-center">
+          <div className="pleasewait text-center">
             <h1>Powered by coindesk</h1>
             <p>Loading data from coindesk ...</p>
           </div>
@@ -742,12 +743,28 @@ class App extends Component {
           { !this.state.fetchingData ?
 
             <Row>
-              <Col xs={12} md={10} lg={6}>
+              <Col xs={12}>
+                <h2>Explore the prediction curve</h2>
+              </Col>
+              
+              <Col xs={12} md={6}>
                 <FormPredictionDateForPrice
                   startDate={startDate}
                   startPrice={startPrice}
                   growthRate={growthRate}
                   targetPrice={this.getTargetPrice()}
+                />
+              </Col>
+
+              <Col xs={12} md={6}>
+                <FormPredictionPriceForDate
+                  startDate={startDate}
+                  startPrice={startPrice}
+                  targetDate={targetDate}
+                  growthRate={growthRate}
+
+                  pauseEvents={this.pauseTimer}
+                  resumeEvents={this.resumeTimer}
                 />
               </Col>
 
