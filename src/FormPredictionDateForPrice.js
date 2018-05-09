@@ -23,7 +23,7 @@ export default class FormPredictionDateForPrice extends Component {
       price = this.state.price;
     }
     if (this.isPriceInRange()) {
-      return moment(startDate).add(Math.floor(Math.log(price/startPrice)/Math.log(1+growthRate/100)), 'days').format('YYYY-MM-DD, dddd');
+      return moment(startDate).add(Math.ceil(Math.log(price/startPrice)/Math.log(1+growthRate/100)), 'days').format('YYYY-MM-DD, dddd');
     } else {
       return 'not on prediction curve';
     }
