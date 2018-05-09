@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import { Col, Form, FormGroup, InputGroup, FormControl, ControlLabel, Well } from 'react-bootstrap';
-//import './katex.css'; // https://github.com/Khan/KaTeX/releases/tag/v0.8.3
-//import Latex from 'react-latex';
+import './katex.css'; // https://github.com/Khan/KaTeX/releases/tag/v0.8.3
+import Latex from 'react-latex';
 
 export default class FormPredictionDateForPrice extends Component {
   constructor(props) {
@@ -16,14 +16,20 @@ export default class FormPredictionDateForPrice extends Component {
     this.setState({price: e.target.value });
   }
 
-  getDateForPrice = () => {
-    const {startDate, startPrice, growthRate} = this.props;
-    let price = this.props.targetPrice;
-    if (this.state.price !== 'default') {
-      price = this.state.price;
-    }
+  getDaysForPrice = () => {
+    const {startPrice, growthRate} = this.props;
+    const price = this.getPrice();
     if (this.isPriceInRange()) {
-      return moment(startDate).add(Math.ceil(Math.log(price/startPrice)/Math.log(1+growthRate/100)), 'days').format('YYYY-MM-DD, dddd');
+      return Math.ceil(Math.log(price/startPrice)/Math.log(1+growthRate/100));
+    }
+  }
+
+  getDateForPrice() {
+    const {startDate} = this.props;
+    const daysForPrice = this.getDaysForPrice();
+
+    if (daysForPrice > 0) {
+      return moment(startDate).add(daysForPrice, 'days').format('YYYY-MM-DD, dddd');
     } else {
       return 'not on prediction curve';
     }
@@ -37,11 +43,25 @@ export default class FormPredictionDateForPrice extends Component {
 
   isPriceInRange() {
     const {startPrice, targetPrice} = this.props;
+    const price = this.getPrice();
+    return (targetPrice >= price && price >= startPrice);
+  }
+
+  getPrice() {
     let price = this.props.targetPrice;
     if (this.state.price !== 'default') {
       price = this.state.price;
     }
-    return (targetPrice >= price && price >= startPrice);
+    return price;
+  }
+
+  latexMathDaysFromPrice() {
+    const {startDate, startPrice, growthRate} = this.props;
+    const price = this.getPrice();
+    const daysForPrice = this.getDaysForPrice();
+    if (daysForPrice > 0) {
+      return `$\\frac{\\log\\left(\\frac{`+price+`}{`+startPrice+`}\\right)}{\\log\\left(1+\\frac{`+ growthRate + `}{100}\\right)} = ` + daysForPrice + `\\ days\\ from\\ `+ moment(startDate).format('YYYY/MM/DD') +`$`;
+    }
   }
 
   render() {
@@ -80,6 +100,7 @@ export default class FormPredictionDateForPrice extends Component {
             <strong>{this.getDateForPrice()}</strong>
           </FormControl.Static>
         </Col>
+        <Col className="katex-daysForPrice"><Latex>{this.latexMathDaysFromPrice()}</Latex></Col>
       </FormGroup>
 
     </Form>
