@@ -65,9 +65,6 @@ export default class FormPredictionDateForPrice extends Component {
   }
 
   render() {
-    const {price} = this.state;
-    const {targetPrice} = this.props;
-
     return(
   <Well>
     <Form horizontal>
