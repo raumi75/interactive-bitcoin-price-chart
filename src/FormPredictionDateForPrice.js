@@ -91,16 +91,16 @@ export default class FormPredictionDateForPrice extends Component {
         </Col>
       </FormGroup>
 
-      <FormGroup controlId="formDateForPrice">
+      <FormGroup controlId="formDateForPrice" bsSize="large">
         <Col componentClass={ControlLabel} sm={2}>
           Date
         </Col>
-        <Col sm={6}>
+        <Col sm={10}>
           <FormControl.Static>
             <strong>{this.getDateForPrice()}</strong>
           </FormControl.Static>
         </Col>
-        <Col className="katex-daysForPrice"><Latex>{this.latexMathDaysFromPrice()}</Latex></Col>
+        <Col className="latex-formula"><Latex>{this.latexMathDaysFromPrice()}</Latex></Col>
       </FormGroup>
 
     </Form>
