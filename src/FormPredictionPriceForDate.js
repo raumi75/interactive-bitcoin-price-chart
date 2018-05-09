@@ -3,9 +3,8 @@ import moment from 'moment';
 import { Col, Form, FormGroup, FormControl, ControlLabel, Well } from 'react-bootstrap';
 import DatePicker from "react-bootstrap-date-picker";
 import formatDollar from './formatting.js';
-
-//import './katex.css'; // https://github.com/Khan/KaTeX/releases/tag/v0.8.3
-//import Latex from 'react-latex';
+import './katex.css'; // https://github.com/Khan/KaTeX/releases/tag/v0.8.3
+import Latex from 'react-latex';
 
 export default class FormPredictionPriceForDate extends Component {
   constructor(props) {
@@ -21,15 +20,27 @@ export default class FormPredictionPriceForDate extends Component {
     }
   }
 
-  getPriceForDate() {
-    const {startDate, startPrice, growthRate} = this.props;
+  getDaysSincePrediction() {
+    const {startDate} = this.props;
     const {date} = this.state;
-
     if (this.isDateInRange()) {
-      return formatDollar(Math.pow(1+growthRate/100, moment(date).diff(moment(startDate), 'days'))*startPrice);
+      return moment(date).diff(moment(startDate), 'days');
+    }
+  }
+
+  getPriceForDate() {
+    const {startPrice, growthRate} = this.props;
+    const daysSincePrediction = this.getDaysSincePrediction();
+    if (this.isDateInRange()) {
+      return formatDollar(Math.pow(1+growthRate/100, daysSincePrediction)*startPrice);
     } else {
       return 'not on prediction curve';
     }
+  }
+
+  latexMathPriceForDate() {
+    const {startPrice, growthRate} = this.props;
+    return `$` + startPrice + ` *\\left(1+\\frac{`+ growthRate + `}{100}\\right)^{`+this.getDaysSincePrediction()+`} $`;
   }
 
   formDateValidationState() {
@@ -72,15 +83,16 @@ export default class FormPredictionPriceForDate extends Component {
         </Col>
       </FormGroup>
 
-      <FormGroup controlId="formPriceForDate">
+      <FormGroup controlId="formPriceForDate"  bsSize="large">
         <Col componentClass={ControlLabel} sm={2}>
           Price
         </Col>
-        <Col sm={6}>
+        <Col sm={10}>
           <FormControl.Static>
             <strong>{this.getPriceForDate()}</strong>
           </FormControl.Static>
         </Col>
+        <Col className="latex-formula"><Latex>{this.latexMathPriceForDate()}</Latex></Col>
       </FormGroup>
 
     </Form>
