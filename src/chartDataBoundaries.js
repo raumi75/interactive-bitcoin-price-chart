@@ -98,6 +98,9 @@ export default function getDataBoundaries(data) {
 
   }
 
+  let minX = getMinX(data);
+  let maxX = getMaxX(data);
+
   return {
     firstPoint: firstPoints,
     firstPrices: {
@@ -109,10 +112,12 @@ export default function getDataBoundaries(data) {
       p: ((typeof(lastPoints.p.y) === 'undefined') ? 0 : lastPoints.p.y.p),
       m: ((typeof(lastPoints.m.y) === 'undefined') ? 0 : lastPoints.m.y.m)
     },
+    minDate:  data[0].d,
+    maxDate:   data[maxX-1].d,
     minPoint:   minPoints,
     maxPoint:   maxPoints,
-    minX:       getMinX(data),
-    maxX:       getMaxX(data),
+    minX:       minX,
+    maxX:       maxX,
     maxY:       getMaxY(data),
     minY:       getMinY(data),
   }

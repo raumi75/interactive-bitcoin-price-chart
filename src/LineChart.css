@@ -34,7 +34,7 @@
   opacity: .2;
 }
 
-rect.linechart_label_p, rect.linechart_label_m, rect.linechart_label_x, rect.linechart_label_s {
+rect.linechart_label_p, rect.linechart_label_m, rect.linechart_label_x, rect.linechart_label_xdatetick, rect.linechart_label_s {
  fill: #FFF;
 }
 
@@ -54,8 +54,7 @@ text.linechart_label_x {
   fill: black;
 }
 
-
-text.linechart_label_s {
+text.linechart_label_s, text.linechart_label_xdatetick {
   fill: lightgrey;
 }
 

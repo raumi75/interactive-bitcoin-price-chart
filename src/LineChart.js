@@ -148,6 +148,44 @@ class LineChart extends Component {
     )
   }
 
+  makeLabelDateTicks() {
+    const {minDate, maxDate, minX} = this.boundaries;
+    const {svgWidth} = this.state;
+    const {yLabelSize} = this.props;
+    const periods = ['week', 'month', 'quarter', 'year'];
+    let maxTickSpacing = yLabelSize*2;
+    let maxTicksX = svgWidth/(maxTickSpacing);
+    let ticksXvalues = [];
+    let ticks = [];
+    //count weeks, months, years and decide which to use as ticks
+    periods.some(function(period){
+      if (maxTicksX >= moment(maxDate).diff(moment(minDate), period+'s')) {
+        for (
+          var d = moment(minDate).startOf(period);
+          d.isBefore(moment(maxDate));
+          d = d.add(1, period)
+             )
+             {
+               ticksXvalues.push (Math.max(minX,d.diff(moment(minDate), 'days')));
+        }
+        return true; // don't try the next periods
+      } else {
+        return false; // try the next periods
+      }
+    });
+
+    ticksXvalues.map( (x) =>{
+      ticks.push(this.makeLabelDate(x, 'datetick'))
+      return null;
+    });
+
+    return (
+      <g className="linechart_labeldate">
+        {ticks}
+      </g>
+    );
+  }
+
   makeLabelTicks() {
     const {scale} = this.props;
     const offset = 4; // pixel
@@ -185,15 +223,18 @@ class LineChart extends Component {
   makeLabelDate(count, cssExtra) {
     const {data, xLabelSize, yLabelSize, labelRadius} = this.props;
     const {svgHeight} = this.state;
+    const tickHeight = 10; // px
     if ((count < data.length) && (count >= 0)) {
       let dateText = data[count].d;
+      let svgX = this.getSvgX(data[count].x);
+
       if (dateText === moment().utc().format('YYYY-MM-DD') ) {
         dateText = 'now';
       }
       return(
-        <g>
+        <g key={cssExtra+count}>
           <rect
-            x={this.getSvgX(data[count].x)-yLabelSize/2-2}
+            x={svgX-yLabelSize/2-2}
             y={svgHeight-xLabelSize+5}
             height={xLabelSize-5}
             width={yLabelSize}
@@ -201,13 +242,18 @@ class LineChart extends Component {
             className={'linechart_label_x'+cssExtra}
           />
           <text
-            transform={`translate(${this.getSvgX(data[count].x)-2},
+            transform={`translate(${svgX -2},
                                   ${svgHeight -3})`}
             className={'linechart_label_x'+cssExtra}
             textAnchor="middle"
           >
             { dateText }
           </text>
+          <line
+            className='tickline'
+            x1={svgX} y1={svgHeight - xLabelSize}
+            x2={svgX} y2={svgHeight - xLabelSize - tickHeight} 
+          />
         </g>
       );
     } else {
@@ -544,6 +590,7 @@ class LineChart extends Component {
         <g>
           {this.makeLineMaxYP()}
 
+          {this.makeLabelDateTicks()}
           {this.makeLabelTicks()}
 
           {this.makePath('p', false)}
