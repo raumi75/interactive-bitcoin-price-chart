@@ -20,7 +20,7 @@ export default class FormPredictionDateForPrice extends Component {
     const {startPrice, growthRate} = this.props;
     const price = this.getPrice();
     if (this.isPriceInRange()) {
-      return Math.ceil(Math.log(price/startPrice)/Math.log(1+growthRate/100));
+      return Math.ceil(Math.log(price/startPrice)/Math.log(1+growthRate/100)-1);
     }
   }
 
@@ -28,7 +28,7 @@ export default class FormPredictionDateForPrice extends Component {
     const {startDate} = this.props;
     const daysForPrice = this.getDaysForPrice();
 
-    if (daysForPrice > 0) {
+    if (this.isPriceInRange() >= 0) {
       return moment(startDate).add(daysForPrice, 'days').format('YYYY-MM-DD, dddd');
     } else {
       return 'not on prediction curve';
@@ -47,7 +47,7 @@ export default class FormPredictionDateForPrice extends Component {
     return (targetPrice >= price && price >= startPrice);
   }
 
-  getPrice() {
+  getPrice = () => {
     let price = this.props.targetPrice;
     if (this.state.price !== 'default') {
       price = this.state.price;
@@ -83,7 +83,7 @@ export default class FormPredictionDateForPrice extends Component {
             <InputGroup.Addon>US$</InputGroup.Addon>
             <FormControl
               type="number"
-              value={price !== 'default' ? price : targetPrice}
+              value={this.getPrice()}
               onChange={this.handlePriceChange}
               autoComplete="off"
             />

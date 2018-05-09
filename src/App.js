@@ -603,7 +603,7 @@ class App extends Component {
 
   render() {
     const {targetDate, startDate, startPrice, growthRate } = this.state;
-
+    const targetPrice = this.getTargetPrice();
     return (
       <div>
         <Grid fluid={true} >
@@ -611,7 +611,7 @@ class App extends Component {
           <PageHead
             customPrediction={this.state.customPrediction}
             targetDate={targetDate}
-            targetPrice={this.getTargetPrice()}
+            targetPrice={targetPrice}
           />
 
           { !this.state.fetchingData ?
@@ -629,7 +629,7 @@ class App extends Component {
             <h1>Powered by coindesk</h1>
             <p>Loading data from coindesk ...</p>
           </div>
-         }
+          }
 
           <Row>
             <Col xs={12}>
@@ -705,23 +705,23 @@ class App extends Component {
           <Row>
             <Col xs={12} lg={8} lgOffset={2}>
               <FormCustomPrediction
-                startDate={this.state.startDate}
+                startDate={startDate}
                 onStartDateChange={this.handleStartDateChange}
 
                 historicalStart={this.state.historicalStart}
                 historicalEnd={this.state.historicalEnd}
                 maxTargetDate={maxTargetDate}
 
-                startPrice={this.state.startPrice}
+                startPrice={startPrice}
                 onStartPriceChange={this.handleStartPriceChange}
 
-                growthRate={this.state.growthRate}
+                growthRate={growthRate}
                 onGrowthRateChange={this.handleGrowthRateChange}
 
-                targetDate={this.state.targetDate}
+                targetDate={targetDate}
                 onTargetDateChange={this.handleTargetDateChange}
 
-                targetPrice={this.state.growthRate !== 0 ? this.getTargetPrice() : ''}
+                targetPrice={this.state.growthRate !== 0 ? targetPrice : ''}
 
                 pauseEvents={this.pauseTimer}
                 resumeEvents={this.resumeTimer}
@@ -746,13 +746,13 @@ class App extends Component {
               <Col xs={12}>
                 <h2>Explore the prediction curve</h2>
               </Col>
-              
+
               <Col xs={12} md={6}>
                 <FormPredictionDateForPrice
                   startDate={startDate}
                   startPrice={startPrice}
                   growthRate={growthRate}
-                  targetPrice={this.getTargetPrice()}
+                  targetPrice={targetPrice}
                 />
               </Col>
 
@@ -770,10 +770,12 @@ class App extends Component {
 
               <Col xs={12} md={10} lg={8}>
                 <ExplainMath
-                  growthRate={this.state.growthRate}
-                  startPrice={this.state.startPrice}
-                  startDate={this.state.startDate}
-                  targetDate={this.state.targetDate}
+                  growthRate={growthRate}
+                  startPrice={startPrice}
+                  startDate={startDate}
+                  targetDate={targetDate}
+                  targetPrice={targetPrice}
+
                 />
               </Col>
 
