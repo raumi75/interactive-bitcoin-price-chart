@@ -66,7 +66,7 @@ export default class FormPredictionDateForPrice extends Component {
 
   render() {
     return(
-  <Well>
+  <Well className="explore-prediction">
     <Form horizontal>
       <FormGroup
         controlId="formPrice"

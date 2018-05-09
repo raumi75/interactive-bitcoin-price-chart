@@ -24,3 +24,7 @@ body, html{
 .acknowledge-coindesk {
   color: grey;
 }
+
+.explore-prediction {
+  min-height: 13.5em;
+}

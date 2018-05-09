@@ -40,7 +40,7 @@ export default class FormPredictionPriceForDate extends Component {
 
   latexMathPriceForDate() {
     const {startPrice, growthRate} = this.props;
-    return `$` + startPrice + ` *\\left(1+\\frac{`+ growthRate + `}{100}\\right)^{`+this.getDaysSincePrediction()+`} $`;
+    return `$` + startPrice + `\\times\\left(1+\\frac{`+ growthRate + `}{100}\\right)^{`+this.getDaysSincePrediction()+`\\ days} $`;
   }
 
   formDateValidationState() {
@@ -60,7 +60,7 @@ export default class FormPredictionPriceForDate extends Component {
     const {startDate, targetDate} = this.props;
 
     return(
-  <Well>
+  <Well className="explore-prediction">
     <Form horizontal>
       <FormGroup
         controlId="formDate"
