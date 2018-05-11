@@ -801,20 +801,17 @@ class App extends Component {
 
                 />
               </Col>
-
-
             </Row>
           : null }
-
-          <Row>
-            <Col xs={12} md={10} lg={8}>
-              <ExplainSupply />
-            </Col>
-          </Row>
-
           <Row>
             <Col xs={12} md={10} lg={8}>
               <ExplainGrowth />
+            </Col>
+          </Row>
+          
+          <Row>
+            <Col xs={12} md={10} lg={8}>
+              <ExplainSupply />
             </Col>
           </Row>
 

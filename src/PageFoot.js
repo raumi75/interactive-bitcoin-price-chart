@@ -20,7 +20,7 @@ class PageFoot extends Component {
           share on <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A//fnordprefekt.de">Facebook</a>,
           or on <a href="https://plus.google.com/share?url=https%3A//fnordprefekt.de">Google Plus</a>
         </p>
-        <p>Do you love this site? Tips are welcome.</p>
+        <p>Do you love this site? It's ad-free. Tips are welcome.</p>
         <DonateQr btc_address="3B19wMMJD7Xjf9ajW2oRcfVfKjRprWmGrG" />
       </Col>
     </Row>
