@@ -18,7 +18,8 @@ body, html{
 
 .pleasewait {
   color: grey;
-  height: 5em;
+  min-height: 5em;
+  margin-bottom: 3em;
 }
 
 .acknowledge-coindesk {

@@ -83,7 +83,6 @@ class App extends Component {
   componentDidMount(){
     this.loadData();
     // update prices if necessary ever second
-    this.timerRefreshPrices = setInterval(() => this.refreshPrices(), 1000);
   }
 
   componentWillUnmount(){
@@ -113,6 +112,9 @@ class App extends Component {
   loadData = () => {
     const {startDate, targetDate, historicalStart, historicalEnd}  = this.state;
     const waitMinutesBeforeReload = 10;
+
+    // no refreshing prices while loading
+    clearInterval(this.timerRefreshPrices);
 
     predictionCount = moment(maxTargetDate).diff(moment(startDate),'days');
     offsetPrediction = moment(historicalStart).diff(moment(startDate),'days');
@@ -171,13 +173,17 @@ class App extends Component {
         data: sortedData,
         fetchingData: false
       },
-        () => this.addMcAfeeRates()
+        () => {
+          this.addMcAfeeRates();
+          this.timerRefreshPrices = setInterval(() => this.refreshPrices(), 1000);
+          this.setSliderMarks();
+        }
       );
-
-      this.setSliderMarks();
     })
     .catch((e) => {
-      console.log('Error when loading price data from coinbase' + e);
+      console.log('Error when loading price data from coindesk. Will try again in 61 seconds.' + e);
+      // try again in 61 seconds
+      setTimeout( this.loadData(), 61000 );
     });
   }
 
@@ -614,7 +620,7 @@ class App extends Component {
     const targetPrice = this.getTargetPrice();
     return (
       <div>
-        <Grid fluid={true} >
+        <Grid fluid={false} >
 
           <PageHead
             customPrediction={customPrediction}
@@ -638,35 +644,38 @@ class App extends Component {
             <p>Loading data from coindesk ...</p>
           </div>
           }
+        </Grid>
 
-          <Row>
-            <Col xs={12}>
-              <Tabs
-                activeKey={activeTabKey}
-                onSelect={this.handleSelectRangeTab}
-                id="rangeTab"
-              >
-                <Tab eventKey={1} title="all (log)"></Tab>
-                <Tab eventKey={2} title="prediction"></Tab>
-                <Tab eventKey={3} title="1m"></Tab>
-                <Tab eventKey={4} title="3m"></Tab>
-                <Tab eventKey={5} title="1y"></Tab>
-              </Tabs>
-            </Col>
-          </Row>
+        { !fetchingData ?
 
-          <Row className="popup">
-            {hoverLoc ?
-              <ToolTip
-                hoverLoc={hoverLoc}
-                activePoint={activePoint}
-                daysPredictionAhead={this.getDaysAheadPoint(activePoint)}
-              />
-            : null
-            }
-          </Row>
+          <Grid fluid={true}>
+            <Row>
+              <Col xs={12}>
+                <Tabs
+                  activeKey={activeTabKey}
+                  onSelect={this.handleSelectRangeTab}
+                  id="rangeTab"
+                >
+                  <Tab eventKey={1} title="all (log)"></Tab>
+                  <Tab eventKey={2} title="prediction"></Tab>
+                  <Tab eventKey={3} title="1m"></Tab>
+                  <Tab eventKey={4} title="3m"></Tab>
+                  <Tab eventKey={5} title="1y"></Tab>
+                </Tabs>
+              </Col>
+            </Row>
 
-          { !fetchingData ?
+            <Row className="popup">
+              {hoverLoc ?
+                <ToolTip
+                  hoverLoc={hoverLoc}
+                  activePoint={activePoint}
+                  daysPredictionAhead={this.getDaysAheadPoint(activePoint)}
+                />
+              : null
+              }
+            </Row>
+
             <Row className='chart'>
 
               <LineChart
@@ -700,43 +709,49 @@ class App extends Component {
               </Col>
 
             </Row>
-          : null }
 
-          <Row>
-            <Col xs={12}>
-              <p className="lead redlineExplanation">The red line steadily grows to { formatDollar(targetPrice) } per BTC. Move the slider to zoom.</p>
-            </Col>
-          </Row>
-        </Grid>
-        <Grid>
+            <Row>
+              <Col xs={12}>
+                <p className="lead redlineExplanation">The red line steadily grows to { formatDollar(targetPrice) } per BTC. Move the slider to zoom.</p>
+              </Col>
+            </Row>
+          </Grid>
+        : null }
 
-          <Row>
-            <Col xs={12} lg={8} lgOffset={2}>
-              <FormCustomPrediction
-                startDate={startDate}
-                onStartDateChange={this.handleStartDateChange}
 
-                historicalStart={historicalStart}
-                historicalEnd={historicalEnd}
-                maxTargetDate={maxTargetDate}
+        <Grid fluid={false}>
 
-                startPrice={startPrice}
-                onStartPriceChange={this.handleStartPriceChange}
+          { !fetchingData ?
 
-                growthRate={growthRate}
-                onGrowthRateChange={this.handleGrowthRateChange}
+            <Row>
+              <Col xs={12} lg={8} lgOffset={2}>
+                <FormCustomPrediction
+                  startDate={startDate}
+                  onStartDateChange={this.handleStartDateChange}
 
-                targetDate={targetDate}
-                onTargetDateChange={this.handleTargetDateChange}
+                  historicalStart={historicalStart}
+                  historicalEnd={historicalEnd}
+                  maxTargetDate={maxTargetDate}
 
-                targetPrice={growthRate !== 0 ? targetPrice : ''}
+                  startPrice={startPrice}
+                  onStartPriceChange={this.handleStartPriceChange}
 
-                pauseEvents={this.pauseTimer}
-                resumeEvents={this.resumeTimer}
-              />
-            </Col>
-          </Row>
+                  growthRate={growthRate}
+                  onGrowthRateChange={this.handleGrowthRateChange}
 
+                  targetDate={targetDate}
+                  onTargetDateChange={this.handleTargetDateChange}
+
+                  targetPrice={growthRate !== 0 ? targetPrice : ''}
+
+                  pauseEvents={this.pauseTimer}
+                  resumeEvents={this.resumeTimer}
+                />
+              </Col>
+            </Row>
+          :
+            null
+          }
           { !customPrediction ?
             <ExplainMcAfeeTweet startPrice={startPrice} />
           :
