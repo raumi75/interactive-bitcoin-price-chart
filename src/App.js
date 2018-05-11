@@ -602,27 +602,35 @@ class App extends Component {
   }
 
   render() {
-    const {targetDate, startDate, startPrice, growthRate } = this.state;
+    const {fetchingData, targetDate, startDate, startPrice, growthRate,
+      customPrediction,
+      predictionPriceNow, actualPriceNow,
+      updatesIn, predictionUpdatesIn, predictionUpdatesMax,
+      data, scale,
+      activeTabKey, hoverLoc, activePoint,
+      rangeMin, sliderMarks, countRange,
+      historicalStart, historicalEnd
+    } = this.state;
     const targetPrice = this.getTargetPrice();
     return (
       <div>
         <Grid fluid={true} >
 
           <PageHead
-            customPrediction={this.state.customPrediction}
+            customPrediction={customPrediction}
             targetDate={targetDate}
             targetPrice={targetPrice}
           />
 
-          { !this.state.fetchingData ?
+          { !fetchingData ?
             <InfoBox
-              predictionPriceNow = {this.state.predictionPriceNow }
-              actualPriceNow={this.state.actualPriceNow}
+              predictionPriceNow = {predictionPriceNow }
+              actualPriceNow={actualPriceNow}
               daysAhead={this.getDaysAheadNow()}
-              actualUpdatesIn={this.state.updatesIn}
+              actualUpdatesIn={updatesIn}
 
-              predictionUpdatesMax ={this.state.predictionUpdatesMax}
-              predictionUpdatesIn  ={this.state.predictionUpdatesIn}
+              predictionUpdatesMax ={predictionUpdatesMax}
+              predictionUpdatesIn  ={predictionUpdatesIn}
             />
           :
           <div className="pleasewait text-center">
@@ -634,7 +642,7 @@ class App extends Component {
           <Row>
             <Col xs={12}>
               <Tabs
-                activeKey={this.state.activeTabKey}
+                activeKey={activeTabKey}
                 onSelect={this.handleSelectRangeTab}
                 id="rangeTab"
               >
@@ -648,34 +656,34 @@ class App extends Component {
           </Row>
 
           <Row className="popup">
-            {this.state.hoverLoc ?
+            {hoverLoc ?
               <ToolTip
-                hoverLoc={this.state.hoverLoc}
-                activePoint={this.state.activePoint}
-                daysPredictionAhead={this.getDaysAheadPoint(this.state.activePoint)}
+                hoverLoc={hoverLoc}
+                activePoint={activePoint}
+                daysPredictionAhead={this.getDaysAheadPoint(activePoint)}
               />
             : null
             }
           </Row>
 
-          { !this.state.fetchingData ?
+          { !fetchingData ?
             <Row className='chart'>
 
               <LineChart
-                data={this.state.data}
-                scale={this.state.scale}
-                daysPredictionAhead={this.state.hoverLoc ? this.getDaysAheadPoint(this.state.activePoint) : 0}
+                data={data}
+                scale={scale}
+                daysPredictionAhead={hoverLoc ? this.getDaysAheadPoint(activePoint) : 0}
                 onChartHover={ (a,b) => this.handleChartHover(a,b) }
               />
 
               <Col xs={12} className='range'>
                 <Range
                   allowCross={false}
-                  min={this.state.rangeMin}
+                  min={rangeMin}
                   max={predictionCount}
-                  marks={this.state.sliderMarks}
+                  marks={sliderMarks}
                   onChange={this.handleLineChartLength}
-                  value={this.state.countRange}
+                  value={countRange}
                   pushable={minSliderDistance+1} />
                 <br />
               </Col>
@@ -683,8 +691,8 @@ class App extends Component {
 
               <Col xs={9} sm={5} smOffset={1}>
                 <RadioLinLog
-                  scale={this.state.scale}
-                  onChange={ (scale) => this.handleScaleChange(scale) } />
+                  scale={scale}
+                  onChange={ (scaleNew) => this.handleScaleChange(scaleNew) } />
               </Col>
 
               <Col xs={3} md={6} className="text-right acknowledge-coindesk">
@@ -696,7 +704,7 @@ class App extends Component {
 
           <Row>
             <Col xs={12}>
-              <p className="lead redlineExplanation">The red line steadily grows to { formatDollar(this.getTargetPrice()) } per BTC. Move the slider to zoom.</p>
+              <p className="lead redlineExplanation">The red line steadily grows to { formatDollar(targetPrice) } per BTC. Move the slider to zoom.</p>
             </Col>
           </Row>
         </Grid>
@@ -708,8 +716,8 @@ class App extends Component {
                 startDate={startDate}
                 onStartDateChange={this.handleStartDateChange}
 
-                historicalStart={this.state.historicalStart}
-                historicalEnd={this.state.historicalEnd}
+                historicalStart={historicalStart}
+                historicalEnd={historicalEnd}
                 maxTargetDate={maxTargetDate}
 
                 startPrice={startPrice}
@@ -721,7 +729,7 @@ class App extends Component {
                 targetDate={targetDate}
                 onTargetDateChange={this.handleTargetDateChange}
 
-                targetPrice={this.state.growthRate !== 0 ? targetPrice : ''}
+                targetPrice={growthRate !== 0 ? targetPrice : ''}
 
                 pauseEvents={this.pauseTimer}
                 resumeEvents={this.resumeTimer}
@@ -729,8 +737,8 @@ class App extends Component {
             </Col>
           </Row>
 
-          { !this.state.customPrediction ?
-            <ExplainMcAfeeTweet startPrice={this.state.startPrice} />
+          { !customPrediction ?
+            <ExplainMcAfeeTweet startPrice={startPrice} />
           :
           <Row>
             <Col xs={12}>
@@ -740,7 +748,7 @@ class App extends Component {
           </Row>
           }
 
-          { !this.state.fetchingData ?
+          { !fetchingData ?
 
             <Row>
               <Col xs={12}>
@@ -815,7 +823,7 @@ class App extends Component {
 
           <Row>
             <Col xs={12} md={10} lg={8}>
-              <ExplainMcAfeePerson customPrediction={this.state.customPrediction} />
+              <ExplainMcAfeePerson customPrediction={customPrediction} />
             </Col>
           </Row>
         </Grid>
