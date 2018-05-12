@@ -1,3 +1,9 @@
+<IfModule mod_php5.c>
+  <FilesMatch "^index.html$">
+    SetHandler application/x-httpd-php
+  </FilesMatch>
+</IfModule>
+
 <IfModule mod_expires.c>
   ExpiresActive On
 

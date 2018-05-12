@@ -1,3 +1,4 @@
+<?php build_meta(); ?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -8,14 +9,14 @@
 
     <meta name="twitter:creator"     content="@raumi75" />
     <meta property="og:site_name"    content="Bitcoin Price Prediction Tracker">
-    <meta property="og:url"          content="https://fnordprefekt.de/">
-    <meta property="og:title"        content="Will Bitcoin be $ 1 million by the end of 2020?">
-    <meta property="og:description"  content="An interactive chart that shows a steady curve to $ 1,000,000 per bitcoin by the end of 2020 along the actual price.">
+    <meta property="og:url"          content="https://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>">
+    <meta property="og:title"        content="<?php echo $title; ?>">
+    <meta property="og:description"  content="<?php echo $description; ?>">
     <meta property="og:type"         content="website">
     <meta property="og:image"        content="https://fnordprefekt.de%PUBLIC_URL%/screenshot.png">
     <meta property="og:image:width"  content="1440">
     <meta property="og:image:height" content="799">
-    <meta property="og:image:alt"    content="Chart with historical bitcoin prices compared to McAfee prediction.">
+    <meta property="og:image:alt"    content="<?php echo $img_alt; ?>">
     <meta property="fb:app_id"       content="549592225407217">
 
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
@@ -48,3 +49,26 @@
     <div id="root"></div>
   </body>
 </html>
+<?php
+function build_meta() {
+  global $title;
+  global $description;
+  global $img_alt;
+  if (!isset($_GET['percent'])) {
+    $title = 'Will Bitcoin be $ 1 million by the end of 2020?';
+    $description = 'An interactive chart that shows a steady curve to $ 1,000,000 per bitcoin by the end of 2020 along the actual price.';
+    $img_alt = 'Chart with historical bitcoin prices compared to McAfee prediction.';
+  } else {
+    // custom prediction
+    $percent = filter_var($_GET['percent'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+    $startdate = DateTime::createFromFormat('Y-m-d', $_GET['startdate']);
+    $targetdate = DateTime::createFromFormat('Y-m-d', $_GET['targetdate']);
+    $startprice = filter_var($_GET['startprice'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+    $datediff = $startdate->diff($targetdate);
+    $targetprice = round(pow((1+$percent/100), $datediff->days) * $startprice,2);
+    $title = 'Will 1 bitcoin be worth $ ' . number_format($targetprice,2) . ' on ' . $targetdate->format('Y-m-d'). '?';
+    $description = 'An interactive chart that shows a steady curve to $ ' . number_format($targetprice,2) . ' per bitcoin by ' . $targetdate->format('Y-m-d') . ' along the actual price.';
+    $img_alt = 'Chart with historical bitcoin prices compared to prediction.';
+  }
+}
+?>
