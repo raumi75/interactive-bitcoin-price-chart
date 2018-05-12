@@ -19,7 +19,7 @@ export default class PageHead extends Component {
       return (
         <p>
           John McAfee says:
-          By the end of 2020 Bitcoin will be worth $&nbsp;1&nbsp;Million.
+          1 BTC will be worth $&nbsp;1&nbsp;million by the end of 2020.
           Is he losing his bet?
         </p>
       );
