@@ -247,7 +247,7 @@ class App extends Component {
 
         this.setState({
           actualPriceNow: Math.round(bitcoinData.bpi.USD.rate_float*100)/100,
-          updatedAt: bitcoinData.time.updatedISO,
+          updatedAt: moment(bitcoinData.time.updatedISO),
           loadingActualPrice: false
         });
       })
@@ -611,7 +611,7 @@ class App extends Component {
     const {fetchingData, targetDate, startDate, startPrice, growthRate,
       customPrediction,
       predictionPriceNow, actualPriceNow,
-      updatesIn, predictionUpdatesIn, predictionUpdatesMax,
+      updatesIn, updatedAt, predictionUpdatesIn, predictionUpdatesMax,
       data, scale,
       activeTabKey, hoverLoc, activePoint,
       rangeMin, sliderMarks, countRange,
@@ -632,7 +632,8 @@ class App extends Component {
             <InfoBox
               predictionPriceNow = {predictionPriceNow }
               actualPriceNow={actualPriceNow}
-              daysAhead={this.getDaysAheadNow()}
+
+              actualUpdatedAt={updatedAt}
               actualUpdatesIn={updatesIn}
 
               predictionUpdatesMax ={predictionUpdatesMax}
