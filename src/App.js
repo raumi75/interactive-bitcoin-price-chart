@@ -113,9 +113,6 @@ class App extends Component {
     const {startDate, targetDate, historicalStart, historicalEnd}  = this.state;
     const waitMinutesBeforeReload = 10;
 
-    // no refreshing prices while loading
-    clearInterval(this.timerRefreshPrices);
-
     predictionCount = moment(maxTargetDate).diff(moment(startDate),'days');
     offsetPrediction = moment(historicalStart).diff(moment(startDate),'days');
     const url = 'https://api.coindesk.com/v1/bpi/historical/close.json?start='+historicalStart+'&end='+historicalEnd;
@@ -127,6 +124,10 @@ class App extends Component {
       // register the timestamp of this load
       this.setState({loadedChartAt: moment()});
     }
+
+    // no refreshing prices while loading
+    clearInterval(this.timerRefreshPrices);
+
     fetch(url).then( r => r.json())
       .then((bitcoinData) => {
 
@@ -184,6 +185,11 @@ class App extends Component {
       console.log('Error when loading price data from coindesk. Will try again in 61 seconds.' + e);
       // try again in 61 seconds
       setTimeout( this.loadData(), 61000 );
+
+      // if old chart data exists, it's safe to restart the timer
+      if (this.state.dataComplete) {
+        this.timerRefreshPrices = setInterval(() => this.refreshPrices(), 1000);
+      }
     });
   }
 
@@ -809,7 +815,7 @@ class App extends Component {
               <ExplainGrowth />
             </Col>
           </Row>
-          
+
           <Row>
             <Col xs={12} md={10} lg={8}>
               <ExplainSupply />
