@@ -580,12 +580,14 @@ class LineChart extends Component {
         width={this.state.svgWidth}
         height={svgHeight}
         viewBox={`0 0 ${svgWidth} ${svgHeight}`}
-        className={'linechart'}
+        className='linechart unselectable'
         onMouseLeave= { () => this.stopHover() }
         onMouseMove = { (e) => this.getMouseCoords(e) }
         onTouchMove = { (e) => this.getTouchCoords(e) }
         onTouchStart= { (e) => this.getTouchCoords(e) }
         onMouseDown = { (e) => this.getMouseCoords(e) }
+        onSelectStart="return false;"
+        unselectable="yes"
       >
         <g>
           {this.makeLineMaxYP()}
