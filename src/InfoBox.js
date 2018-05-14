@@ -45,7 +45,7 @@ class InfoBox extends Component {
           <div className="heading actual"><a href="https://www.coindesk.com/price/" title="Powered by coindesk">{formatDollar(actualPriceNow)}</a></div>
           {(PriceAgeSeconds > 120 && PriceAgeSeconds < 60*60*24)
             ?
-              <div className="subtext">last connection {PriceAgeSeconds} sec</div>
+              <div className="subtext"><small>{PriceAgeSeconds} seconds ago. connecting...</small></div>
             :
             <ProgressBar className="actualupdatesin" now={actualUpdatesIn} max={60} />
           }
