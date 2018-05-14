@@ -577,9 +577,9 @@ class LineChart extends Component {
     this.setScale();
     return (
       <svg
-        width={this.state.svgWidth}
+        width={svgWidth}
         height={svgHeight}
-        viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+        viewBox="0 0 {svgWidth} {svgHeight}"
         className='linechart unselectable'
         onMouseLeave= { () => this.stopHover() }
         onMouseMove = { (e) => this.getMouseCoords(e) }
