@@ -577,6 +577,7 @@ class LineChart extends Component {
     this.setScale();
     return (
       <svg
+        id='linechart'
         width={svgWidth}
         height={svgHeight}
         viewBox="0 0 {svgWidth} {svgHeight}"

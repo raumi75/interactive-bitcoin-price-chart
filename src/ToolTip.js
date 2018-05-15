@@ -5,7 +5,7 @@ class ToolTip extends Component {
 
   render() {
     const {hoverLoc, activePoint} = this.props;
-    const svgLocation = document.getElementsByClassName("linechart")[0].getBoundingClientRect();
+    const svgLocation = document.getElementById('linechart').getBoundingClientRect();
 
     let placementStyles = {};
     let width = 140; // pixels
