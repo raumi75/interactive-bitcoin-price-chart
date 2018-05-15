@@ -20,7 +20,6 @@ class ToolTip extends Component {
       return (
         <div
           className={'unselectable hover hover-'+this.getAboveOrBelow()}
-          onSelectStart="return false;"
           unselectable="yes"
           style={ placementStyles }
         >

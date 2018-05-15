@@ -252,7 +252,7 @@ class LineChart extends Component {
           <line
             className='tickline'
             x1={svgX} y1={svgHeight - xLabelSize}
-            x2={svgX} y2={svgHeight - xLabelSize - tickHeight} 
+            x2={svgX} y2={svgHeight - xLabelSize - tickHeight}
           />
         </g>
       );
@@ -580,14 +580,13 @@ class LineChart extends Component {
         id='linechart'
         width={svgWidth}
         height={svgHeight}
-        viewBox="0 0 {svgWidth} {svgHeight}"
+        viewBox={"0 0 " + svgWidth + ' ' + svgHeight}
         className='linechart unselectable'
         onMouseLeave= { () => this.stopHover() }
         onMouseMove = { (e) => this.getMouseCoords(e) }
         onTouchMove = { (e) => this.getTouchCoords(e) }
         onTouchStart= { (e) => this.getTouchCoords(e) }
         onMouseDown = { (e) => this.getMouseCoords(e) }
-        onSelectStart="return false;"
         unselectable="yes"
       >
         <g>
