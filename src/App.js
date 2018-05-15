@@ -209,7 +209,7 @@ class App extends Component {
 
     this.refreshPredictionPriceNow();
 
-    if (loadingActualPrice) {
+    if (loadingActualPrice || !navigator.onLine) {
       this.setState({updatesIn: 0});
     } else {
       this.setState({updatesIn: 90-PriceAgeSeconds});
