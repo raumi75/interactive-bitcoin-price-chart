@@ -18,7 +18,12 @@ class ToolTip extends Component {
 
     if (activePoint.y.p>0 && activePoint.y.m>0) {
       return (
-        <div className={'hover hover-'+this.getAboveOrBelow()} style={ placementStyles }>
+        <div
+          className={'unselectable hover hover-'+this.getAboveOrBelow()}
+          onSelectStart="return false;"
+          unselectable="yes"
+          style={ placementStyles }
+        >
           <div className="hover-percent">{(Math.abs(activePoint.y.p/activePoint.y.m-1)).toLocaleString('en-us', { style: 'percent', maximumSignificantDigits: 3})} {this.getAboveOrBelow()}</div>
           <div>{Math.abs(this.props.daysPredictionAhead)} days {this.getAheadOrBehind()}</div>
         </div>
