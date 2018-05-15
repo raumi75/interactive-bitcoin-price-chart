@@ -235,7 +235,7 @@ class App extends Component {
   // and update the state
   refreshActualPriceNow = () => {
     const url = 'https://api.coindesk.com/v1/bpi/currentprice.json';
-    const waitSecondsBeforeReload = 5;
+    const waitSecondsBeforeReload = 30;
 
     if (moment().diff(this.state.loadedActualAt, 'seconds') < waitSecondsBeforeReload) {
       //console.log("waiting. don't abuse Coindesk");
