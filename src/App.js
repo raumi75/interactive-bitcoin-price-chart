@@ -276,7 +276,6 @@ class App extends Component {
   }
 
   handleLineChartLength = (pos) => {
-
     if (pos[0] < 0) { pos[0] = 0; }
     if (pos[1] < 1) { pos[1] = this.state.todayCount; }
     if (pos[0] >= (pos[1]-minSliderDistance)) {
@@ -286,6 +285,8 @@ class App extends Component {
 
     this.setState({
       countRange: [pos[0], pos[1]],
+      hoverLoc: null,
+      activePoint: null
     }, this.cutData([pos[0], pos[1]]));
   };
 
@@ -353,7 +354,10 @@ class App extends Component {
     this.setRangeDefault();
     this.setState({
       scale: 'lin',
-      activeTabKey: 2});
+      activeTabKey: 2,
+      activePoint: null,
+      hoverLoc: null
+    });
   }
 
   setRangeDefault = () => {
@@ -361,6 +365,8 @@ class App extends Component {
     this.setState({
       rangeMin: Math.min(defaultRangeMin, -offsetPrediction),
       countRange: cr,
+      activePoint: null,
+      hoverLoc: null
     });
     this.cutData(cr);
   }
@@ -371,7 +377,9 @@ class App extends Component {
       rangeMin: 0,
       countRange: cr,
       scale: 'log',
-      activeTabKey: 1
+      activeTabKey: 1,
+      activePoint: null,
+      hoverLoc: null
       }
     );
     this.cutData(cr);
@@ -383,7 +391,9 @@ class App extends Component {
       rangeMin: defaultRangeMin,
       countRange: cr,
       scale: 'lin',
-      activeTabKey: 3
+      activeTabKey: 3,
+      activePoint: null,
+      hoverLoc: null
       }
     );
     this.cutData(cr);
@@ -395,7 +405,9 @@ class App extends Component {
       rangeMin: defaultRangeMin,
       countRange: cr,
       scale: 'lin',
-      activeTabKey: 4
+      activeTabKey: 4,
+      activePoint: null,
+      hoverLoc: null
       }
     );
     this.cutData(cr);
@@ -407,7 +419,9 @@ class App extends Component {
       rangeMin: defaultRangeMin,
       countRange: cr,
       scale: 'lin',
-      activeTabKey: 5
+      activeTabKey: 5,
+      activePoint: null,
+      hoverLoc: null
       }
     );
     this.cutData(cr);
@@ -476,8 +490,6 @@ class App extends Component {
           this.addMcAfeeRates();                  }
     );
   }
-
-
 
   handleStartPriceChange = (e) => {
     let price = parseFloat(e.target.value);
@@ -688,6 +700,8 @@ class App extends Component {
               <LineChart
                 data={data}
                 scale={scale}
+                activePoint={activePoint}
+                hoverLoc={hoverLoc}
                 daysPredictionAhead={hoverLoc ? this.getDaysAheadPoint(activePoint) : 0}
                 onChartHover={ (a,b) => this.handleChartHover(a,b) }
               />

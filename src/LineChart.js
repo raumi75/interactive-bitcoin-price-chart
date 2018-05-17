@@ -25,8 +25,6 @@ class LineChart extends Component {
     //this.boundaries = getDataBoundaries(this.props.data);
 
     this.state = {
-      hoverLoc: null,     // x-location of the hovering mouse
-      activePoint: null,  // the data point closest to hovering mouse
       svgWidth: document.documentElement.clientWidth,
       svgHeight: document.documentElement.clientWidth/chartRatio
     }
@@ -393,10 +391,6 @@ class LineChart extends Component {
     }
 
     if (this.areCoordsOnChart(relativeLoc)) {
-      this.setState({
-        hoverLoc: relativeLoc,
-        activePoint: closestPoint
-      });
       this.props.onChartHover(  relativeLoc, closestPoint);
     } else {
       // Pointer is outside of chart
@@ -406,14 +400,12 @@ class LineChart extends Component {
   }
   // STOP HOVER
   stopHover(){
-    this.setState({hoverLoc: null, activePoint: null});
     this.props.onChartHover(null, null);
   }
 
   // MAKE ACTIVE POINT
   makeActivePoint(){
-    const {color, pointRadius} = this.props;
-    const {activePoint} = this.state;
+    const {color, pointRadius, activePoint} = this.props;
     if (activePoint.y['p']>0) {
       return (
         <circle
@@ -431,8 +423,8 @@ class LineChart extends Component {
 
   // MAKE vertical HOVER LINE
   createLine(){
-    const {xLabelSize} = this.props;
-    const {hoverLoc, svgHeight} = this.state;
+    const {xLabelSize, hoverLoc} = this.props;
+    const {svgHeight} = this.state;
     return (
       <line
         className='hoverline'
@@ -443,7 +435,7 @@ class LineChart extends Component {
 
   // MAKE horizontal HOVER LINE
   createHorizontalHoverLine(pricetype){
-    const {activePoint} = this.state;
+    const {activePoint} = this.props;
 
     if (activePoint.y[pricetype] === 0) {
       return (null);
@@ -455,8 +447,8 @@ class LineChart extends Component {
   // horizontal line between hover point price and prediction curve price
   // to visualize how many days price is ahead or behind
   createHoverLineAhead(){
-    const {activePoint, svgHeight} = this.state;
-    const {daysPredictionAhead, xLabelSize} = this.props;
+    const {svgHeight} = this.state;
+    const {daysPredictionAhead, xLabelSize, activePoint} = this.props;
 
     if (activePoint.y.m === 0 || activePoint.y.p === 0) {
       return (null);
@@ -486,7 +478,7 @@ class LineChart extends Component {
   // vertical line between hover point price and prediction curve price
   // to visualize how the price is above or below
   createHoverLineAbove(){
-    const {activePoint} = this.state;
+    const {activePoint} = this.props;
 
     if (activePoint.y.m === 0 || activePoint.y.p === 0) {
       return (null);
@@ -506,7 +498,7 @@ class LineChart extends Component {
   // is the price above or below the prediction.
   // css className will color the percentage accordingly
   getAboveOrBelow() {
-    const {activePoint} = this.state;
+    const {activePoint} = this.props;
 
     if (activePoint.y.p>=activePoint.y.m)
     { return ('above'); } else { return 'below' ; }
@@ -529,12 +521,15 @@ class LineChart extends Component {
 
   // Label Date for HOVER LINE
   makeActiveDate(){
-    return (this.makeLabelDate(this.state.activePoint.x, '_hover'));
+    const {activePoint} = this.props;
+    return (this.makeLabelDate(activePoint.x, '_hover'));
   }
 
   // Label Price for Hover Line
   makeActiveLabelPrice(pricetype, position){
-    return ( this.makeLabelPricePoint(this.state.activePoint.y, position, pricetype, '_hover') );
+    const {activePoint} = this.props;
+
+    return ( this.makeLabelPricePoint(activePoint.y, position, pricetype, '_hover') );
   }
 
   makeHover() {
@@ -571,7 +566,8 @@ class LineChart extends Component {
   }
 
   render() {
-    const {svgHeight, svgWidth, hoverLoc} = this.state;
+    const {svgHeight, svgWidth} = this.state;
+    const {hoverLoc} = this.props;
     this.boundaries = getDataBoundaries(this.props.data);
 
     this.setScale();
@@ -608,6 +604,8 @@ class LineChart extends Component {
 // DEFAULT PROPS
 LineChart.defaultProps = {
   data: [],
+  activePoint: null,
+  hoverLoc: null,
   pointRadius: 5,
   labelRadius: 5,
   xLabelSize: 20,
