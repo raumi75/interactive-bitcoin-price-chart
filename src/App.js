@@ -50,34 +50,27 @@ class App extends Component {
       countRange: [0, predictionCount],
       activeTabKey: 2,
       rangeMin: defaultRangeMin,
-      todayCount: 0,
+      todayCount: 0, // chart data x value of todays prices record
       sliderMarks: {},
       historicalStart: minHistoricalStart, //'2011-01-01',
       historicalEnd: moment().format('YYYY-MM-DD'),
-      scale: 'lin',
+      scale: 'lin', // linear scale (also 'log' for logarithmic scale)
       growthRate: getParameterByName('percent') || this.props.growthRate,
       customPrediction: (getParameterByName('percent') !== null),
-      startPrice: 0,
-      predictionUpdatesMax: 10,
-      predictionUpdatesIn: 10,
-      predictionPriceNow: 1,
-      actualPriceNow: 1,
-      updatedChartAt: moment('2011-01-01 00:00:00'),
-      loadedChartAt:  moment('2011-01-01 00:00:00'),
+      startPrice: 0, // US$
+      predictionUpdatesMax: 10, // seconds
+      predictionUpdatesIn: 10,  // seconds
+      predictionPriceNow: 1, // US$
+      actualPriceNow: 1,     // US$
+      updatedChartAt: moment('2011-01-01 00:00:00'), // the coindesk timestamp of the data
+      loadedChartAt:  moment('2011-01-01 00:00:00'), // the client time when loading the chart data
       lastHistoricalDate: moment('2011-01-01 00:00:00'),
       loadedActualAt: moment('2011-01-01 00:00:00'), // last attempt to download actual price
       updatedAt:      moment('2011-01-01 00:00:00'), // last successful update of actual price
       startDate:  getParameterByName('startdate')  || this.props.startDate,
       targetDate: getParameterByName('targetdate') || this.props.targetDate,
-      pausedAt: null
+      pausedAt: null // if this is a timestamp, the price will not get updated during data entry.
     }
-  }
-
-  handleChartHover(hoverLoc, activePoint){
-    this.setState({
-      hoverLoc: hoverLoc,
-      activePoint: activePoint
-    })
   }
 
   componentDidMount(){
@@ -302,6 +295,13 @@ class App extends Component {
     this.setState ({
       sliderMarks: mark
     });
+  }
+
+  handleChartHover(hoverLoc, activePoint){
+    this.setState({
+      hoverLoc: hoverLoc,
+      activePoint: activePoint
+    })
   }
 
   cutData(pos) {
