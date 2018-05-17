@@ -543,28 +543,25 @@ class App extends Component {
 
   refreshPredictionPriceNow() {
     const predictionNow = this.getPredictionPriceNow();
-    let predictionUpdatesMax = this.state;
-    if (this.state.dataComplete[this.state.todayCount].y.m !== predictionNow) {
-      let newDataComplete = this.state.dataComplete;
+    let {dataComplete, todayCount, predictionUpdatesMax, predictionUpdatesIn, countRange} = this.state;
+    if (dataComplete[todayCount].y.m !== predictionNow) {
+      let newDataComplete = dataComplete;
       predictionUpdatesMax = this.secondsPredictionOneCent();
-      newDataComplete[this.state.todayCount].y.m = predictionNow;
+      newDataComplete[todayCount].y.m = predictionNow;
       this.setState({
         dataComplete: newDataComplete,
         predictionUpdatesMax: predictionUpdatesMax,
-        predictionUpdatesIn: predictionUpdatesMax
+        predictionUpdatesIn: predictionUpdatesMax,
+        predictionPriceNow: predictionNow
       },
-        () => this.cutData(this.state.countRange)
+        () => this.cutData(countRange)
       );
     } else {
       // count down to next prediction Price change
       this.setState({
-        predictionUpdatesIn: this.state.predictionUpdatesIn-1
+        predictionUpdatesIn: predictionUpdatesIn-1
       });
     }
-
-    this.setState({
-      predictionPriceNow: predictionNow
-    });
   }
 
   secondsPredictionOneCent() {
