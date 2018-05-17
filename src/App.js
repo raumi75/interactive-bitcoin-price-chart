@@ -703,7 +703,7 @@ class App extends Component {
                 onChartHover={ (a,b) => this.handleChartHover(a,b) }
               />
 
-              <Col xs={12} className='range'>
+              <Col xs={12} className='range unselectable'>
                 <Range
                   allowCross={false}
                   min={rangeMin}
