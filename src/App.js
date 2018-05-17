@@ -546,7 +546,7 @@ class App extends Component {
     let {predictionPriceNow, dataComplete, todayCount, predictionUpdatesMax, predictionUpdatesIn, countRange} = this.state;
     if (predictionPriceNow !== predictionNow) {
       let newDataComplete = dataComplete;
-      predictionUpdatesMax = this.secondsPredictionOneCent();
+      predictionUpdatesMax = this.secondsPredictionOneCent(predictionNow);
       newDataComplete[todayCount].y.m = predictionNow;
       this.setState({
         dataComplete: newDataComplete,
@@ -564,10 +564,10 @@ class App extends Component {
     }
   }
 
-  secondsPredictionOneCent() {
+  secondsPredictionOneCent(predictionPriceNow) {
     const updateThreshold = 0.01; // One Cent
     // Time it takes for prediciton to rise 1 Cent
-    return Math.ceil(updateThreshold/(this.state.predictionPriceNow*(this.state.growthRate/100)/60/60/24));
+    return Math.ceil(updateThreshold/(predictionPriceNow*(this.state.growthRate/100)/60/60/24));
   }
 
   // No Paramter because this is realtime
@@ -584,6 +584,8 @@ class App extends Component {
 
   // Add predicted priced to sortedData Array
   addMcAfeeRates = () => {
+    const predictionPriceNow = this.getPredictionPriceNow();
+    const secondsPredictionOneCent = this.secondsPredictionOneCent(predictionPriceNow);
     var newDataComplete = this.state.dataComplete.map(
       (val) => {
       return {
@@ -594,9 +596,14 @@ class App extends Component {
       }
     });
 
-    newDataComplete[this.state.todayCount].y.m = this.getPredictionPriceNow();
+    newDataComplete[this.state.todayCount].y.m = predictionPriceNow;
 
-    this.setState ({ dataComplete: newDataComplete },
+    this.setState ({
+      dataComplete: newDataComplete,
+      predictionPriceNow: predictionPriceNow,
+      predictionUpdatesIn: secondsPredictionOneCent,
+      predictionUpdatesMax: secondsPredictionOneCent
+     },
       () => this.cutData(this.state.countRange)
     );
 
