@@ -25,7 +25,7 @@ class InfoBox extends Component {
   }
 
   render(){
-    const {predictionPriceNow, actualUpdatedAt, actualUpdatesIn, actualPriceNow, predictionUpdatesIn,predictionUpdatesMax} = this.props;
+    const {predictionPriceNow, actualUpdatedAt, actualUpdatesIn, actualPriceNow, predictionUpdatesIn,predictionUpdatesMax, loadingActualPrice} = this.props;
     const aboveOrBelow = this.getAboveOrBelow();
     const PriceAgeSeconds = moment().utc().diff(actualUpdatedAt, 'seconds');
 
@@ -45,7 +45,7 @@ class InfoBox extends Component {
           <div className="heading actual"><a href="https://www.coindesk.com/price/" title="Powered by coindesk">{formatDollar(actualPriceNow)}</a></div>
           {(PriceAgeSeconds > 120 && PriceAgeSeconds < 60*60*24)
             ?
-              <div className="subtext"><small>{moment(actualUpdatedAt).fromNow()}. { (navigator.onLine) ? 'loading...' : '(now offline)' }</small></div>
+              <div className="subtext"><small>{moment(actualUpdatedAt).fromNow()}. { (loadingActualPrice) ? 'loading...' : '(now offline)' }</small></div>
             :
             <ProgressBar className="actualupdatesin" now={actualUpdatesIn} max={60} />
           }

@@ -110,13 +110,13 @@ class App extends Component {
   }
 
   loadData = () => {
-    const {startDate, targetDate, historicalStart, historicalEnd}  = this.state;
+    const {startDate, targetDate, historicalStart, historicalEnd, loadedChartAt}  = this.state;
     const waitMinutesBeforeReload = 10;
 
     predictionCount = moment(maxTargetDate).diff(moment(startDate),'days');
     offsetPrediction = moment(historicalStart).diff(moment(startDate),'days');
     const url = 'https://api.coindesk.com/v1/bpi/historical/close.json?start='+historicalStart+'&end='+historicalEnd;
-    if (moment().diff(this.state.loadedChartAt, 'minutes') < waitMinutesBeforeReload ) {
+    if (moment().diff(loadedChartAt, 'minutes') < waitMinutesBeforeReload ) {
       // we do not load if an attempt has been made in the last 10 minutes
       console.log('not reloading historical prices to prevent abusing coindesk');
       return null;
@@ -194,12 +194,12 @@ class App extends Component {
   }
 
   refreshPrices = () => {
-    const {loadingActualPrice} = this.state;
-    const PriceAgeSeconds = moment().utc().diff(this.state.updatedAt, 'seconds');
+    const {loadingActualPrice, updatedAt, pausedAt} = this.state;
+    const PriceAgeSeconds = moment().utc().diff(updatedAt, 'seconds');
 
     // Don't refresh anything if paused because of user input
-    if (this.state.pausedAt !== null ) {
-      if (moment().diff(this.state.pausedAt, 'second') > 30) {
+    if (pausedAt !== null ) {
+      if (moment().diff(pausedAt, 'second') > 30) {
         // force resume after 30 seconds
         this.setState({pausedAt: null});
       } else {
@@ -239,6 +239,8 @@ class App extends Component {
 
     if (moment().diff(this.state.loadedActualAt, 'seconds') < waitSecondsBeforeReload) {
       //console.log("waiting. don't abuse Coindesk");
+      // Even if client clock (or timezone) is set incorrectly
+      // and it wrongly assumes that the price is old
       return null;
     }
 
@@ -251,6 +253,17 @@ class App extends Component {
       .then((bitcoinData) => {
         this.setActualPriceNow(bitcoinData.bpi.USD.rate_float);
 
+        // TODO:
+        //  updatedAt is the timestamp from coindesk.
+        //  it gets compared to the client time later on.
+        //
+        //  Is my assumption correct, that most clients have the correct time
+        //  and timezone set?
+        //
+        //  if updatedISO and moment().utc are off more than a 30 seconds,
+        //  calculate how much the client clock is off and use that when displaying
+        //  the age of the actualPriceNow and deciding when to reload.
+        //  Maybe send a message to my server to track how common this is.
         this.setState({
           actualPriceNow: Math.round(bitcoinData.bpi.USD.rate_float*100)/100,
           updatedAt: moment(bitcoinData.time.updatedISO),
@@ -633,7 +646,7 @@ class App extends Component {
     const {fetchingData, targetDate, startDate, startPrice, growthRate,
       customPrediction,
       predictionPriceNow, actualPriceNow,
-      updatesIn, updatedAt, predictionUpdatesIn, predictionUpdatesMax,
+      updatesIn, updatedAt, loadingActualPrice, predictionUpdatesIn, predictionUpdatesMax,
       data, scale,
       activeTabKey, hoverLoc, activePoint,
       rangeMin, sliderMarks, countRange,
@@ -655,6 +668,7 @@ class App extends Component {
               predictionPriceNow = {predictionPriceNow }
               actualPriceNow={actualPriceNow}
 
+              loadingActualPrice={loadingActualPrice}
               actualUpdatedAt={updatedAt}
               actualUpdatesIn={updatesIn}
 
