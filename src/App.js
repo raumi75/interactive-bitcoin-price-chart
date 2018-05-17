@@ -65,8 +65,8 @@ class App extends Component {
       updatedChartAt: moment('2011-01-01 00:00:00'),
       loadedChartAt:  moment('2011-01-01 00:00:00'),
       lastHistoricalDate: moment('2011-01-01 00:00:00'),
-      loadedActualAt: moment('2011-01-01 00:00:00'),
-      updatedAt:      moment('2011-01-01 00:00:00'),
+      loadedActualAt: moment('2011-01-01 00:00:00'), // last attempt to download actual price
+      updatedAt:      moment('2011-01-01 00:00:00'), // last successful update of actual price
       startDate:  getParameterByName('startdate')  || this.props.startDate,
       targetDate: getParameterByName('targetdate') || this.props.targetDate,
       pausedAt: null
@@ -195,7 +195,7 @@ class App extends Component {
 
   refreshPrices = () => {
     const {loadingActualPrice, updatedAt, pausedAt} = this.state;
-    const PriceAgeSeconds = moment().utc().diff(updatedAt, 'seconds');
+    const PriceAgeSeconds = moment().diff(updatedAt, 'seconds');
 
     // Don't refresh anything if paused because of user input
     if (pausedAt !== null ) {
@@ -212,12 +212,10 @@ class App extends Component {
     if (loadingActualPrice || !navigator.onLine) {
       this.setState({updatesIn: 0});
     } else {
-      this.setState({updatesIn: 90-PriceAgeSeconds});
+      this.setState({updatesIn: 60-PriceAgeSeconds});
 
-      // Do not refresh right when the price is 60 seconds old,
-      // because it is not ready yet. Refreshing 90 seconds old prices will
-      // effectively refresh every 60 seconds.
-      if (PriceAgeSeconds > 90) {
+      // refresh every 60 seconds.
+      if (PriceAgeSeconds > 60) {
         this.refreshActualPriceNow();
       }
     }
@@ -253,20 +251,11 @@ class App extends Component {
       .then((bitcoinData) => {
         this.setActualPriceNow(bitcoinData.bpi.USD.rate_float);
 
-        // TODO:
-        //  updatedAt is the timestamp from coindesk.
-        //  it gets compared to the client time later on.
-        //
-        //  Is my assumption correct, that most clients have the correct time
-        //  and timezone set?
-        //
-        //  if updatedISO and moment().utc are off more than a 30 seconds,
-        //  calculate how much the client clock is off and use that when displaying
-        //  the age of the actualPriceNow and deciding when to reload.
-        //  Maybe send a message to my server to track how common this is.
+        // if coinbase time and client time are off more than a 30 seconds,
+        // use the client time to see if price is old
         this.setState({
           actualPriceNow: Math.round(bitcoinData.bpi.USD.rate_float*100)/100,
-          updatedAt: moment(bitcoinData.time.updatedISO),
+          updatedAt: moment(),
           loadingActualPrice: false
         });
       })

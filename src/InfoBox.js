@@ -27,7 +27,7 @@ class InfoBox extends Component {
   render(){
     const {predictionPriceNow, actualUpdatedAt, actualUpdatesIn, actualPriceNow, predictionUpdatesIn,predictionUpdatesMax, loadingActualPrice} = this.props;
     const aboveOrBelow = this.getAboveOrBelow();
-    const PriceAgeSeconds = moment().utc().diff(actualUpdatedAt, 'seconds');
+    const PriceAgeSeconds = moment().diff(actualUpdatedAt, 'seconds');
 
     document.title = formatDollar(actualPriceNow) + "/BTC ("
               + this.getStrPercent() + " " + aboveOrBelow + " prediction)";
