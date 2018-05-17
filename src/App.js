@@ -543,8 +543,8 @@ class App extends Component {
 
   refreshPredictionPriceNow() {
     const predictionNow = this.getPredictionPriceNow();
-    let {dataComplete, todayCount, predictionUpdatesMax, predictionUpdatesIn, countRange} = this.state;
-    if (dataComplete[todayCount].y.m !== predictionNow) {
+    let {predictionPriceNow, dataComplete, todayCount, predictionUpdatesMax, predictionUpdatesIn, countRange} = this.state;
+    if (predictionPriceNow !== predictionNow) {
       let newDataComplete = dataComplete;
       predictionUpdatesMax = this.secondsPredictionOneCent();
       newDataComplete[todayCount].y.m = predictionNow;
