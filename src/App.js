@@ -336,7 +336,7 @@ class App extends Component {
         this.handleRangeExtend();
         break;
       case 2:
-        this.handleRangeReset();
+        this.setRangeDefault();
         break;
       case 3:
         this.handleRange1m();
@@ -352,23 +352,15 @@ class App extends Component {
     }
   }
 
-  handleRangeReset = () => {
-    this.setRangeDefault();
-    this.setState({
-      scale: 'lin',
-      activeTabKey: 2,
-      activePoint: null,
-      hoverLoc: null
-    });
-  }
-
   setRangeDefault = () => {
     var cr = [Math.max(-offsetPrediction,0), this.state.todayCount]
     this.setState({
       rangeMin: Math.min(defaultRangeMin, -offsetPrediction),
+      scale: 'lin',
       countRange: cr,
       activePoint: null,
-      hoverLoc: null
+      hoverLoc: null,
+      activeTabKey: 2
     });
     this.cutData(cr);
   }
