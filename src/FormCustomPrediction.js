@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { Col, Form, FormGroup, InputGroup, FormControl, ControlLabel, Well } from 'react-bootstrap';
+import { Col, Form, FormGroup, InputGroup, FormControl, ControlLabel, ButtonGroup, Button, Well } from 'react-bootstrap';
 import './FormCustomPrediction.css';
 import getGrowthRate from './growthRate.js';
 import './katex.css'; // https://github.com/Khan/KaTeX/releases/tag/v0.8.3
@@ -136,6 +136,12 @@ class FormCustomPrediction extends Component {
         </Col>
       </FormGroup>
     </Form>
+
+    <ButtonGroup justified>
+      <Button href="https://fnordprefekt.de?percent=0.20077949226013875&startdate=2018-04-13&targetdate=2022-12-31&startprice=7889.23">Draper Prediction (250k by 2022)</Button>
+      <Button href="https://fnordprefekt.de">McAfee Prediction (1 million by 2020)</Button>
+    </ButtonGroup>
+
   </Well>
     );
   }

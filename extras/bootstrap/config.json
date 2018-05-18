@@ -388,6 +388,7 @@
     "forms.less",
     "buttons.less",
     "responsive-utilities.less",
+    "button-groups.less",
     "input-groups.less",
     "navs.less",
     "labels.less",
