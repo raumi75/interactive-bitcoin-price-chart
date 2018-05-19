@@ -14,7 +14,7 @@ import formatDollar from './formatting.js';
 import {getParameterByName} from './getparameter.js';
 import RadioLinLog from './RadioLinLog.js';
 import FormCustomPrediction from './FormCustomPrediction.js';
-import {getUrl} from './urls.js'; 
+import {getUrl} from './urls.js';
 import FormPredictionDateForPrice from './FormPredictionDateForPrice.js';
 import FormPredictionPriceForDate from './FormPredictionPriceForDate.js';
 
@@ -37,6 +37,7 @@ const minHistoricalStart = '2011-01-01';     // Coindesk API requires historical
 const maxTargetDate = '2030-01-01';
 const defaultHistoricalStart = '2017-01-01'; // show historical Data starting this day by default
 const defaultRangeMin = moment(defaultHistoricalStart).diff(moment(minHistoricalStart), 'days'); // left slider can go
+export const timerMilliseconds = 1000;
 
 class App extends Component {
   constructor(props) {
@@ -60,7 +61,6 @@ class App extends Component {
       customPrediction: (getParameterByName('percent') !== null),
       startPrice: 0, // US$
       predictionUpdatesMax: 10, // seconds
-      predictionUpdatesIn: 10,  // seconds
       predictionPriceNow: 1, // US$
       actualPriceNow: 1,     // US$
       updatedChartAt: moment('2011-01-01 00:00:00'), // the coindesk timestamp of the data
@@ -170,7 +170,7 @@ class App extends Component {
       },
         () => {
           this.addMcAfeeRates();
-          this.timerRefreshPrices = setInterval(() => this.refreshPrices(), 1000);
+          this.timerRefreshPrices = setInterval(() => this.refreshPrices(), timerMilliseconds);
           this.setSliderMarks();
         }
       );
@@ -182,7 +182,7 @@ class App extends Component {
 
       // if old chart data exists, it's safe to restart the timer
       if (this.state.dataComplete) {
-        this.timerRefreshPrices = setInterval(() => this.refreshPrices(), 1000);
+        this.timerRefreshPrices = setInterval(() => this.refreshPrices(), timerMilliseconds);
       }
     });
   }
@@ -206,7 +206,7 @@ class App extends Component {
     if (loadingActualPrice || !navigator.onLine) {
       this.setState({updatesIn: 0});
     } else {
-      this.setState({updatesIn: 60-PriceAgeSeconds});
+      //this.setState({updatesIn: 60-PriceAgeSeconds});
 
       // refresh every 60 seconds.
       if (PriceAgeSeconds > 60) {
@@ -538,7 +538,7 @@ class App extends Component {
 
   refreshPredictionPriceNow() {
     const predictionNow = this.getPredictionPriceNow();
-    let {predictionPriceNow, dataComplete, todayCount, predictionUpdatesMax, predictionUpdatesIn, countRange} = this.state;
+    let {predictionPriceNow, dataComplete, todayCount, predictionUpdatesMax, countRange} = this.state;
     if (predictionPriceNow !== predictionNow) {
       let newDataComplete = dataComplete;
       predictionUpdatesMax = this.secondsPredictionOneCent(predictionNow);
@@ -546,16 +546,10 @@ class App extends Component {
       this.setState({
         dataComplete: newDataComplete,
         predictionUpdatesMax: predictionUpdatesMax,
-        predictionUpdatesIn: predictionUpdatesMax,
         predictionPriceNow: predictionNow
       },
         () => this.cutData(countRange)
       );
-    } else {
-      // count down to next prediction Price change
-      this.setState({
-        predictionUpdatesIn: predictionUpdatesIn-1
-      });
     }
   }
 
@@ -596,7 +590,6 @@ class App extends Component {
     this.setState ({
       dataComplete: newDataComplete,
       predictionPriceNow: predictionPriceNow,
-      predictionUpdatesIn: secondsPredictionOneCent,
       predictionUpdatesMax: secondsPredictionOneCent
      },
       () => this.cutData(this.state.countRange)
@@ -627,7 +620,7 @@ class App extends Component {
     const {fetchingData, targetDate, startDate, startPrice, growthRate,
       customPrediction,
       predictionPriceNow, actualPriceNow,
-      updatesIn, updatedAt, loadingActualPrice, predictionUpdatesIn, predictionUpdatesMax,
+      updatedAt, loadingActualPrice, predictionUpdatesMax,
       data, scale,
       activeTabKey, hoverLoc, activePoint,
       rangeMin, sliderMarks, countRange,
@@ -651,10 +644,8 @@ class App extends Component {
 
               loadingActualPrice={loadingActualPrice}
               actualUpdatedAt={updatedAt}
-              actualUpdatesIn={updatesIn}
 
               predictionUpdatesMax ={predictionUpdatesMax}
-              predictionUpdatesIn  ={predictionUpdatesIn}
             />
           :
           <div className="pleasewait text-center">

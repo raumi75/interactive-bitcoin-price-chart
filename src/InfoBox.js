@@ -3,8 +3,57 @@ import { Row, Col, ProgressBar } from 'react-bootstrap';
 import moment from 'moment';
 import formatDollar from './formatting.js';
 import './InfoBox.css';
+//const timerMilliseconds = 1000;
+import {timerMilliseconds} from './App.js';
 
 class InfoBox extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      predictionUpdatesIn: this.props.predictionUpdatesMax,  // seconds
+      predictionLastPrice: this.props.predictionPriceNow,
+      actualLastPrice: this.props.actualPriceNow
+    }
+  }
+
+  componentDidMount() {
+    this.timerCoundown = setInterval(() => this.refreshProgressbar(), timerMilliseconds);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerCoundown);
+  }
+
+  refreshProgressbar() {
+    this.refreshPredictionProgressbar();
+    this.refreshActualProgressbar();
+  }
+
+  refreshPredictionProgressbar = () => {
+    if (this.state.predictionLastPrice !== this.props.predictionPriceNow) {
+      this.setState({
+        predictionUpdatesIn: this.props.predictionUpdatesMax,
+        predictionLastPrice: this.props.predictionPriceNow
+       });
+    } else {
+      this.setState({
+        predictionUpdatesIn: this.state.predictionUpdatesIn - timerMilliseconds/1000
+       });
+    }
+  }
+
+  refreshActualProgressbar = () => {
+    if (this.state.actualLastPrice !== this.props.actualPriceNow) {
+      this.setState({
+        actualUpdatesIn: 60,
+        actualLastPrice: this.props.actualPriceNow
+       });
+    } else {
+      this.setState({
+        actualUpdatesIn: this.state.actualUpdatesIn - timerMilliseconds/1000
+       });
+    }
+  }
 
   // @return string
   getAboveOrBelow() {
@@ -25,7 +74,8 @@ class InfoBox extends Component {
   }
 
   render(){
-    const {predictionPriceNow, actualUpdatedAt, actualUpdatesIn, actualPriceNow, predictionUpdatesIn,predictionUpdatesMax, loadingActualPrice} = this.props;
+    const {predictionPriceNow, actualUpdatedAt, actualPriceNow,predictionUpdatesMax, loadingActualPrice} = this.props;
+    const {predictionUpdatesIn, actualUpdatesIn} = this.state;
     const aboveOrBelow = this.getAboveOrBelow();
     const PriceAgeSeconds = moment().diff(actualUpdatedAt, 'seconds');
 
