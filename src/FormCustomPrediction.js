@@ -6,6 +6,7 @@ import getGrowthRate from './growthRate.js';
 import './katex.css'; // https://github.com/Khan/KaTeX/releases/tag/v0.8.3
 import DatePicker from "react-bootstrap-date-picker";
 import Latex from 'react-latex';
+import {getUrl, getUrlMcAfee} from './urls.js';
 
 class FormCustomPrediction extends Component {
   render() {
@@ -138,10 +139,9 @@ class FormCustomPrediction extends Component {
     </Form>
 
     <ButtonGroup justified>
-      <Button href="https://fnordprefekt.de?percent=0.20077949226013875&startdate=2018-04-13&targetdate=2022-12-31&startprice=7889.23">Draper Prediction (250k by 2022)</Button>
-      <Button href="https://fnordprefekt.de">McAfee Prediction (1 million by 2020)</Button>
+      <Button href={getUrl(0.20077949226013875,'2018-04-13','2022-12-31',7889.23)}>Draper<span className="hidden-xs"> Prediction (250k by 2022)</span></Button>
+      <Button href={getUrlMcAfee()}>McAfee<span className="hidden-xs"> Prediction (1 million by 2020)</span></Button>
     </ButtonGroup>
-
   </Well>
     );
   }

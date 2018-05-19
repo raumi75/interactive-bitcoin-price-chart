@@ -14,6 +14,7 @@ import formatDollar from './formatting.js';
 import {getParameterByName} from './getparameter.js';
 import RadioLinLog from './RadioLinLog.js';
 import FormCustomPrediction from './FormCustomPrediction.js';
+import {getUrl} from './urls.js'; 
 import FormPredictionDateForPrice from './FormPredictionDateForPrice.js';
 import FormPredictionPriceForDate from './FormPredictionPriceForDate.js';
 
@@ -618,9 +619,8 @@ class App extends Component {
   }
 
   getUrl() {
-    const FQDN = 'https://fnordprefekt.de';
     const {growthRate, startDate, targetDate, startPrice} = this.state;
-    return FQDN + '?percent=' + growthRate + '&startdate=' + startDate + '&targetdate=' + targetDate + '&startprice=' + startPrice;
+    return getUrl(growthRate, startDate, targetDate, startPrice);
   }
 
   render() {
