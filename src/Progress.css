@@ -1,11 +1,10 @@
 .progress_container {
   margin-top: 0.5em;
-  width: 100%;
-  background-color: white;
+  background-color: #DCDCDC;
 }
 
 .progress_bar {
-  height: 0.1em;;
+  height: 0.12em;
 }
 
 .progress_prediction {
