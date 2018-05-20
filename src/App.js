@@ -203,15 +203,8 @@ class App extends Component {
 
     this.refreshPredictionPriceNow();
 
-    if (loadingActualPrice || !navigator.onLine) {
-      this.setState({updatesIn: 0});
-    } else {
-      //this.setState({updatesIn: 60-PriceAgeSeconds});
-
-      // refresh every 60 seconds.
-      if (PriceAgeSeconds > 60) {
-        this.refreshActualPriceNow();
-      }
+    if (!loadingActualPrice && navigator.onLine && PriceAgeSeconds > 60) {
+      this.refreshActualPriceNow();
     }
 
     // reload the chart when it is 25 hours old to get the

@@ -95,7 +95,7 @@ class InfoBox extends Component {
         <Col xs={4} md={2} className="infobox">
           <div className="subtext"><a href="https://www.coindesk.com/price/" title="Powered by coindesk">Actual</a></div>
           <div className="heading actual"><a href="https://www.coindesk.com/price/" title="Powered by coindesk">{formatDollar(actualPriceNow)}</a></div>
-          {(PriceAgeSeconds > 120 && PriceAgeSeconds < 60*60*24)
+          {(!navigator.onLine || (60*60*24*7 > PriceAgeSeconds > 120))
             ?
               <div className="subtext"><small>{moment(actualUpdatedAt).fromNow()}. { (loadingActualPrice) ? 'loading...' : '(now offline)' }</small></div>
             :
