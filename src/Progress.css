@@ -1,0 +1,17 @@
+.progress_container {
+  margin-top: 0.5em;
+  width: 100%;
+  background-color: white;
+}
+
+.progress_bar {
+  height: 0.1em;;
+}
+
+.progress_prediction {
+  background-color: red;
+}
+
+.progress_actual {
+  background-color: #2196F3;
+}

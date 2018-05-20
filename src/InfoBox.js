@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Row, Col, ProgressBar } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import moment from 'moment';
 import formatDollar from './formatting.js';
 import './InfoBox.css';
-//const timerMilliseconds = 1000;
+import Progress from './Progress.js';
+
 import {timerMilliseconds} from './App.js';
 
 class InfoBox extends Component {
@@ -12,6 +13,7 @@ class InfoBox extends Component {
     this.state = {
       predictionUpdatesIn: this.props.predictionUpdatesMax,  // seconds
       predictionLastPrice: this.props.predictionPriceNow,
+      actualUpdatesIn: 60,  // seconds
       actualLastPrice: this.props.actualPriceNow
     }
   }
@@ -87,7 +89,7 @@ class InfoBox extends Component {
         <Col xs={4} md={2} mdOffset={3} className="infobox">
           <div className="subtext">Predicted</div>
           <div className="heading predicted">{formatDollar(predictionPriceNow)}</div>
-          <ProgressBar className="actualupdatesin" bsStyle="danger" now={predictionUpdatesIn} max={predictionUpdatesMax} />
+          <Progress max={predictionUpdatesMax} value={predictionUpdatesIn} type="prediction" />
         </Col>
 
         <Col xs={4} md={2} className="infobox">
@@ -97,7 +99,7 @@ class InfoBox extends Component {
             ?
               <div className="subtext"><small>{moment(actualUpdatedAt).fromNow()}. { (loadingActualPrice) ? 'loading...' : '(now offline)' }</small></div>
             :
-            <ProgressBar className="actualupdatesin" now={actualUpdatesIn} max={60} />
+            <Progress max="60" value={actualUpdatesIn} type="actual" />
           }
 
         </Col>
@@ -117,9 +119,7 @@ InfoBox.defaultProps = {
   actualUpdatedAt: null,
   actualPriceNow: 10,
   predictionPriceNow: 10,
-  actualUpdatesIn: 60,
-  predictionUpdatesMax: 20,
-  predictionUpdatesIn: 20
+  predictionUpdatesMax: 20
 }
 
 export default InfoBox;
