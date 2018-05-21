@@ -5,21 +5,17 @@ import formatDollar from './formatting.js';
 import './InfoBox.css';
 import Progress from './Progress.js';
 
-import {timerMilliseconds} from './App.js';
-
 class InfoBox extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      predictionUpdatesIn: this.props.predictionUpdatesMax,  // seconds
-      predictionLastPrice: this.props.predictionPriceNow,
+      predictionUpdatesIn: 60,  // seconds
       actualUpdatesIn: 60,  // seconds
-      actualLastPrice: this.props.actualPriceNow
     }
   }
 
   componentDidMount() {
-    this.timerCoundown = setInterval(() => this.refreshProgressbar(), timerMilliseconds);
+    this.timerCoundown = setInterval(() => this.refreshProgressbar(), 1000);
   }
 
   componentWillUnmount() {
@@ -27,34 +23,10 @@ class InfoBox extends Component {
   }
 
   refreshProgressbar() {
-    this.refreshPredictionProgressbar();
-    this.refreshActualProgressbar();
-  }
-
-  refreshPredictionProgressbar = () => {
-    if (this.state.predictionLastPrice !== this.props.predictionPriceNow) {
-      this.setState({
-        predictionUpdatesIn: this.props.predictionUpdatesMax,
-        predictionLastPrice: this.props.predictionPriceNow
-       });
-    } else {
-      this.setState({
-        predictionUpdatesIn: this.state.predictionUpdatesIn - timerMilliseconds/1000
-       });
-    }
-  }
-
-  refreshActualProgressbar = () => {
-    if (this.state.actualLastPrice !== this.props.actualPriceNow) {
-      this.setState({
-        actualUpdatesIn: 60,
-        actualLastPrice: this.props.actualPriceNow
-       });
-    } else {
-      this.setState({
-        actualUpdatesIn: this.state.actualUpdatesIn - timerMilliseconds/1000
-       });
-    }
+    this.setState({
+      predictionUpdatesIn: this.props.predictionUpdatesAt.diff(moment(), 'seconds'),
+      actualUpdatesIn: this.props.actualUpdatedAt.diff(moment(), 'seconds')+60
+     });
   }
 
   // @return string
@@ -76,7 +48,7 @@ class InfoBox extends Component {
   }
 
   render(){
-    const {predictionPriceNow, actualUpdatedAt, actualPriceNow,predictionUpdatesMax, loadingActualPrice} = this.props;
+    const {predictionPriceNow, actualUpdatedAt, actualPriceNow, predictionUpdatesMax, loadingActualPrice} = this.props;
     const {predictionUpdatesIn, actualUpdatesIn} = this.state;
     const aboveOrBelow = this.getAboveOrBelow();
     const PriceAgeSeconds = moment().diff(actualUpdatedAt, 'seconds');
@@ -119,7 +91,7 @@ InfoBox.defaultProps = {
   actualUpdatedAt: null,
   actualPriceNow: 10,
   predictionPriceNow: 10,
-  predictionUpdatesMax: 20
+  predictionUpdatesMax: 60
 }
 
 export default InfoBox;

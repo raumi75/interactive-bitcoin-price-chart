@@ -60,6 +60,7 @@ class App extends Component {
       growthRate: getParameterByName('percent') || this.props.growthRate,
       customPrediction: (getParameterByName('percent') !== null),
       startPrice: 0, // US$
+      predictionUpdatesAt: moment().add(10, 'seconds'),
       predictionUpdatesMax: 10, // seconds
       predictionPriceNow: 1, // US$
       actualPriceNow: 1,     // US$
@@ -538,6 +539,7 @@ class App extends Component {
       newDataComplete[todayCount].y.m = predictionNow;
       this.setState({
         dataComplete: newDataComplete,
+        predictionUpdatesAt: moment().add(predictionUpdatesMax, 'seconds'),
         predictionUpdatesMax: predictionUpdatesMax,
         predictionPriceNow: predictionNow
       },
@@ -613,7 +615,7 @@ class App extends Component {
     const {fetchingData, targetDate, startDate, startPrice, growthRate,
       customPrediction,
       predictionPriceNow, actualPriceNow,
-      updatedAt, loadingActualPrice, predictionUpdatesMax,
+      updatedAt, loadingActualPrice, predictionUpdatesAt, predictionUpdatesMax,
       data, scale,
       activeTabKey, hoverLoc, activePoint,
       rangeMin, sliderMarks, countRange,
@@ -632,13 +634,13 @@ class App extends Component {
 
           { !fetchingData ?
             <InfoBox
-              predictionPriceNow = {predictionPriceNow }
-              actualPriceNow={actualPriceNow}
+              predictionPriceNow   = {predictionPriceNow }
+              predictionUpdatesAt  = {predictionUpdatesAt}
+              predictionUpdatesMax = {predictionUpdatesMax}
 
+              actualPriceNow={actualPriceNow}
               loadingActualPrice={loadingActualPrice}
               actualUpdatedAt={updatedAt}
-
-              predictionUpdatesMax ={predictionUpdatesMax}
             />
           :
           <div className="pleasewait text-center">
