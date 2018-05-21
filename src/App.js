@@ -585,6 +585,7 @@ class App extends Component {
     this.setState ({
       dataComplete: newDataComplete,
       predictionPriceNow: predictionPriceNow,
+      predictionUpdatesAt: moment().add(secondsPredictionOneCent, 'seconds'),
       predictionUpdatesMax: secondsPredictionOneCent
      },
       () => this.cutData(this.state.countRange)

@@ -4,7 +4,7 @@ import './Progress.css';
 export default class Progress extends Component {
   render() {
     const divStyle = {
-      width: Math.ceil(this.props.value/this.props.max*100) + '%'
+      width: Math.min(100,Math.ceil(this.props.value/this.props.max*100)) + '%'
     };
 
     return (
