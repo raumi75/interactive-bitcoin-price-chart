@@ -141,7 +141,7 @@ class LineChart extends Component {
         { (typeof(lastPrices.m) === 'undefined') ? null : this.makeLabelPricePoint(lastPrices, 'right', 'm', '') }
 
         { this.makeLabelDate(minX, '') }
-        { this.makeLabelDate(maxX-1, '') }
+        { this.makeLabelDate(maxX, '') }
       </g>
     )
   }
