@@ -24,8 +24,8 @@ class InfoBox extends Component {
 
   refreshProgressbar() {
     this.setState({
-      predictionUpdatesIn: this.props.predictionUpdatesAt.diff(moment(), 'seconds'),
-      actualUpdatesIn: this.props.actualUpdatedAt.diff(moment(), 'seconds')+60
+      predictionUpdatesIn: this.props.predictionUpdatesAt.diff(moment(), 'seconds', true),
+      actualUpdatesIn: this.props.actualUpdatedAt.diff(moment(), 'seconds', true)+60
      });
   }
 
