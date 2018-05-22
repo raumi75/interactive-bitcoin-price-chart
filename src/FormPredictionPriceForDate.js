@@ -1,22 +1,24 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Col, Form, FormGroup, FormControl, ControlLabel, Well } from 'react-bootstrap';
 import DatePicker from "react-bootstrap-date-picker";
 import formatDollar from './formatting.js';
 import './katex.css'; // https://github.com/Khan/KaTeX/releases/tag/v0.8.3
 import Latex from 'react-latex';
+import {dateFormat} from './App.js';
 
 export default class FormPredictionPriceForDate extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      date: moment().format('YYYY-MM-DD')
+      date: moment()
     }
   }
 
   handleDateChange = (value) => {
     if (typeof(value) !== 'undefined') {
-      this.setState({date: moment(value).format('YYYY-MM-DD') });
+      this.setState({date: moment(value) });
     }
   }
 
@@ -24,7 +26,7 @@ export default class FormPredictionPriceForDate extends Component {
     const {startDate} = this.props;
     const {date} = this.state;
     if (this.isDateInRange()) {
-      return moment(date).diff(moment(startDate), 'days');
+      return date.diff(startDate, 'days');
     }
   }
 
@@ -52,7 +54,7 @@ export default class FormPredictionPriceForDate extends Component {
   isDateInRange() {
     const {startDate, targetDate} = this.props;
     const {date} = this.state;
-    return moment(date).isBetween(moment(startDate).add(-1, 'days'), moment(targetDate).add(1, 'days'));
+    return date.isBetween(startDate, targetDate, 'days', '[]');
   }
 
   render() {
@@ -71,14 +73,14 @@ export default class FormPredictionPriceForDate extends Component {
         </Col>
         <Col sm={6}>
           <DatePicker id="datepicker"
-            value={date}
+            value={date.format(dateFormat)}
             onChange={this.handleDateChange}
             onFocus={this.props.pauseEvents}
             onBlur={this.props.resumeEvents}
-            minDate={startDate}
-            maxDate={targetDate}
+            minDate={startDate.format(dateFormat)}
+            maxDate={targetDate.format(dateFormat)}
             showClearButton={false}
-            dateFormat="YYYY-MM-DD"
+            dateFormat={dateFormat}
           />
         </Col>
       </FormGroup>
@@ -99,4 +101,13 @@ export default class FormPredictionPriceForDate extends Component {
   </Well>
     );
   }
+}
+
+FormPredictionPriceForDate.propTypes = {
+  startDate: PropTypes.instanceOf(moment),
+  targetDate: PropTypes.instanceOf(moment),
+  startPrice: PropTypes.number,
+  growthRate: PropTypes.number,
+  pauseEvents: PropTypes.func.isRequired,
+  resumeEvents: PropTypes.func.isRequired
 }

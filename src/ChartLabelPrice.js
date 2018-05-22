@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {xLabelSize, yLabelSize, labelRadius} from './LineChart.js';
 import formatDollar from './formatting.js';
 
 export default class ChartLabelPrice extends Component {
   render(){
-    const {price, xPos, yPos, priceType, cssExtra, key} = this.props;
+    const {price, xPos, yPos, priceType, cssExtra} = this.props;
 
     if (price > 0) {
       return(
-        <g key={key}>
+        <g>
           <rect
             x={xPos}
             y={yPos-xLabelSize+5}
@@ -35,12 +36,18 @@ export default class ChartLabelPrice extends Component {
   }
 }
 
+ChartLabelPrice.propTypes = {
+  price: PropTypes.number,
+  xPos: PropTypes.number,
+  yPos: PropTypes.number,
+  priceType: PropTypes.oneOf(['p','m','s']),
+  cssExtra: PropTypes.oneOf(['', '_hover'])
+}
 
 ChartLabelPrice.defaultProps = {
   price: 10,
   xPos: 0,
   yPos: 0,
   priceType: 'p',
-  cssExtra: '',
-  key: 1
+  cssExtra: ''
 }

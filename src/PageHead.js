@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Row , Col } from 'react-bootstrap';
 import {formatDollar} from './formatting.js';
@@ -12,7 +13,7 @@ export default class PageHead extends Component {
     if (customPrediction) {
       return (
         <p>
-          Will bitcoin be {formatDollar(targetPrice)} on {moment(targetDate).format('MMMM Do YYYY')}?
+          Will bitcoin be {formatDollar(targetPrice)} on {targetDate.format('MMMM Do YYYY')}?
         </p>
       )
     } else {
@@ -44,4 +45,10 @@ export default class PageHead extends Component {
       </div>
     );
   }
+}
+
+PageHead.propTypes = {
+  customPrediction: PropTypes.bool,
+  targetPrice: PropTypes.number,
+  targetDate: PropTypes.instanceOf(moment)
 }

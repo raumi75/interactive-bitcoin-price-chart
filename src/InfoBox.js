@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Row, Col } from 'react-bootstrap';
 import moment from 'moment';
 import formatDollar from './formatting.js';
 import './InfoBox.css';
 import Progress from './Progress.js';
 
-class InfoBox extends Component {
+export default class InfoBox extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -71,7 +72,7 @@ class InfoBox extends Component {
             ?
               <div className="subtext"><small>{moment(actualUpdatedAt).fromNow()}. { (loadingActualPrice) ? 'loading...' : '(now offline)' }</small></div>
             :
-            <Progress max="60" value={actualUpdatesIn} type="actual" />
+            <Progress max={60} value={actualUpdatesIn} type="actual" />
           }
 
         </Col>
@@ -86,12 +87,20 @@ class InfoBox extends Component {
   }
 }
 
+InfoBox.propTypes = {
+  predictionPriceNow: PropTypes.number,
+  actualUpdatedAt: PropTypes.instanceOf(moment),
+  actualPriceNow: PropTypes.number,
+  predictionUpdatesAt: PropTypes.instanceOf(moment),
+  predictionUpdatesMax: PropTypes.number,
+  loadingActualPrice:  PropTypes.bool
+}
+
 // DEFAULT PROPS
 InfoBox.defaultProps = {
   actualUpdatedAt: null,
   actualPriceNow: 10,
-  predictionPriceNow: 10,
-  predictionUpdatesMax: 60
-}
 
-export default InfoBox;
+  predictionPriceNow: 10,
+  predictionUpdatesMax: 60,
+}

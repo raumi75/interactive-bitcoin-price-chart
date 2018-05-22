@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './ToolTip.css';
 
-class ToolTip extends Component {
+export default class ToolTip extends Component {
 
   render() {
     const {hoverLoc, activePoint} = this.props;
@@ -47,4 +48,7 @@ class ToolTip extends Component {
   }
 }
 
-export default ToolTip;
+ToolTip.propTypes = {
+  hoverLoc: PropTypes.number.isRequired,
+  activePoint: PropTypes.object.isRequired
+}

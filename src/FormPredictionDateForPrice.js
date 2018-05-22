@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Col, Form, FormGroup, InputGroup, FormControl, ControlLabel, Well } from 'react-bootstrap';
 import './katex.css'; // https://github.com/Khan/KaTeX/releases/tag/v0.8.3
@@ -104,4 +105,10 @@ export default class FormPredictionDateForPrice extends Component {
   </Well>
     );
   }
+}
+
+FormPredictionDateForPrice.propTypes = {
+  startDate: PropTypes.instanceOf(moment),
+  startPrice: PropTypes.number,
+  growthRate: PropTypes.number
 }

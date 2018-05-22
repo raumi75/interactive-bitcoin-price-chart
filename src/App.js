@@ -30,18 +30,22 @@ import ExplainMcAfeePerson from './ExplainMcAfeePerson.js';
 import PageHead from './PageHead.js';
 import PageFoot from './PageFoot.js';
 
+export const dateFormat = 'YYYY-MM-DD';
+const apiDateFormat = 'YYYY-MM-DD'; // dateformat used by CoinDesk in url and json
+
 var predictionCount = 1263;   // days startDate to targetDate (2020-12-31)
 var offsetPrediction = -2389; // days startDate to minHistoricalStart
 const minSliderDistance = 29;
-const minHistoricalStart = '2011-01-01';     // Coindesk API requires historicalStart >= 2010-07-17
-const maxTargetDate = '2030-01-01';
-const defaultHistoricalStart = '2017-01-01'; // show historical Data starting this day by default
-const defaultRangeMin = moment(defaultHistoricalStart).diff(moment(minHistoricalStart), 'days'); // left slider can go
+const minHistoricalStart = moment('2011-01-01');     // Coindesk API requires historicalStart >= 2010-07-17
+const maxTargetDate = moment('2030-01-01');
+const defaultHistoricalStart = moment('2017-01-01'); // show historical Data starting this day by default
+const defaultRangeMin = defaultHistoricalStart.diff(minHistoricalStart, 'days'); // left slider can go
 export const timerMilliseconds = 1000;
 
 class App extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       fetchingData: true,
       loadingActualPrice: false,
@@ -55,7 +59,7 @@ class App extends Component {
       todayCount: 0, // chart data x value of todays prices record
       sliderMarks: {},
       historicalStart: minHistoricalStart, //'2011-01-01',
-      historicalEnd: moment().format('YYYY-MM-DD'),
+      historicalEnd: moment(),
       scale: 'lin', // linear scale (also 'log' for logarithmic scale)
       growthRate: getParameterByName('percent') || this.props.growthRate,
       customPrediction: (getParameterByName('percent') !== null),
@@ -64,13 +68,13 @@ class App extends Component {
       predictionUpdatesMax: 10, // seconds
       predictionPriceNow: 1, // US$
       actualPriceNow: 1,     // US$
-      updatedChartAt: moment('2011-01-01 00:00:00'), // the coindesk timestamp of the data
-      loadedChartAt:  moment('2011-01-01 00:00:00'), // the client time when loading the chart data
-      lastHistoricalDate: moment('2011-01-01 00:00:00'),
-      loadedActualAt: moment('2011-01-01 00:00:00'), // last attempt to download actual price
-      updatedAt:      moment('2011-01-01 00:00:00'), // last successful update of actual price
-      startDate:  getParameterByName('startdate')  || this.props.startDate,
-      targetDate: getParameterByName('targetdate') || this.props.targetDate,
+      updatedChartAt: moment('2011-01-01T00:00:00'), // the coindesk timestamp of the data
+      loadedChartAt:  moment('2011-01-01T00:00:00'), // the client time when loading the chart data
+      lastHistoricalDate: moment('2011-01-01T00:00:00'),
+      loadedActualAt: moment('2011-01-01T00:00:00'), // last attempt to download actual price
+      updatedAt:      moment('2011-01-01T00:00:00'), // last successful update of actual price
+      startDate:  (getParameterByName('startdate')  ? moment(getParameterByName('startdate')) : this.props.startDate),
+      targetDate: (getParameterByName('targetdate') ? moment(getParameterByName('targetdate')) : this.props.targetDate),
       pausedAt: null // if this is a timestamp, the price will not get updated during data entry.
     }
   }
@@ -100,17 +104,15 @@ class App extends Component {
     const {lastHistoricalDate} = this.state;
     const expectedReleaseTime = 'T02:00:00+0000';
     const historicalAgeHours = moment().utc().diff(lastHistoricalDate + expectedReleaseTime, 'hours');
-    //console.log (lastHistoricalDate + ' historicalAgeHours ' + historicalAgeHours);
     return (historicalAgeHours > 48);
   }
 
   loadData = () => {
     const {startDate, targetDate, historicalStart, historicalEnd, loadedChartAt}  = this.state;
     const waitMinutesBeforeReload = 10;
-
-    predictionCount = moment(maxTargetDate).diff(moment(startDate),'days');
-    offsetPrediction = moment(historicalStart).diff(moment(startDate),'days');
-    const url = 'https://api.coindesk.com/v1/bpi/historical/close.json?start='+historicalStart+'&end='+historicalEnd;
+    predictionCount = maxTargetDate.diff(startDate,'days');
+    offsetPrediction = historicalStart.diff(startDate,'days');
+    const url = 'https://api.coindesk.com/v1/bpi/historical/close.json?start='+historicalStart.format(apiDateFormat)+'&end='+historicalEnd.format(apiDateFormat);
     if (moment().diff(loadedChartAt, 'minutes') < waitMinutesBeforeReload ) {
       // we do not load if an attempt has been made in the last 10 minutes
       console.log('not reloading historical prices to prevent abusing coindesk');
@@ -134,7 +136,7 @@ class App extends Component {
       // load historical prices
       for (let date in bitcoinData.bpi){
         sortedData.push({
-          d: moment(date).format('YYYY-MM-DD'),
+          d: moment(date).format(dateFormat),
           x: count, //previous days
           y: {p: Math.round(bitcoinData.bpi[date]*100)/100, // historical price on date
               m: 0} // predicted price for date
@@ -145,24 +147,26 @@ class App extends Component {
       // Labels on range-slider below chart
       predictionCount = predictionCount-offsetPrediction;
 
+      let startDateFormatted = startDate.format(apiDateFormat);
+
       this.setState({
         todayCount: count,
         countRange: [Math.max(-offsetPrediction,0), count],
         lastHistoricalDate: sortedData[count-1].d,
-        historicalEnd: moment().format('YYYY-MM-DD'),
-        startPrice: parseFloat(getParameterByName('startprice')) || sortedData.find(function(data) { return data.d === startDate} ).y.p
+        historicalEnd: moment(),
+        startPrice: parseFloat(getParameterByName('startprice')) || sortedData.find(function(data) { return data.d === startDateFormatted } ).y.p
       });
 
       for (count; count <= predictionCount; count++) {
         sortedData.push({
-          d: moment(historicalStart).add(count, 'days').format('YYYY-MM-DD'),
+          d: moment(historicalStart).add(count, 'days').format(dateFormat),
           x: count, //previous days
           y: {p: 0, // historical price on date
               m: 0}
         });
       }
 
-      predictionCount = moment(targetDate).diff(moment(startDate),'days')-offsetPrediction;
+      predictionCount = targetDate.diff(startDate,'days')-offsetPrediction;
 
       this.setState({
         dataComplete: sortedData,
@@ -283,10 +287,10 @@ class App extends Component {
   setSliderMarks = () => {
     const {historicalStart, startDate, targetDate} = this.state;
     var mark = {};
-    mark[0] = moment(historicalStart).format('YYYY-MM-DD');;
-    mark[(moment(startDate).diff(moment(historicalStart),'days'))] = moment(startDate).format('YYYY-MM-DD');;
-    mark[(moment(Date.now()).diff(moment(historicalStart),'days'))] = 'now';
-    mark[(moment(targetDate).diff(moment(historicalStart),'days'))] = moment(targetDate).format('YYYY-MM-DD');
+    mark[0] = historicalStart.format(dateFormat);;
+    mark[startDate.diff(historicalStart,'days')] = startDate.format(dateFormat);
+    mark[moment().diff(historicalStart,'days')] = 'now';
+    mark[targetDate.diff(historicalStart,'days')] = targetDate.format(dateFormat);
     this.setState ({
       sliderMarks: mark
     });
@@ -429,20 +433,23 @@ class App extends Component {
   // User entered a new start date
   handleStartDateChange = (value) => {
     const {dataComplete, historicalStart} = this.state;
-    let inputDate = moment(value).format('YYYY-MM-DD');
-    if (moment(inputDate).isAfter(moment(Date.now()).subtract(1, 'week'))) {
-      inputDate = moment(Date.now()).subtract(1, 'week').format('YYYY-MM-DD');
+    let inputDate = moment(value);
+    if (inputDate.isAfter(moment().subtract(1, 'week')) || !inputDate.isValid() ) {
+      inputDate = moment().subtract(1, 'week');
     }
-    if (moment(inputDate).isBefore(moment(historicalStart))) {
+    if (inputDate.isBefore(historicalStart)) {
       inputDate = historicalStart;
     }
-    let dataStartDate = dataComplete.find(function(data) { return data.d === inputDate} )
+
+    const inputDateFormatted = inputDate.format(apiDateFormat);
+
+    let dataStartDate = dataComplete.find(function(data) { return data.d === inputDateFormatted} )
     let price = 0;
 
     if (typeof(dataStartDate)     !== 'undefined' ||
         typeof(dataStartDate.y.p) !== 'undefined' ) {
       price = dataStartDate.y.p;
-      offsetPrediction = moment(historicalStart).diff(moment(inputDate),'days');
+      offsetPrediction = historicalStart.diff(inputDate,'days');
       this.setState(
         {
           customPrediction: true,
@@ -460,19 +467,20 @@ class App extends Component {
 
   handleTargetDateChange = (value) => {
     const {startDate} = this.state;
-    let inputDate = moment(value).format('YYYY-MM-DD');
-    if (moment(inputDate).isBefore(moment(Date.now()).add(1, 'month'))) {
-      inputDate = moment(Date.now()).add(1, 'month').format('YYYY-MM-DD');
+    let inputDate = moment(value);
+    if (inputDate.isBefore(moment().add(1, 'month'))) {
+      inputDate = moment().add(1, 'month');
     }
-    if (moment(inputDate).isAfter(moment(maxTargetDate))) {
+    if (inputDate.isAfter(maxTargetDate)) {
       inputDate = maxTargetDate;
     }
+
     this.setState(
       {
         customPrediction: true,
         targetDate: inputDate
       }, () => {
-          predictionCount = moment(inputDate).diff(moment(startDate),'days')-offsetPrediction;
+          predictionCount = inputDate.diff(startDate,'days')-offsetPrediction;
 
           this.setRangeDefault();
           this.setSliderMarks();
@@ -516,12 +524,12 @@ class App extends Component {
   // How many days between given price point and the prediction curve
   getDaysAhead(price, date) {
     const {startDate} = this.state;
-    return this.getDaysAfterStart(price) - (date.diff(moment(startDate), 'days'));
+    return this.getDaysAfterStart(price) - (moment(date).diff(startDate, 'days'));
   }
 
   // How many days between given price point and the prediction curve
   getDaysAheadPoint(pricePoint) {
-    return this.getDaysAhead(pricePoint.y.p, moment(pricePoint.d));
+    return this.getDaysAhead(pricePoint.y.p, pricePoint.d);
   }
 
   // How many days between given price point and the prediction curve
@@ -563,7 +571,7 @@ class App extends Component {
   // predicted Price on targetDate
   getTargetPrice() {
     const {startDate, targetDate} = this.state;
-    return this.getMcAfeeRate(moment(targetDate).diff(moment(startDate),'days'));
+    return this.getMcAfeeRate(targetDate.diff(startDate,'days'));
   }
 
   // Add predicted priced to sortedData Array
@@ -597,14 +605,14 @@ class App extends Component {
   // @return integer
   getDaysSincePrediction(d) {
     const {startDate} = this.state;
-    return moment(d).diff(moment(startDate),'days')
+    return d.diff(startDate,'days')
   }
 
   // Days (with decimals) between prediction and now
   // @return float
   getDaysFloatSincePrediction() {
     const {startDate} = this.state;
-    return moment().utc().diff(moment(startDate + ' 00:00 +0000', 'YYYY-MM-DD HH:mm Z'),'days', true) -1;
+    return moment().utc().diff(startDate.utc(),'days', true) -1;
   }
 
   getUrl() {
@@ -856,8 +864,8 @@ class App extends Component {
 
 // DEFAULT PROPS
 App.defaultProps = {
-  startDate:  '2017-07-17',         // Date of first McAfee Tweet
-  targetDate:  '2020-12-31',        // Day McAfee predicted the price
+  startDate:  moment('2017-07-17'),         // Date of first McAfee Tweet
+  targetDate:  moment('2020-12-31'),        // Day McAfee predicted the price
   growthRate:  0.484095526          // daily growth rate to goal of 1.000.000 USD/BTC
 }
 

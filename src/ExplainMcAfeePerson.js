@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 export default class ExplainMcAfeePerson extends Component {
   render() {
@@ -30,4 +31,8 @@ export default class ExplainMcAfeePerson extends Component {
       );
     }
   }
+}
+
+ExplainMcAfeePerson.propTypes = {
+  customPrediction: PropTypes.bool.isRequired
 }

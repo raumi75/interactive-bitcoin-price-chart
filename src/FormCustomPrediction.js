@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import moment from 'moment';
+import PropTypes from 'prop-types';
 import { Col, Form, FormGroup, InputGroup, FormControl, ControlLabel, ButtonGroup, Button, Well } from 'react-bootstrap';
 import './FormCustomPrediction.css';
 import getGrowthRate from './growthRate.js';
@@ -7,8 +7,9 @@ import './katex.css'; // https://github.com/Khan/KaTeX/releases/tag/v0.8.3
 import DatePicker from "react-bootstrap-date-picker";
 import Latex from 'react-latex';
 import {getUrlDraper, getUrlMcAfee} from './urls.js';
+import moment from 'moment';
 
-class FormCustomPrediction extends Component {
+export default class FormCustomPrediction extends Component {
   render() {
     const {startDate, startPrice, growthRate, targetPrice, targetDate, maxTargetDate, historicalEnd, historicalStart} = this.props;
 
@@ -22,12 +23,12 @@ class FormCustomPrediction extends Component {
         </Col>
         <Col sm={8} md={5}>
           <DatePicker id="startdatepicker"
-            value={startDate}
+            value={startDate.format('YYYY-MM-DD')}
             onChange={this.props.onStartDateChange}
             onFocus={this.props.pauseEvents}
             onBlur={this.props.resumeEvents}
-            minDate={historicalStart}
-            maxDate={moment(historicalEnd).subtract(1, 'week').format('YYYY-MM-DD')}
+            minDate={historicalStart.format('YYYY-MM-DD')}
+            maxDate={historicalEnd.subtract(1, 'week').format('YYYY-MM-DD')}
             showClearButton={false}
             dateFormat="YYYY-MM-DD"
           />
@@ -72,10 +73,10 @@ class FormCustomPrediction extends Component {
         </Col>
         <Col sm={8} md={5}>
           <DatePicker id="targetdatepicker"
-            value={targetDate}
+            value={targetDate.format('YYYY-MM-DD')}
             onChange={this.props.onTargetDateChange}
-            minDate={moment(historicalEnd).add(1, 'month').format('YYYY-MM-DD')}
-            maxDate={maxTargetDate}
+            minDate={historicalEnd.add(1, 'month').format('YYYY-MM-DD')}
+            maxDate={maxTargetDate.format('YYYY-MM-DD')}
             onFocus={this.props.pauseEvents}
             onBlur={this.props.resumeEvents}
             showClearButton={false}
@@ -161,7 +162,7 @@ class FormCustomPrediction extends Component {
   }
 
   predictionDays() {
-    return moment(this.props.targetDate).diff(moment(this.props.startDate), 'days');
+    return this.props.targetDate.diff(this.props.startDate, 'days');
   }
 
   latexMathAnnualGrowth() {
@@ -175,4 +176,19 @@ class FormCustomPrediction extends Component {
   }
 }
 
-export default FormCustomPrediction;
+FormCustomPrediction.propTypes = {
+  startPrice:  PropTypes.number.isRequired,
+  targetPrice: PropTypes.number.isRequired,
+  growthRate:  PropTypes.number.isRequired,
+  startDate:       PropTypes.instanceOf(moment).isRequired,
+  targetDate:      PropTypes.instanceOf(moment).isRequired,
+  maxTargetDate:   PropTypes.instanceOf(moment).isRequired,
+  historicalEnd:   PropTypes.instanceOf(moment).isRequired,
+  historicalStart: PropTypes.instanceOf(moment).isRequired,
+  onStartPriceChange:  PropTypes.func.isRequired,
+  onStartDateChange:   PropTypes.func.isRequired,
+  onTargetDateChange:  PropTypes.func.isRequired,
+  onGrowthRateChange:  PropTypes.func.isRequired,
+  pauseEvents:  PropTypes.func.isRequired,
+  resumeEvents: PropTypes.func.isRequired
+}

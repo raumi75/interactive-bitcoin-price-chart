@@ -4,6 +4,7 @@ import moment from 'moment';
 import niceScale from './LineChartNiceScale.js';
 import getDataBoundaries from './chartDataBoundaries.js';
 import ChartLabelPrice from './ChartLabelPrice.js';
+import {dateFormat} from './App.js';
 const chartRatio = 3; // Chart's height is 1/3 of width
 let stopHoverTimer;
 let scaleMaxY = 0;
@@ -158,15 +159,19 @@ class LineChart extends Component {
     let ticksXvalues = [];
     let ticks = [];
     //count weeks, months, years and decide which to use as ticks
+
+    const maxDateMoment = moment(maxDate);
+    const minDateMoment = moment(minDate);
+
     periods.some(function(period){
-      if (maxTicksX >= moment(maxDate).diff(moment(minDate), period+'s')) {
+      if (maxTicksX >= maxDateMoment.diff(minDateMoment, period+'s')) {
         for (
-          var d = moment(minDate).startOf(period);
-          d.isBefore(moment(maxDate));
+          var d = moment(minDateMoment).startOf(period);
+          d.isBefore(maxDateMoment);
           d = d.add(1, period)
              )
              {
-               ticksXvalues.push (Math.max(minX,d.diff(moment(minDate), 'days')));
+               ticksXvalues.push (Math.max(minX,d.diff(minDateMoment, 'days')));
         }
         return true; // don't try the next periods
       } else {
@@ -187,7 +192,6 @@ class LineChart extends Component {
   }
 
   makeLabelTicks() {
-    const {maxX} = this.boundaries;
     const {scale} = this.props;
     const {svgWidth} = this.state;
     const offset = 4; // pixel
@@ -205,8 +209,8 @@ class LineChart extends Component {
         tickY = Math.pow(10,i);
       }
 
-      ticks.push (<ChartLabelPrice price={tickY} yPos={this.getSvgY(tickY)+offset} priceType='s' key={'p'+i} /> );
-      ticks.push (<ChartLabelPrice price={tickY} xPos={svgWidth-yLabelSize} yPos={this.getSvgY(tickY)+offset} priceType='s' key={'p'+i} /> );
+      ticks.push (<ChartLabelPrice price={tickY} yPos={this.getSvgY(tickY)+offset} priceType='s' key={'lp'+i} /> );
+      ticks.push (<ChartLabelPrice price={tickY} xPos={svgWidth-yLabelSize} yPos={this.getSvgY(tickY)+offset} priceType='s' key={'rp'+i} /> );
       ticks.push (this.createHorizontalLine(tickY, 'tickline', 'l'+i));
     }
     return (
@@ -241,7 +245,7 @@ class LineChart extends Component {
       let dateText = data[count].d;
       let svgX = this.getSvgX(data[count].x);
 
-      if (dateText === moment().utc().format('YYYY-MM-DD') ) {
+      if (dateText === moment().utc().format(dateFormat) ) {
         dateText = 'now';
       }
       return(

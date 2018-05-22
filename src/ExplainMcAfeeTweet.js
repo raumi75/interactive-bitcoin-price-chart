@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Row , Col, Image } from 'react-bootstrap';
 import formatDollar from './formatting.js';
 
-class ExplainMcAfeeTweet extends Component {
+export default class ExplainMcAfeeTweet extends Component {
 
   render() {
     const {startPrice} = this.props;
@@ -32,4 +33,6 @@ class ExplainMcAfeeTweet extends Component {
   }
 }
 
-export default ExplainMcAfeeTweet;
+ExplainMcAfeeTweet.propTypes = {
+  startPrice: PropTypes.number.isRequired
+}

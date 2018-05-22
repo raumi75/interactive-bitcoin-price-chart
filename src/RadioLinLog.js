@@ -1,14 +1,15 @@
 import React, {Component} from "react";
+import PropTypes from 'prop-types';
 import { FormGroup, Radio} from 'react-bootstrap';
 
-class RadioLinLog extends Component {
+export default class RadioLinLog extends Component {
 
-  handleScaleChange = (changeEvent) => {
-    this.props.onChange(this.validScaleString(changeEvent.target.value));
+  handleScaleChange = (e) => {
+    this.props.onChange(e.target.value === 'lin' ? 'lin' : 'log');
   }
 
   render() {
-    const scale = this.validScaleString(this.props.scale);
+    const {scale} = this.props;
     return (
       <FormGroup>
         <Radio name="radioGroup" value="lin" checked={scale === 'lin'} onChange={this.handleScaleChange} >
@@ -20,18 +21,8 @@ class RadioLinLog extends Component {
       </FormGroup>
     );
   }
-
-  validScaleString(scale) {
-    if (scale === 'log') {
-      return 'log';
-    } else if (scale === 'lin') {
-      return 'lin';
-    } else {
-      console.log ('WARNING: invalid scale in RadioLinLog.js.');
-      return 'lin';
-    }
-
-  }
 }
-
-export default RadioLinLog;
+RadioLinLog.propTypes = {
+  scale: PropTypes.oneOf(['lin', 'log']),
+  onChange: PropTypes.func.isRequired
+}
