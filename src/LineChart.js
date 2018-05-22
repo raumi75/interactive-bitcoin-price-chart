@@ -1,15 +1,18 @@
 import React, {Component} from "react";
 import "./LineChart.css";
-import formatDollar from './formatting.js';
 import moment from 'moment';
 import niceScale from './LineChartNiceScale.js';
 import getDataBoundaries from './chartDataBoundaries.js';
+import ChartLabelPrice from './ChartLabelPrice.js';
 const chartRatio = 3; // Chart's height is 1/3 of width
 let stopHoverTimer;
 let scaleMaxY = 0;
 let scaleMinY = 0;
 let tickSpacing = 0;
 const stopHoverMilliseconds = 2000; // Hover Tooltip disappears after 2 seconds (touch displays)
+export const xLabelSize = 20;
+export const yLabelSize = 80;
+export const labelRadius = 5;
 
 function log_ZeroPossible(n) {
   // It is mathematically impossible to find an exponent that will result in zero
@@ -48,14 +51,13 @@ class LineChart extends Component {
 
   // GET SVG COORDINATES
   getSvgX(x) {
-    const {yLabelSize} = this.props;
     const {maxX} = this.boundaries;
     const {svgWidth} = this.state;
     return yLabelSize + (x / maxX * (svgWidth - 2*yLabelSize));
   }
 
   getSvgY(y) {
-    const {xLabelSize, scale} = this.props;
+    const {scale} = this.props;
     const {svgHeight} = this.state;
 
     if (scale === 'lin') {
@@ -89,7 +91,7 @@ class LineChart extends Component {
       if (point.y[pricetype]>0) {
         return "L " + this.getSvgX(point.x) + " " + this.getSvgY(point.y[pricetype]) + " ";
       } else if (isArea) {
-        return "L " + this.getSvgX((point.x)-1) + " " + (this.state.svgHeight - this.props.xLabelSize) + " ";
+        return "L " + this.getSvgX((point.x)-1) + " " + (this.state.svgHeight - xLabelSize) + " ";
       } else {
         return null;
       }
@@ -132,13 +134,14 @@ class LineChart extends Component {
 
     return(
       <g className="linechart_label">
-        { (maxPoint.p === 0) ? null : this.makeLabelPricePoint(maxPoint.p.y, 'left', 'p', '') }
+        { (maxPoint.p === 0) ? null :
+        <ChartLabelPrice price={maxPoint.p.y.p} yPos={this.getSvgY(maxPoint.p.y.p)} priceType='p' />
+        }
+        { (typeof(firstPrices.p) === 'undefined') ? null : <ChartLabelPrice price={firstPrices.p} yPos={this.getSvgY(firstPrices.p)} priceType='p' /> }
+        { (typeof(firstPrices.m) === 'undefined') ? null : <ChartLabelPrice price={firstPrices.m} yPos={this.getSvgY(firstPrices.m)} priceType='m' /> }
 
-        { (typeof(firstPrices.p) === 'undefined') ? null : this.makeLabelPricePoint(firstPrices, 'left', 'p', '') }
-        { (typeof(firstPrices.m) === 'undefined') ? null : this.makeLabelPricePoint(firstPrices, 'left', 'm', '') }
-
-        { (typeof(lastPrices.p) === 'undefined') ? null : this.makeLabelPricePoint(lastPrices, 'right', 'p', '') }
-        { (typeof(lastPrices.m) === 'undefined') ? null : this.makeLabelPricePoint(lastPrices, 'right', 'm', '') }
+        { (typeof(lastPrices.p) === 'undefined') ? null : <ChartLabelPrice price={lastPrices.p} yPos={this.getSvgY(lastPrices.p)} priceType='p' /> }
+        { (typeof(lastPrices.m) === 'undefined') ? null : <ChartLabelPrice price={lastPrices.m} yPos={this.getSvgY(lastPrices.m)} priceType='m' /> }
 
         { this.makeLabelDate(minX, '') }
         { this.makeLabelDate(maxX, '') }
@@ -149,7 +152,6 @@ class LineChart extends Component {
   makeLabelDateTicks() {
     const {minDate, maxDate, minX} = this.boundaries;
     const {svgWidth} = this.state;
-    const {yLabelSize} = this.props;
     const periods = ['week', 'month', 'quarter', 'year'];
     let maxTickSpacing = yLabelSize*2;
     let maxTicksX = svgWidth/(maxTickSpacing);
@@ -185,7 +187,9 @@ class LineChart extends Component {
   }
 
   makeLabelTicks() {
+    const {maxX} = this.boundaries;
     const {scale} = this.props;
+    const {svgWidth} = this.state;
     const offset = 4; // pixel
     let ticks = [];
     let tickY = 0;
@@ -207,8 +211,8 @@ class LineChart extends Component {
         tickY = Math.pow(10,i);
       }
 
-      ticks.push (this.makeLabelPrice(tickY, offset, 'left',  's', '', 'p'+i));
-      ticks.push (this.makeLabelPrice(tickY, offset, 'right', 's', '', 'r'+i));
+      ticks.push (<ChartLabelPrice price={tickY} yPos={this.getSvgY(tickY)+offset} priceType='s' key={'p'+i} /> );
+      ticks.push (<ChartLabelPrice price={tickY} xPos={svgWidth-yLabelSize} yPos={this.getSvgY(tickY)+offset} priceType='s' key={'p'+i} /> );
       ticks.push (this.createHorizontalLine(tickY, 'tickline', 'l'+i));
     }
     return (
@@ -219,7 +223,7 @@ class LineChart extends Component {
   }
   // Label on X-Axis (Date)
   makeLabelDate(count, cssExtra) {
-    const {data, xLabelSize, yLabelSize, labelRadius} = this.props;
+    const {data} = this.props;
     const {svgHeight} = this.state;
     const tickHeight = 10; // px
     if ((count < data.length) && (count >= 0)) {
@@ -265,7 +269,6 @@ class LineChart extends Component {
 
   // If pricelabels are too close together, move them up or down a little
   getOffsetLabelPrice(prices, pricetype) {
-    const {xLabelSize} = this.props;
     var otherPricetype = this.otherPricetype(pricetype);
     var distanceY      = 0;
 
@@ -291,53 +294,22 @@ class LineChart extends Component {
 
   // Label on Y-Axis for given Data-point
   makeLabelPricePoint(prices, position, pricetype, cssExtra) {
+    const {maxX} = this.boundaries;
+    let xPos = 0;
+    if (position === 'right') {
+      xPos = this.getSvgX(maxX);
+    }
     return (
-      this.makeLabelPrice(
-        prices[pricetype],
-        this.getOffsetLabelPrice(prices, pricetype),
-        position, pricetype, cssExtra
-      )
+      <ChartLabelPrice
+        price={prices[pricetype]}
+        xPos={xPos}
+        yPos={this.getSvgY(prices[pricetype])+this.getOffsetLabelPrice(prices, pricetype)}
+        priceType={pricetype}
+        cssExtra={cssExtra}
+      />
     );
   }
 
-  // Label on Y-Axis (Price)
-  makeLabelPrice(price, offset, position, pricetype, cssExtra, key) {
-    const {xLabelSize, yLabelSize, labelRadius} = this.props;
-    const {maxX} = this.boundaries;
-    var xpos = 0;
-    var ypos = this.getSvgY(price)+offset;
-
-    if (position === 'right') {
-      xpos = this.getSvgX(maxX);
-    }
-
-    if (price > 0) {
-      return(
-        <g key={key}>
-          <rect
-            x={xpos}
-            y={ypos-xLabelSize+5}
-            height={xLabelSize}
-            width={yLabelSize}
-            rx={labelRadius}
-            ry={labelRadius}
-            className={'linechart_label_' + pricetype + cssExtra}
-          />
-          <text
-            transform={`translate(${xpos+yLabelSize/2},
-                                      ${ypos})`}
-            fill="red"
-            textAnchor="middle"
-            className={'linechart_label_' + pricetype+cssExtra}
-          >
-            {formatDollar(price)}
-          </text>
-        </g>
-      );
-    } else {
-      return '';
-    }
-  }
 
   getTouchCoords = (e) => {
     if (this.areCoordsOnChart(e.touches[0].pageX)) {
@@ -355,7 +327,6 @@ class LineChart extends Component {
   }
 
   areCoordsOnChart(relativeLoc) {
-    const {yLabelSize} = this.props;
     const svgLocation = document.getElementsByClassName("linechart")[0].getBoundingClientRect();
     const chartRightBounding = svgLocation.width-yLabelSize;
 
@@ -364,7 +335,7 @@ class LineChart extends Component {
 
   // FIND CLOSEST POINT TO MOUSE
   getCoords(relativeLoc) {
-    const {data, yLabelSize} = this.props;
+    const {data} = this.props;
     const svgLocation = document.getElementsByClassName("linechart")[0].getBoundingClientRect();
     const chartWidth = svgLocation.width-yLabelSize*2;
 
@@ -423,7 +394,7 @@ class LineChart extends Component {
 
   // MAKE vertical HOVER LINE
   createLine(){
-    const {xLabelSize, hoverLoc} = this.props;
+    const {hoverLoc} = this.props;
     const {svgHeight} = this.state;
     return (
       <line
@@ -448,7 +419,7 @@ class LineChart extends Component {
   // to visualize how many days price is ahead or behind
   createHoverLineAhead(){
     const {svgHeight} = this.state;
-    const {daysPredictionAhead, xLabelSize, activePoint} = this.props;
+    const {daysPredictionAhead, activePoint} = this.props;
 
     if (activePoint.y.m === 0 || activePoint.y.p === 0) {
       return (null);
@@ -505,7 +476,6 @@ class LineChart extends Component {
   }
 
   createHorizontalLine(price, className, key) {
-    const {yLabelSize} = this.props;
     const {svgWidth} = this.state;
     var svgY = this.getSvgY(price);
 
@@ -553,7 +523,6 @@ class LineChart extends Component {
   // calculate Y-Boundaries and Ticks for Labeling the Y-Axis
   setScale() {
     const {minY, maxY} = this.boundaries;
-    const {xLabelSize} = this.props;
     const {svgHeight} = this.state;
 
     let maxTickSpacing = 2* xLabelSize;
@@ -607,9 +576,6 @@ LineChart.defaultProps = {
   activePoint: null,
   hoverLoc: null,
   pointRadius: 5,
-  labelRadius: 5,
-  xLabelSize: 20,
-  yLabelSize: 80
 }
 
 export default LineChart;
