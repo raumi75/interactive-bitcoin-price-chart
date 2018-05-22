@@ -193,21 +193,15 @@ class LineChart extends Component {
     const offset = 4; // pixel
     let ticks = [];
     let tickY = 0;
-    let maxTicks = 0;
-    if (scale === 'lin') {
-      maxTicks = (scaleMaxY-scaleMinY)/tickSpacing;
-    } else {
-      // on a log scale:
-      // how many orders of magnitude to the maximum price?
-      maxTicks = Math.ceil(Math.log(scaleMaxY));
-    }
+    let maxTickCount = this.getMaxYTickCount();
 
     // i starts at -1 to start at $ 0.10 on a log scale
-    for (var i = -1; i <= maxTicks ; i++) {
+    for (var i = -1; i <= maxTickCount ; i++) {
       if (scale === 'lin') {
         tickY = scaleMinY+tickSpacing*i;
       } else {
         // scale === 'log'
+        // dont worry about tick spacing.  Just label magnitudes
         tickY = Math.pow(10,i);
       }
 
@@ -221,6 +215,23 @@ class LineChart extends Component {
       </g>
     );
   }
+
+  /**
+   * How many Labels fit on the Y-Scale at most?
+   * @return integer
+   */
+  getMaxYTickCount() {
+    const {scale} = this.props;
+
+    if (scale === 'lin') {
+      return (scaleMaxY-scaleMinY)/tickSpacing;
+    } else {
+      // on a log scale:
+      // how many orders of magnitude to the maximum price?
+      return Math.ceil(Math.log(scaleMaxY));
+    }
+  }
+
   // Label on X-Axis (Date)
   makeLabelDate(count, cssExtra) {
     const {data} = this.props;
