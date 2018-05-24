@@ -136,7 +136,8 @@ class LineChart extends Component {
 
   makeLabels(){
     const {minX, maxX, firstPrices, lastPrices, maxPoint} = this.boundaries;
-
+    const {svgWidth} = this.state;
+    
     return(
       <g className="linechart_label">
         { (maxPoint.p === 0) ? null :
@@ -145,8 +146,8 @@ class LineChart extends Component {
         { (typeof(firstPrices.p) === 'undefined') ? null : <ChartLabelPrice price={firstPrices.p} yPos={this.getSvgY(firstPrices.p)} priceType='p' /> }
         { (typeof(firstPrices.m) === 'undefined') ? null : <ChartLabelPrice price={firstPrices.m} yPos={this.getSvgY(firstPrices.m)} priceType='m' /> }
 
-        { (typeof(lastPrices.p) === 'undefined') ? null : <ChartLabelPrice price={lastPrices.p} yPos={this.getSvgY(lastPrices.p)} priceType='p' /> }
-        { (typeof(lastPrices.m) === 'undefined') ? null : <ChartLabelPrice price={lastPrices.m} yPos={this.getSvgY(lastPrices.m)} priceType='m' /> }
+        { (typeof(lastPrices.p) === 'undefined') ? null : <ChartLabelPrice price={lastPrices.p} xPos={svgWidth-yLabelSize} yPos={this.getSvgY(lastPrices.p)} priceType='p' /> }
+        { (typeof(lastPrices.m) === 'undefined') ? null : <ChartLabelPrice price={lastPrices.m} xPos={svgWidth-yLabelSize} yPos={this.getSvgY(lastPrices.m)} priceType='m' /> }
 
         { this.makeLabelDate(minX, '') }
         { this.makeLabelDate(maxX, '') }
