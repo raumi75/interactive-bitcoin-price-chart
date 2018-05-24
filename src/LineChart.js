@@ -1,10 +1,12 @@
 import React, {Component} from "react";
+import PropTypes from 'prop-types';
 import "./LineChart.css";
 import moment from 'moment';
 import niceScale from './LineChartNiceScale.js';
 import getDataBoundaries from './chartDataBoundaries.js';
 import ChartLabelPrice from './ChartLabelPrice.js';
 import {dateFormat} from './App.js';
+import ToolTip from './ToolTip';
 const chartRatio = 3; // Chart's height is 1/3 of width
 let stopHoverTimer;
 let scaleMaxY = 0;
@@ -30,7 +32,9 @@ class LineChart extends Component {
 
     this.state = {
       svgWidth: document.documentElement.clientWidth,
-      svgHeight: document.documentElement.clientWidth/chartRatio
+      svgHeight: document.documentElement.clientWidth/chartRatio,
+      hoverLoc: null,
+      activePoint: null
     }
   }
 
@@ -307,30 +311,9 @@ class LineChart extends Component {
     }
   }
 
-  // Label on Y-Axis for given Data-point
-  makeLabelPricePoint(prices, position, pricetype, cssExtra) {
-    const {maxX} = this.boundaries;
-    let xPos = 0;
-    if (position === 'right') {
-      xPos = this.getSvgX(maxX);
-    }
-    return (
-      <ChartLabelPrice
-        price={prices[pricetype]}
-        xPos={xPos}
-        yPos={this.getSvgY(prices[pricetype])+this.getOffsetLabelPrice(prices, pricetype)}
-        priceType={pricetype}
-        cssExtra={cssExtra}
-      />
-    );
-  }
-
-
   getTouchCoords = (e) => {
     if (this.areCoordsOnChart(e.touches[0].pageX)) {
       e.preventDefault();
-      clearTimeout(stopHoverTimer);
-      stopHoverTimer = setTimeout(function() { this.stopHover(); }.bind(this), stopHoverMilliseconds);
       this.getCoords(e.touches[0].pageX);
     } else {
       this.stopHover();
@@ -342,8 +325,7 @@ class LineChart extends Component {
   }
 
   areCoordsOnChart(relativeLoc) {
-    const svgLocation = document.getElementsByClassName("linechart")[0].getBoundingClientRect();
-    const chartRightBounding = svgLocation.width-yLabelSize;
+    const chartRightBounding = this.state.svgWidth-yLabelSize;
 
     return ( (yLabelSize < relativeLoc) && (relativeLoc < chartRightBounding) )
   }
@@ -351,8 +333,7 @@ class LineChart extends Component {
   // FIND CLOSEST POINT TO MOUSE
   getCoords(relativeLoc) {
     const {data} = this.props;
-    const svgLocation = document.getElementsByClassName("linechart")[0].getBoundingClientRect();
-    const chartWidth = svgLocation.width-yLabelSize*2;
+    const chartWidth = this.state.svgWidth-yLabelSize*2;
 
     let svgData = [];
     data.map((point, i) => {
@@ -377,7 +358,7 @@ class LineChart extends Component {
     }
 
     if (this.areCoordsOnChart(relativeLoc)) {
-      this.props.onChartHover(  relativeLoc, closestPoint);
+      this.handleChartHover( relativeLoc, closestPoint);
     } else {
       // Pointer is outside of chart
       this.stopHover();
@@ -386,12 +367,27 @@ class LineChart extends Component {
   }
   // STOP HOVER
   stopHover(){
-    this.props.onChartHover(null, null);
+    this.handleChartHover(null, null);
+  }
+
+  handleChartHover(hoverLoc, activePoint) {
+    let daysPredictionAhead = null;
+    clearTimeout(stopHoverTimer);
+    if (hoverLoc > 0) {
+      daysPredictionAhead = this.getDaysAheadPoint(activePoint);
+      stopHoverTimer = setTimeout(function() { this.stopHover(); }.bind(this), stopHoverMilliseconds);
+    }
+    this.setState({
+      hoverLoc: hoverLoc,
+      activePoint: activePoint,
+      daysPredictionAhead: daysPredictionAhead
+    })
   }
 
   // MAKE ACTIVE POINT
   makeActivePoint(){
-    const {color, pointRadius, activePoint} = this.props;
+    const {color, pointRadius} = this.props;
+    const {activePoint} = this.state;
     if (activePoint.y['p']>0) {
       return (
         <circle
@@ -409,8 +405,7 @@ class LineChart extends Component {
 
   // MAKE vertical HOVER LINE
   createLine(){
-    const {hoverLoc} = this.props;
-    const {svgHeight} = this.state;
+    const {hoverLoc, svgHeight} = this.state;
     return (
       <line
         className='hoverline'
@@ -421,7 +416,7 @@ class LineChart extends Component {
 
   // MAKE horizontal HOVER LINE
   createHorizontalHoverLine(pricetype){
-    const {activePoint} = this.props;
+    const {activePoint} = this.state;
 
     if (activePoint.y[pricetype] === 0) {
       return (null);
@@ -433,8 +428,7 @@ class LineChart extends Component {
   // horizontal line between hover point price and prediction curve price
   // to visualize how many days price is ahead or behind
   createHoverLineAhead(){
-    const {svgHeight} = this.state;
-    const {daysPredictionAhead, activePoint} = this.props;
+    const {svgHeight, daysPredictionAhead, activePoint} = this.state;
 
     if (activePoint.y.m === 0 || activePoint.y.p === 0) {
       return (null);
@@ -464,7 +458,7 @@ class LineChart extends Component {
   // vertical line between hover point price and prediction curve price
   // to visualize how the price is above or below
   createHoverLineAbove(){
-    const {activePoint} = this.props;
+    const {activePoint} = this.state;
 
     if (activePoint.y.m === 0 || activePoint.y.p === 0) {
       return (null);
@@ -484,7 +478,7 @@ class LineChart extends Component {
   // is the price above or below the prediction.
   // css className will color the percentage accordingly
   getAboveOrBelow() {
-    const {activePoint} = this.props;
+    const {activePoint} = this.state;
 
     if (activePoint.y.p>=activePoint.y.m)
     { return ('above'); } else { return 'below' ; }
@@ -506,15 +500,45 @@ class LineChart extends Component {
 
   // Label Date for HOVER LINE
   makeActiveDate(){
-    const {activePoint} = this.props;
+    const {activePoint} = this.state;
     return (this.makeLabelDate(activePoint.x, '_hover'));
   }
 
   // Label Price for Hover Line
   makeActiveLabelPrice(pricetype, position){
-    const {activePoint} = this.props;
+    const {maxX} = this.boundaries;
+    const prices = this.state.activePoint.y;
+    let xPos = 0;
+    if (position === 'right') {
+      xPos = this.getSvgX(maxX);
+    }
+    return (
+      <ChartLabelPrice
+        price={prices[pricetype]}
+        xPos={xPos}
+        yPos={this.getSvgY(prices[pricetype])+this.getOffsetLabelPrice(prices, pricetype)}
+        priceType={pricetype}
+        cssExtra='_hover'
+      />
+    );
+  }
 
-    return ( this.makeLabelPricePoint(activePoint.y, position, pricetype, '_hover') );
+  // how many days does it take to reach this price?
+  getDaysAfterStart(price) {
+    const goalRate = 1+(this.props.growthRate/100);
+    const {startPrice} = this.props;
+    return Math.ceil(Math.log(price/startPrice)/Math.log(goalRate));
+  }
+
+  // How many days between given price point and the prediction curve
+  getDaysAhead(price, date) {
+    const {startDate} = this.props;
+    return this.getDaysAfterStart(price) - (moment(date).diff(startDate, 'days'));
+  }
+
+  // How many days between given price point and the prediction curve
+  getDaysAheadPoint(pricePoint) {
+    return this.getDaysAhead(pricePoint.y.p, pricePoint.d);
   }
 
   makeHover() {
@@ -550,47 +574,71 @@ class LineChart extends Component {
   }
 
   render() {
-    const {svgHeight, svgWidth} = this.state;
-    const {hoverLoc} = this.props;
+    const {svgHeight, svgWidth, hoverLoc, activePoint, daysPredictionAhead} = this.state;
     this.boundaries = getDataBoundaries(this.props.data);
 
     this.setScale();
     return (
-      <svg
-        id='linechart'
-        width={svgWidth}
-        height={svgHeight}
-        viewBox={"0 0 " + svgWidth + ' ' + svgHeight}
-        className='linechart unselectable'
-        onMouseLeave= { () => this.stopHover() }
-        onMouseMove = { (e) => this.getMouseCoords(e) }
-        onTouchMove = { (e) => this.getTouchCoords(e) }
-        onTouchStart= { (e) => this.getTouchCoords(e) }
-        onMouseDown = { (e) => this.getMouseCoords(e) }
-        unselectable="yes"
-      >
-        <g>
-          {this.makeLineMaxYP()}
+      <div>
+        <div className="popup">
+          {hoverLoc ?
+            <ToolTip
+              hoverLoc={hoverLoc}
+              activePoint={activePoint}
+              daysPredictionAhead={daysPredictionAhead}
+            />
+          : null
+          }
+        </div>
 
-          {this.makeLabelDateTicks()}
-          {this.makeLabelTicks()}
+        <svg
+          id='linechart'
+          width={svgWidth}
+          height={svgHeight}
+          viewBox={"0 0 " + svgWidth + ' ' + svgHeight}
+          className='linechart unselectable'
+          onMouseLeave= { () => this.stopHover() }
+          onMouseMove = { (e) => this.getMouseCoords(e) }
+          onTouchMove = { (e) => this.getTouchCoords(e) }
+          onTouchStart= { (e) => this.getTouchCoords(e) }
+          onMouseDown = { (e) => this.getMouseCoords(e) }
+          unselectable="yes"
+        >
+          <g>
+            {this.makeLineMaxYP()}
 
-          {this.makePath('p', false)}
-          {this.makePath('m', false)}
-          {this.makePath('p', true)}
-          {this.makeLabels()}
-          {hoverLoc ? this.makeHover() : null}
-        </g>
-      </svg>
+            {this.makeLabelDateTicks()}
+            {this.makeLabelTicks()}
+
+            {this.makePath('p', false)}
+            {this.makePath('m', false)}
+            {this.makePath('p', true)}
+            {this.makeLabels()}
+            {hoverLoc ? this.makeHover() : null}
+          </g>
+        </svg>
+      </div>
     );
   }
 }
 // DEFAULT PROPS
 LineChart.defaultProps = {
   data: [],
-  activePoint: null,
-  hoverLoc: null,
   pointRadius: 5,
+  scale: 'lin',
+  color: 'grey' // hoverpoint
 }
 
 export default LineChart;
+
+LineChart.propTypes = {
+  data: PropTypes.array.isRequired,
+  pointRadius: PropTypes.number,
+  color: PropTypes.string,
+  scale: PropTypes.oneOf(['lin', 'log']).isRequired,
+
+  // for calculating days ahead and behind
+  startPrice: PropTypes.number.isRequired,
+  startDate: PropTypes.instanceOf(moment).isRequired,
+  growthRate: PropTypes.number.isRequired
+}

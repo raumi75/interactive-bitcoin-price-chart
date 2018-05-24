@@ -4,7 +4,6 @@ import { Grid, Row , Col, Tabs, Tab} from 'react-bootstrap';
 import './bootstrap.css';
 import './App.css';
 import LineChart from './LineChart';
-import ToolTip from './ToolTip';
 import InfoBox from './InfoBox';
 // eslint-disable-next-line
 import Slider, { Range } from 'rc-slider';
@@ -51,8 +50,6 @@ class App extends Component {
       loadingActualPrice: false,
       data: null,
       sortedData: null,
-      hoverLoc: null,
-      activePoint: null,
       countRange: [0, predictionCount],
       activeTabKey: 2,
       rangeMin: defaultRangeMin,
@@ -278,9 +275,7 @@ class App extends Component {
     }
 
     this.setState({
-      countRange: [pos[0], pos[1]],
-      hoverLoc: null,
-      activePoint: null
+      countRange: [pos[0], pos[1]]
     }, this.cutData([pos[0], pos[1]]));
   };
 
@@ -294,13 +289,6 @@ class App extends Component {
     this.setState ({
       sliderMarks: mark
     });
-  }
-
-  handleChartHover(hoverLoc, activePoint){
-    this.setState({
-      hoverLoc: hoverLoc,
-      activePoint: activePoint
-    })
   }
 
   cutData(pos) {
@@ -357,8 +345,6 @@ class App extends Component {
       rangeMin: Math.min(defaultRangeMin, -offsetPrediction),
       scale: 'lin',
       countRange: cr,
-      activePoint: null,
-      hoverLoc: null,
       activeTabKey: 2
     });
     this.cutData(cr);
@@ -370,9 +356,7 @@ class App extends Component {
       rangeMin: 0,
       countRange: cr,
       scale: 'log',
-      activeTabKey: 1,
-      activePoint: null,
-      hoverLoc: null
+      activeTabKey: 1
       }
     );
     this.cutData(cr);
@@ -384,9 +368,7 @@ class App extends Component {
       rangeMin: defaultRangeMin,
       countRange: cr,
       scale: 'lin',
-      activeTabKey: 3,
-      activePoint: null,
-      hoverLoc: null
+      activeTabKey: 3
       }
     );
     this.cutData(cr);
@@ -398,9 +380,7 @@ class App extends Component {
       rangeMin: defaultRangeMin,
       countRange: cr,
       scale: 'lin',
-      activeTabKey: 4,
-      activePoint: null,
-      hoverLoc: null
+      activeTabKey: 4
       }
     );
     this.cutData(cr);
@@ -412,9 +392,7 @@ class App extends Component {
       rangeMin: defaultRangeMin,
       countRange: cr,
       scale: 'lin',
-      activeTabKey: 5,
-      activePoint: null,
-      hoverLoc: null
+      activeTabKey: 5
       }
     );
     this.cutData(cr);
@@ -514,30 +492,6 @@ class App extends Component {
     }
   }
 
-  // how many days does it take to reach this price?
-  getDaysAfterStart(price) {
-    const goalRate = 1+(this.state.growthRate/100);
-    const {startPrice} = this.state;
-    return Math.ceil(Math.log(price/startPrice)/Math.log(goalRate));
-  }
-
-  // How many days between given price point and the prediction curve
-  getDaysAhead(price, date) {
-    const {startDate} = this.state;
-    return this.getDaysAfterStart(price) - (moment(date).diff(startDate, 'days'));
-  }
-
-  // How many days between given price point and the prediction curve
-  getDaysAheadPoint(pricePoint) {
-    return this.getDaysAhead(pricePoint.y.p, pricePoint.d);
-  }
-
-  // How many days between given price point and the prediction curve
-  getDaysAheadNow() {
-    const {actualPriceNow} = this.state;
-    return this.getDaysAhead(actualPriceNow, moment());
-  }
-
   refreshPredictionPriceNow() {
     const predictionNow = this.getPredictionPriceNow();
     let {predictionPriceNow, dataComplete, todayCount, predictionUpdatesMax, countRange} = this.state;
@@ -626,7 +580,7 @@ class App extends Component {
       predictionPriceNow, actualPriceNow,
       updatedAt, loadingActualPrice, predictionUpdatesAt, predictionUpdatesMax,
       data, scale,
-      activeTabKey, hoverLoc, activePoint,
+      activeTabKey,
       rangeMin, sliderMarks, countRange,
       historicalStart, historicalEnd
     } = this.state;
@@ -678,26 +632,14 @@ class App extends Component {
               </Col>
             </Row>
 
-            <Row className="popup">
-              {hoverLoc ?
-                <ToolTip
-                  hoverLoc={hoverLoc}
-                  activePoint={activePoint}
-                  daysPredictionAhead={this.getDaysAheadPoint(activePoint)}
-                />
-              : null
-              }
-            </Row>
-
             <Row className='chart'>
 
               <LineChart
                 data={data}
                 scale={scale}
-                activePoint={activePoint}
-                hoverLoc={hoverLoc}
-                daysPredictionAhead={hoverLoc ? this.getDaysAheadPoint(activePoint) : 0}
-                onChartHover={ (a,b) => this.handleChartHover(a,b) }
+                startPrice={startPrice}
+                growthRate={growthRate}
+                startDate={startDate}
               />
 
               <Col xs={12} className='range unselectable'>
@@ -758,7 +700,7 @@ class App extends Component {
                   onTargetDateChange={this.handleTargetDateChange}
 
                   targetPrice={growthRate !== 0 ? targetPrice : ''}
-
+                  
                   pauseEvents={this.pauseTimer}
                   resumeEvents={this.resumeTimer}
                 />
