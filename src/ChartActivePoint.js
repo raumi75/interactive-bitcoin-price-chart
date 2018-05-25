@@ -36,6 +36,6 @@ ChartActivePoint.defaultProps = {
 ChartActivePoint.propTypes = {
   pointRadius: PropTypes.number,
   color: PropTypes.string,
-  activePoint: PropTypes.array.isRequired,
-  priceType: PropTypes.oneOf['p', 'm']
+  activePoint: PropTypes.object.isRequired,
+  priceType: PropTypes.oneOf(['p', 'm'])
 }
