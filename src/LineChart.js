@@ -534,7 +534,9 @@ class LineChart extends Component {
     return (
           <g id="hoverData">
             {this.createLine()}
-            <ChartActivePoint activePoint={activePoint} />
+            <ChartActivePoint activePoint={activePoint} priceType='p' />
+            <ChartActivePoint activePoint={activePoint} priceType='m' />
+
             {this.createHorizontalHoverLine('p')}
             {this.createHorizontalHoverLine('m')}
             {this.createHoverLineAhead()}
