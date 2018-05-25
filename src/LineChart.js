@@ -6,6 +6,7 @@ import niceScale from './LineChartNiceScale.js';
 import getDataBoundaries from './chartDataBoundaries.js';
 import ChartLabelPrice from './ChartLabelPrice.js';
 import ChartActivePoint from './ChartActivePoint.js';
+import ChartVerticalLine from './ChartVerticalLine.js';
 
 import {dateFormat} from './App.js';
 import ToolTip from './ToolTip';
@@ -390,17 +391,6 @@ class LineChart extends Component {
     })
   }
 
-  // MAKE vertical HOVER LINE
-  createLine(){
-    const {hoverLoc, svgHeight} = this.state;
-    return (
-      <line
-        className='hoverline'
-        x1={hoverLoc} y1={0-xLabelSize}
-        x2={hoverLoc} y2={svgHeight - xLabelSize} />
-    )
-  }
-
   // MAKE horizontal HOVER LINE
   createHorizontalHoverLine(pricetype){
     const {activePoint} = this.state;
@@ -529,11 +519,11 @@ class LineChart extends Component {
   }
 
   makeHover() {
-    const {activePoint} = this.state;
+    const {hoverLoc, activePoint, svgHeight} = this.state;
 
     return (
           <g id="hoverData">
-            {this.createLine()}
+            <ChartVerticalLine x={hoverLoc} height={svgHeight} />
             <ChartActivePoint activePoint={activePoint} priceType='p' />
             <ChartActivePoint activePoint={activePoint} priceType='m' />
 
