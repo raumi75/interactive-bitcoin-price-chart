@@ -7,6 +7,7 @@ import getDataBoundaries from './chartDataBoundaries.js';
 import ChartLabelPrice from './ChartLabelPrice.js';
 import ChartActivePoint from './ChartActivePoint.js';
 import ChartVerticalLine from './ChartVerticalLine.js';
+import ChartHorizontalLine from './ChartHorizontalLine.js';
 
 import {dateFormat} from './App.js';
 import ToolTip from './ToolTip';
@@ -205,6 +206,7 @@ class LineChart extends Component {
     const offset = 4; // pixel
     let ticks = [];
     let tickY = 0;
+    let tickSvgY = 0;
     let maxTickCount = this.getMaxYTickCount();
 
     // i starts at -1 to start at $ 0.10 on a log scale
@@ -216,11 +218,12 @@ class LineChart extends Component {
         // dont worry about tick spacing.  Just label magnitudes
         tickY = Math.pow(10,i);
       }
-
-      ticks.push (<ChartLabelPrice price={tickY} yPos={this.getSvgY(tickY)+offset} priceType='s' key={'lp'+i} /> );
-      ticks.push (<ChartLabelPrice price={tickY} xPos={svgWidth-yLabelSize} yPos={this.getSvgY(tickY)+offset} priceType='s' key={'rp'+i} /> );
-      ticks.push (this.createHorizontalLine(tickY, 'tickline', 'l'+i));
+      tickSvgY = this.getSvgY(tickY);
+      ticks.push (<ChartLabelPrice price={tickY} yPos={tickSvgY+offset} priceType='s' key={'lp'+i} /> );
+      ticks.push (<ChartLabelPrice price={tickY} xPos={svgWidth-yLabelSize} yPos={tickSvgY+offset} priceType='s' key={'rp'+i} /> );
+      ticks.push (<ChartHorizontalLine y={tickSvgY} width={svgWidth} className='tickline' key={'l'+i} />);
     }
+
     return (
       <g className="linechart_label">
         {ticks}
@@ -391,20 +394,11 @@ class LineChart extends Component {
     })
   }
 
-  // MAKE horizontal HOVER LINE
-  createHorizontalHoverLine(pricetype){
-    const {activePoint} = this.state;
 
-    if (activePoint.y[pricetype] === 0) {
-      return (null);
-    } else {
-      return (this.createHorizontalLine(activePoint.y[pricetype], 'hoverline'));
-    }
-  }
 
   // horizontal line between hover point price and prediction curve price
   // to visualize how many days price is ahead or behind
-  createHoverLineAhead(){
+  createHoverLineAhead() {
     const {svgHeight, daysPredictionAhead, activePoint} = this.state;
 
     if (activePoint.y.m === 0 || activePoint.y.p === 0) {
@@ -461,20 +455,6 @@ class LineChart extends Component {
     { return ('above'); } else { return 'below' ; }
   }
 
-  createHorizontalLine(price, className, key) {
-    const {svgWidth} = this.state;
-    var svgY = this.getSvgY(price);
-
-    return (
-      <line
-        className={className}
-        x1={yLabelSize}            y1={svgY}
-        x2={svgWidth - yLabelSize} y2={svgY}
-        key={key}
-      />
-    )
-  }
-
   // Label Date for HOVER LINE
   makeActiveDate(){
     const {activePoint} = this.state;
@@ -519,16 +499,16 @@ class LineChart extends Component {
   }
 
   makeHover() {
-    const {hoverLoc, activePoint, svgHeight} = this.state;
+    const {hoverLoc, activePoint, svgHeight, svgWidth} = this.state;
 
     return (
           <g id="hoverData">
             <ChartVerticalLine x={hoverLoc} height={svgHeight} />
             <ChartActivePoint activePoint={activePoint} priceType='p' />
             <ChartActivePoint activePoint={activePoint} priceType='m' />
+            { (activePoint.y.p) ? <ChartHorizontalLine y={activePoint.svgY.p} width={svgWidth} /> : null }
+            { (activePoint.y.m) ? <ChartHorizontalLine y={activePoint.svgY.m} width={svgWidth} /> : null }
 
-            {this.createHorizontalHoverLine('p')}
-            {this.createHorizontalHoverLine('m')}
             {this.createHoverLineAhead()}
             {this.createHoverLineAbove()}
             {this.makeActiveDate()}
