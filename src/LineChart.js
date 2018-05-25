@@ -5,6 +5,8 @@ import moment from 'moment';
 import niceScale from './LineChartNiceScale.js';
 import getDataBoundaries from './chartDataBoundaries.js';
 import ChartLabelPrice from './ChartLabelPrice.js';
+import ChartActivePoint from './ChartActivePoint.js';
+
 import {dateFormat} from './App.js';
 import ToolTip from './ToolTip';
 const chartRatio = 3; // Chart's height is 1/3 of width
@@ -340,7 +342,10 @@ class LineChart extends Component {
     data.map((point, i) => {
       svgData.push({
         svgX: this.getSvgX(point.x),
-        svgY: this.getSvgY(point.y.p),
+        svgY: {
+          p: this.getSvgY(point.y.p),
+          m: this.getSvgY(point.y.m)
+        },
         x: point.x,
         d: point.d,
         y: point.y
@@ -383,25 +388,6 @@ class LineChart extends Component {
       activePoint: activePoint,
       daysPredictionAhead: daysPredictionAhead
     })
-  }
-
-  // MAKE ACTIVE POINT
-  makeActivePoint(){
-    const {color, pointRadius} = this.props;
-    const {activePoint} = this.state;
-    if (activePoint.y['p']>0) {
-      return (
-        <circle
-          className='linechart_point'
-          style={{stroke: color}}
-          r={pointRadius}
-          cx={activePoint.svgX}
-          cy={activePoint.svgY}
-        />
-      );
-    } else {
-      return (null);
-    }
   }
 
   // MAKE vertical HOVER LINE
@@ -543,10 +529,12 @@ class LineChart extends Component {
   }
 
   makeHover() {
+    const {activePoint} = this.state;
+
     return (
           <g id="hoverData">
             {this.createLine()}
-            {this.makeActivePoint()}
+            <ChartActivePoint activePoint={activePoint} />
             {this.createHorizontalHoverLine('p')}
             {this.createHorizontalHoverLine('m')}
             {this.createHoverLineAhead()}
@@ -625,17 +613,13 @@ class LineChart extends Component {
 // DEFAULT PROPS
 LineChart.defaultProps = {
   data: [],
-  pointRadius: 5,
-  scale: 'lin',
-  color: 'grey' // hoverpoint
+  scale: 'lin'
 }
 
 export default LineChart;
 
 LineChart.propTypes = {
   data: PropTypes.array.isRequired,
-  pointRadius: PropTypes.number,
-  color: PropTypes.string,
   scale: PropTypes.oneOf(['lin', 'log']).isRequired,
 
   // for calculating days ahead and behind
