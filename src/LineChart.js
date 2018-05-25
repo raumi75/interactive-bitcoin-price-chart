@@ -5,10 +5,10 @@ import moment from 'moment';
 import niceScale from './LineChartNiceScale.js';
 import getDataBoundaries from './chartDataBoundaries.js';
 import ChartLabelPrice from './ChartLabelPrice.js';
+import ChartLabelPricePair from './ChartLabelPricePair.js';
 import ChartActivePoint from './ChartActivePoint.js';
 import ChartVerticalLine from './ChartVerticalLine.js';
 import ChartHorizontalLine from './ChartHorizontalLine.js';
-
 import {dateFormat} from './App.js';
 import ToolTip from './ToolTip';
 const chartRatio = 3; // Chart's height is 1/3 of width
@@ -138,21 +138,30 @@ class LineChart extends Component {
     }
   }
 
-  makeLabels(){
-    const {minX, maxX, firstPrices, lastPrices, maxPoint} = this.boundaries;
+  makeLabels() {
+    const {minX, maxX, maxPoint} = this.boundaries;
     const {svgWidth} = this.state;
+    const getSvgForPoint = (pricePoint) => {
+        pricePoint.svgY = {
+          p: (pricePoint.p ? this.getSvgY(pricePoint.p) : 0),
+          m: (pricePoint.m ? this.getSvgY(pricePoint.m) : 0)
+        };
+        pricePoint.y = {
+          p: pricePoint.p,
+          m: pricePoint.m
+        };
+        return pricePoint;
+      }
+    const firstPrices = getSvgForPoint(this.boundaries.firstPrices);
+    const lastPrices  = getSvgForPoint(this.boundaries.lastPrices);
 
     return(
       <g className="linechart_label">
         { (maxPoint.p === 0) ? null :
         <ChartLabelPrice price={maxPoint.p.y.p} yPos={this.getSvgY(maxPoint.p.y.p)} priceType='p' />
         }
-        { (typeof(firstPrices.p) === 'undefined') ? null : <ChartLabelPrice price={firstPrices.p} yPos={this.getSvgY(firstPrices.p) + this.getOffsetLabelPrice(firstPrices, 'p')} priceType='p' /> }
-        { (typeof(firstPrices.m) === 'undefined') ? null : <ChartLabelPrice price={firstPrices.m} yPos={this.getSvgY(firstPrices.m) + this.getOffsetLabelPrice(firstPrices, 'm')} priceType='m' /> }
-
-        { (typeof(lastPrices.p) === 'undefined') ? null : <ChartLabelPrice price={lastPrices.p} xPos={svgWidth-yLabelSize} yPos={this.getSvgY(lastPrices.p) + this.getOffsetLabelPrice(lastPrices, 'p')} priceType='p' /> }
-        { (typeof(lastPrices.m) === 'undefined') ? null : <ChartLabelPrice price={lastPrices.m} xPos={svgWidth-yLabelSize} yPos={this.getSvgY(lastPrices.m) + this.getOffsetLabelPrice(lastPrices, 'm')} priceType='m' /> }
-
+        <ChartLabelPricePair activePoint={firstPrices} />
+        <ChartLabelPricePair activePoint={lastPrices} xPos={svgWidth-yLabelSize} />
         { this.makeLabelDate(minX, '') }
         { this.makeLabelDate(maxX, '') }
       </g>
@@ -286,35 +295,6 @@ class LineChart extends Component {
       );
     } else {
       return null;
-    }
-  }
-
-  otherPricetype(pricetype) {
-    if (pricetype === 'm') { return 'p'; } else { return 'm'; }
-  }
-
-  // If pricelabels are too close together, move them up or down a little
-  getOffsetLabelPrice(prices, pricetype) {
-    var otherPricetype = this.otherPricetype(pricetype);
-    var distanceY      = 0;
-
-    if (prices[otherPricetype] > 0) {
-      distanceY = this.getSvgY(prices[pricetype])-this.getSvgY(prices[otherPricetype]);
-    }
-
-    if (distanceY === 0) {return 0;}
-
-    if (Math.abs(distanceY) < xLabelSize) {
-      // prices are too close
-      if (distanceY < 0) {
-        // this price is above the other
-        return xLabelSize*(-0.5);
-      } else {
-        // this price is below the other
-        return xLabelSize*0.25;
-      }
-    } else {
-      return 0;
     }
   }
 
@@ -461,25 +441,6 @@ class LineChart extends Component {
     return (this.makeLabelDate(activePoint.x, '_hover'));
   }
 
-  // Label Price for Hover Line
-  makeActiveLabelPrice(pricetype, position){
-    const {maxX} = this.boundaries;
-    const prices = this.state.activePoint.y;
-    let xPos = 0;
-    if (position === 'right') {
-      xPos = this.getSvgX(maxX);
-    }
-    return (
-      <ChartLabelPrice
-        price={prices[pricetype]}
-        xPos={xPos}
-        yPos={this.getSvgY(prices[pricetype])+this.getOffsetLabelPrice(prices, pricetype)}
-        priceType={pricetype}
-        cssExtra='_hover'
-      />
-    );
-  }
-
   // how many days does it take to reach this price?
   getDaysAfterStart(price) {
     const goalRate = 1+(this.props.growthRate/100);
@@ -512,10 +473,8 @@ class LineChart extends Component {
             {this.createHoverLineAhead()}
             {this.createHoverLineAbove()}
             {this.makeActiveDate()}
-            {this.makeActiveLabelPrice('p', 'left')}
-            {this.makeActiveLabelPrice('m', 'left')}
-            {this.makeActiveLabelPrice('p', 'right')}
-            {this.makeActiveLabelPrice('m', 'right')}
+            <ChartLabelPricePair activePoint={activePoint}                           cssExtra='_hover' />
+            <ChartLabelPricePair activePoint={activePoint} xPos={svgWidth - yLabelSize} cssExtra='_hover' />
           </g>
          );
   }
