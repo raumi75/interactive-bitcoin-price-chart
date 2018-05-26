@@ -9,7 +9,7 @@ import ChartLabelPricePair from './ChartLabelPricePair.js';
 import ChartActivePoint from './ChartActivePoint.js';
 import ChartVerticalLine from './ChartVerticalLine.js';
 import ChartHorizontalLine from './ChartHorizontalLine.js';
-import {dateFormat} from './App.js';
+import {dateFormat, apiDateFormat} from './App.js';
 import ToolTip from './ToolTip';
 const chartRatio = 3; // Chart's height is 1/3 of width
 let stopHoverTimer;
@@ -265,7 +265,7 @@ class LineChart extends Component {
       let dateText = data[count].d;
       let svgX = this.getSvgX(data[count].x);
 
-      if (dateText === moment().utc().format(dateFormat) ) {
+      if (dateText === moment().utc().format(apiDateFormat) ) {
         dateText = 'now';
       }
       return(
