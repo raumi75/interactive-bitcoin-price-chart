@@ -25,7 +25,7 @@ export default class ToolTip extends Component {
           style={ placementStyles }
         >
           <div className="hover-percent">{(Math.abs(activePoint.y.p/activePoint.y.m-1)).toLocaleString('en-us', { style: 'percent', maximumSignificantDigits: 3})} {this.getAboveOrBelow()}</div>
-          <div>{Math.abs(this.props.daysPredictionAhead)} days {this.getAheadOrBehind()}</div>
+          <div>{Math.abs(activePoint.daysPredictionAhead)} days {this.getAheadOrBehind()}</div>
         </div>
       );
     } else {

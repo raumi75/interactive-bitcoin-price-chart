@@ -357,6 +357,8 @@ class LineChart extends Component {
       p: this.getSvgY(closestPoint.y.p),
       m: this.getSvgY(closestPoint.y.m)
     }
+    closestPoint.daysPredictionAhead = this.getDaysAheadPoint(closestPoint);
+    closestPoint.svgXPredictionAhead = this.getSvgX(closestPoint.x + closestPoint.daysPredictionAhead);
 
     if (this.areCoordsOnChart(relativeLoc)) {
       this.handleChartHover( relativeLoc, closestPoint);
@@ -384,23 +386,16 @@ class LineChart extends Component {
   }
 
   handleChartHover(hoverLoc, activePoint) {
-    let daysPredictionAhead = null;
-    if (hoverLoc > 0) {
-      daysPredictionAhead = this.getDaysAheadPoint(activePoint);
-    }
     this.setState({
       hoverLoc: hoverLoc,
-      activePoint: activePoint,
-      daysPredictionAhead: daysPredictionAhead
+      activePoint: activePoint
     })
   }
-
-
 
   // horizontal line between hover point price and prediction curve price
   // to visualize how many days price is ahead or behind
   createHoverLineAhead() {
-    const {svgHeight, daysPredictionAhead, activePoint} = this.state;
+    const {svgHeight, activePoint} = this.state;
 
     if (activePoint.y.m === 0 || activePoint.y.p === 0) {
       return (null);
@@ -410,18 +405,18 @@ class LineChart extends Component {
         <line
           className={'hoverline_'+this.getAboveOrBelow()}
           x1={activePoint.svgX} y1={activePoint.svgY.p}
-          x2={this.getSvgX(activePoint.x+daysPredictionAhead)} y2={activePoint.svgY.p}
+          x2={activePoint.svgXPredictionAhead} y2={activePoint.svgY.p}
           strokeDasharray="9"
         />
 
         <line
           className={'hoverline'}
-          x1={this.getSvgX(activePoint.x+daysPredictionAhead)} y1={activePoint.svgY.p}
-          x2={this.getSvgX(activePoint.x+daysPredictionAhead)} y2={svgHeight - xLabelSize}
+          x1={activePoint.svgXPredictionAhead} y1={activePoint.svgY.p}
+          x2={activePoint.svgXPredictionAhead} y2={svgHeight - xLabelSize}
           strokeDasharray="9"
         />
 
-        {this.makeLabelDate(activePoint.x+daysPredictionAhead, '')}
+        {this.makeLabelDate(activePoint.x+activePoint.daysPredictionAhead, '')}
       </g>
       )
     }  }
@@ -513,7 +508,7 @@ class LineChart extends Component {
   }
 
   render() {
-    const {svgHeight, svgWidth, hoverLoc, activePoint, daysPredictionAhead} = this.state;
+    const {svgHeight, svgWidth, hoverLoc, activePoint} = this.state;
     this.boundaries = getDataBoundaries(this.props.data);
 
     this.setScale();
@@ -527,7 +522,6 @@ class LineChart extends Component {
             <ToolTip
               hoverLoc={hoverLoc}
               activePoint={activePoint}
-              daysPredictionAhead={daysPredictionAhead}
             />
           : null
           }
