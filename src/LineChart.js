@@ -360,12 +360,21 @@ class LineChart extends Component {
     this.handleChartHover(null, null);
   }
 
+  // Only stop the hover display if mouse is out.
+  // Mouse could have left wiithout triggering onMouseLeave
+  // (e.g. when scrolling the page)
+  stopHoverIfOut() {
+    if (!(document.getElementById('chart').querySelector(':hover'))) {
+      this.stopHover();
+    }
+  }
+
   handleChartHover(hoverLoc, activePoint) {
     let daysPredictionAhead = null;
     clearTimeout(stopHoverTimer);
     if (hoverLoc > 0) {
       daysPredictionAhead = this.getDaysAheadPoint(activePoint);
-      stopHoverTimer = setTimeout(function() { this.stopHover(); }.bind(this), stopHoverMilliseconds);
+      stopHoverTimer = setTimeout(function() { this.stopHoverIfOut(); }.bind(this), stopHoverMilliseconds);
     }
     this.setState({
       hoverLoc: hoverLoc,
@@ -499,7 +508,10 @@ class LineChart extends Component {
 
     this.setScale();
     return (
-      <div>
+      <div
+        id="chart"
+        onMouseLeave= { () => this.stopHover() }
+      >
         <div className="popup">
           {hoverLoc ?
             <ToolTip
