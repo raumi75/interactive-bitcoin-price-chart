@@ -54,7 +54,12 @@ class LineChart extends Component {
   }
 
   updateWindowDimensions = () => {
-    this.setState({ svgWidth: document.documentElement.clientWidth, svgHeight: document.documentElement.clientWidth/chartRatio });
+    this.setState({
+      svgWidth: document.documentElement.clientWidth,
+      svgHeight: document.documentElement.clientWidth/chartRatio,
+      hoverLoc: null,
+      activePoint: null
+    });
   }
 
 
@@ -299,16 +304,21 @@ class LineChart extends Component {
   }
 
   getTouchCoords = (e) => {
+    clearTimeout(stopHoverTimer);
+
     if (this.areCoordsOnChart(e.touches[0].pageX)) {
       e.preventDefault();
       this.getCoords(e.touches[0].pageX);
+      stopHoverTimer = setTimeout(function() { this.stopHover(); }.bind(this), stopHoverMilliseconds);
     } else {
       this.stopHover();
     }
   }
 
   getMouseCoords(e) {
+    clearTimeout(stopHoverTimer);
     this.getCoords(e.pageX);
+    stopHoverTimer = setTimeout(function() { this.stopHoverIfOut(); }.bind(this), stopHoverMilliseconds);
   }
 
   areCoordsOnChart(relativeLoc) {
@@ -356,7 +366,7 @@ class LineChart extends Component {
 
   }
   // STOP HOVER
-  stopHover(){
+  stopHover() {
     this.handleChartHover(null, null);
   }
 
@@ -366,15 +376,16 @@ class LineChart extends Component {
   stopHoverIfOut() {
     if (!(document.getElementById('chart').querySelector(':hover'))) {
       this.stopHover();
+    } else {
+      // check again later
+      stopHoverTimer = setTimeout(function() { this.stopHoverIfOut(); }.bind(this), stopHoverMilliseconds);
     }
   }
 
   handleChartHover(hoverLoc, activePoint) {
     let daysPredictionAhead = null;
-    clearTimeout(stopHoverTimer);
     if (hoverLoc > 0) {
       daysPredictionAhead = this.getDaysAheadPoint(activePoint);
-      stopHoverTimer = setTimeout(function() { this.stopHoverIfOut(); }.bind(this), stopHoverMilliseconds);
     }
     this.setState({
       hoverLoc: hoverLoc,
