@@ -393,19 +393,18 @@ class LineChart extends Component {
     if (activePoint.y.m === 0 || activePoint.y.p === 0) {
       return (null);
     } else {
-      let svgY = this.getSvgY(activePoint.y.p);
       return (
       <g>
         <line
           className={'hoverline_'+this.getAboveOrBelow()}
-          x1={this.getSvgX(activePoint.x)} y1={svgY}
-          x2={this.getSvgX(activePoint.x+daysPredictionAhead)} y2={svgY}
+          x1={activePoint.svgX} y1={activePoint.svgY.p}
+          x2={this.getSvgX(activePoint.x+daysPredictionAhead)} y2={activePoint.svgY.p}
           strokeDasharray="9"
         />
 
         <line
           className={'hoverline'}
-          x1={this.getSvgX(activePoint.x+daysPredictionAhead)} y1={svgY}
+          x1={this.getSvgX(activePoint.x+daysPredictionAhead)} y1={activePoint.svgY.p}
           x2={this.getSvgX(activePoint.x+daysPredictionAhead)} y2={svgHeight - xLabelSize}
           strokeDasharray="9"
         />
@@ -423,12 +422,11 @@ class LineChart extends Component {
     if (activePoint.y.m === 0 || activePoint.y.p === 0) {
       return (null);
     } else {
-      let svgX = this.getSvgX(activePoint.x);
       return (
         <line
           className={'hoverline_'+this.getAboveOrBelow()}
-          x1={svgX} y1={this.getSvgY(activePoint.y.m)}
-          x2={svgX} y2={this.getSvgY(activePoint.y.p)}
+          x1={activePoint.svgX} y1={activePoint.svgY.m}
+          x2={activePoint.svgX} y2={activePoint.svgY.p}
           strokeDasharray="9"
         />
       )
