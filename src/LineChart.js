@@ -333,13 +333,9 @@ class LineChart extends Component {
     const chartWidth = this.state.svgWidth-yLabelSize*2;
 
     let svgData = [];
-    data.map((point, i) => {
+    data.map((point) => {
       svgData.push({
         svgX: this.getSvgX(point.x),
-        svgY: {
-          p: this.getSvgY(point.y.p),
-          m: this.getSvgY(point.y.m)
-        },
         x: point.x,
         d: point.d,
         y: point.y
@@ -355,6 +351,11 @@ class LineChart extends Component {
         c = Math.abs(svgData[i].svgX - relativeLoc);
         closestPoint = svgData[i];
       }
+    }
+
+    closestPoint.svgY = {
+      p: this.getSvgY(closestPoint.y.p),
+      m: this.getSvgY(closestPoint.y.m)
     }
 
     if (this.areCoordsOnChart(relativeLoc)) {
