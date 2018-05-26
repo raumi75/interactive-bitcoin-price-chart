@@ -29,8 +29,8 @@ import ExplainMcAfeePerson from './ExplainMcAfeePerson.js';
 import PageHead from './PageHead.js';
 import PageFoot from './PageFoot.js';
 
-export const dateFormat    = 'YYYY-MM-DD';
-export const apiDateFormat = 'YYYY-MM-DD'; // dateformat used by CoinDesk in url and json
+export const dateFormat = 'YYYY-MM-DD';
+const apiDateFormat = 'YYYY-MM-DD'; // dateformat used by CoinDesk in url and json
 
 var predictionCount = 1263;   // days startDate to targetDate (2020-12-31)
 var offsetPrediction = -2389; // days startDate to minHistoricalStart
