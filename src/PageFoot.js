@@ -11,12 +11,11 @@ class PageFoot extends Component {
     <Row className="footer" id="pagefoot">
       <Col xs={12}>
         <p>Data-Source: <strong>Powered by <a href="https://www.coindesk.com/price/">CoinDesk</a></strong></p>
-        <p>Chart based on Brandon Morellis <a href="https://codeburst.io/how-i-built-an-interactive-30-day-bitcoin-price-graph-with-react-and-an-api-6fe551c2ab1d">Tutorial</a></p>
+        <p>Chart based on Brandon Morelli's <a href="https://codeburst.io/how-i-built-an-interactive-30-day-bitcoin-price-graph-with-react-and-an-api-6fe551c2ab1d">Tutorial</a></p>
         <p>Source: <a href="https://github.com/raumi75/mcafeetracker">raumi75@github</a></p>
-        <p><strong>Suggestions, Feedback, Ideas?</strong> Get in touch: <a href="https://reddit.com/u/raumi75/">/u/raumi75</a>, <a href="https://twitter.com/raumi75">@raumi75</a></p>
+        <p><strong>Suggestions, Feedback, Ideas?</strong> Get in touch: <a href="https://reddit.com/u/raumi75/">/u/raumi75</a> on reddit</p>
         <p>
           Spread the word:
-          <a href="https://twitter.com/raumi75/status/964468501657391104"> retweet</a>,
           share on <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A//fnordprefekt.de">Facebook</a>,
           or on <a href="https://plus.google.com/share?url=https%3A//fnordprefekt.de">Google Plus</a>
         </p>
