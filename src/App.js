@@ -35,9 +35,9 @@ const apiDateFormat = 'YYYY-MM-DD'; // dateformat used by CoinDesk in url and js
 var predictionCount = 1263;   // days startDate to targetDate (2020-12-31)
 var offsetPrediction = -2389; // days startDate to minHistoricalStart
 const minSliderDistance = 29;
-const minHistoricalStart = moment('2011-01-01');     // Coindesk API requires historicalStart >= 2010-07-17
-const maxTargetDate = moment('2030-01-01');
-const defaultHistoricalStart = moment('2017-01-01'); // show historical Data starting this day by default
+const minHistoricalStart = moment.utc('2011-01-01');     // Coindesk API requires historicalStart >= 2010-07-17
+const maxTargetDate = moment.utc('2030-01-01');
+const defaultHistoricalStart = moment.utc('2017-01-01'); // show historical Data starting this day by default
 const defaultRangeMin = defaultHistoricalStart.diff(minHistoricalStart, 'days'); // left slider can go
 export const timerMilliseconds = 1000;
 
