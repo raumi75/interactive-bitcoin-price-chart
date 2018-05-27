@@ -70,8 +70,8 @@ class App extends Component {
       lastHistoricalDate: moment('2011-01-01T00:00:00'),
       loadedActualAt: moment('2011-01-01T00:00:00'), // last attempt to download actual price
       updatedAt:      moment('2011-01-01T00:00:00'), // last successful update of actual price
-      startDate:  (getParameterByName('startdate')  ? moment(getParameterByName('startdate')) : this.props.startDate),
-      targetDate: (getParameterByName('targetdate') ? moment(getParameterByName('targetdate')) : this.props.targetDate),
+      startDate:  (getParameterByName('startdate')  ? moment.utc(getParameterByName('startdate')) : this.props.startDate),
+      targetDate: (getParameterByName('targetdate') ? moment.utc(getParameterByName('targetdate')) : this.props.targetDate),
       pausedAt: null // if this is a timestamp, the price will not get updated during data entry.
     }
   }
@@ -411,7 +411,7 @@ class App extends Component {
   // User entered a new start date
   handleStartDateChange = (value) => {
     const {dataComplete, historicalStart} = this.state;
-    let inputDate = moment(value);
+    let inputDate = moment.utc(value, apiDateFormat);
     if (inputDate.isAfter(moment().subtract(1, 'week')) || !inputDate.isValid() ) {
       inputDate = moment().subtract(1, 'week');
     }
@@ -445,7 +445,7 @@ class App extends Component {
 
   handleTargetDateChange = (value) => {
     const {startDate} = this.state;
-    let inputDate = moment(value);
+    let inputDate = moment.utc(value, apiDateFormat);
     if (inputDate.isBefore(moment().add(1, 'month'))) {
       inputDate = moment().add(1, 'month');
     }
@@ -700,7 +700,7 @@ class App extends Component {
                   onTargetDateChange={this.handleTargetDateChange}
 
                   targetPrice={growthRate !== 0 ? targetPrice : ''}
-                  
+
                   pauseEvents={this.pauseTimer}
                   resumeEvents={this.resumeTimer}
                 />
@@ -806,8 +806,8 @@ class App extends Component {
 
 // DEFAULT PROPS
 App.defaultProps = {
-  startDate:  moment('2017-07-17'),         // Date of first McAfee Tweet
-  targetDate:  moment('2020-12-31'),        // Day McAfee predicted the price
+  startDate:  moment.utc('2017-07-17'),         // Date of first McAfee Tweet
+  targetDate: moment.utc('2020-12-31'),        // Day McAfee predicted the price
   growthRate:  0.484095526          // daily growth rate to goal of 1.000.000 USD/BTC
 }
 
