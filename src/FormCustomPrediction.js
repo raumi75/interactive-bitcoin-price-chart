@@ -5,6 +5,7 @@ import './FormCustomPrediction.css';
 import getGrowthRate from './growthRate.js';
 import './katex.css'; // https://github.com/Khan/KaTeX/releases/tag/v0.8.3
 import DatePicker from "react-bootstrap-date-picker";
+import {dateFormat} from "./App.js";
 import Latex from 'react-latex';
 import {getUrlDraper, getUrlMcAfee} from './urls.js';
 import moment from 'moment';
@@ -23,12 +24,12 @@ export default class FormCustomPrediction extends Component {
         </Col>
         <Col sm={8} md={5}>
           <DatePicker id="startdatepicker"
-            value={startDate.format('YYYY-MM-DD')}
+            value={startDate.format(dateFormat)}
             onChange={this.props.onStartDateChange}
             onFocus={this.props.pauseEvents}
             onBlur={this.props.resumeEvents}
-            minDate={historicalStart.format('YYYY-MM-DD')}
-            maxDate={historicalEnd.subtract(1, 'week').format('YYYY-MM-DD')}
+            minDate={historicalStart.format(dateFormat)}
+            maxDate={historicalEnd.subtract(1, 'week').format(dateFormat)}
             showClearButton={false}
             dateFormat="YYYY-MM-DD"
           />
@@ -73,10 +74,10 @@ export default class FormCustomPrediction extends Component {
         </Col>
         <Col sm={8} md={5}>
           <DatePicker id="targetdatepicker"
-            value={targetDate.format('YYYY-MM-DD')}
+            value={targetDate.format(dateFormat)}
             onChange={this.props.onTargetDateChange}
-            minDate={historicalEnd.add(1, 'month').format('YYYY-MM-DD')}
-            maxDate={maxTargetDate.format('YYYY-MM-DD')}
+            minDate={historicalStart.add(1, 'month').format(dateFormat)}
+            maxDate={maxTargetDate.format(dateFormat)}
             onFocus={this.props.pauseEvents}
             onBlur={this.props.resumeEvents}
             showClearButton={false}
