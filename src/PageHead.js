@@ -32,7 +32,7 @@ export default class PageHead extends Component {
       <div>
         <Row className="about">
           <Col xs={12}>
-            <small>made by a bitcoin fan - <a href="#pagefoot">Feedback or tips</a>.</small>
+            <small>made by a bitcoin fan - <a href="#pagefoot">donations keep it <strong>ad free</strong></a>.</small>
           </Col>
         </Row>
 
