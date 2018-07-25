@@ -3,18 +3,17 @@
   "version": "1.4.0",
   "dependencies": {
     "babel-polyfill": "^6.26.0",
-    "moment": "^2.22.1",
+    "moment": "^2.22.2",
     "npm": "^5.10.0",
     "rc-slider": "^8.6.1",
-    "react": "^16.3.2",
+    "react": "^16.4.1",
     "react-bootstrap": "^0.32.1",
     "react-bootstrap-date-picker": "github:maxaggedon/react-bootstrap-date-picker",
-    "react-dom": "^16.3.2",
-    "react-latex": "^1.2.0",
-    "serve": "^6.5.6"
+    "react-dom": "^16.4.1",
+    "react-latex": "^1.2.0"
   },
   "devDependencies": {
-    "react-scripts": "1.0.10"
+    "react-scripts": "^1.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
