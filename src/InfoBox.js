@@ -67,7 +67,7 @@ export default class InfoBox extends Component {
 
         <Col xs={4} md={2} className="infobox">
           <div className="subtext"><a href="https://www.coindesk.com/price/" title="Powered by coindesk">Actual</a></div>
-          <div className="heading actual"><a href="https://www.coindesk.com/price/" title="Powered by coindesk">{formatDollar(actualPriceNow)}</a></div>
+          <div className="heading actual"><a href="https://www.coindesk.com/price/" title="Powered by coindesk">{ actualPriceNow!==1 ? formatDollar(actualPriceNow) : <em>loading</em> }</a></div>
           {(!navigator.onLine || (60*60*24*7 > PriceAgeSeconds > 120))
             ?
               <div className="subtext"><small>{moment(actualUpdatedAt).fromNow()}. { (loadingActualPrice) ? 'loading...' : '(now offline)' }</small></div>
@@ -79,7 +79,7 @@ export default class InfoBox extends Component {
 
         <Col xs={4} md={2} className="infobox">
           <div className="subtext">Bitcoin is</div>
-          <div className={"heading "+aboveOrBelow }>{this.getStrPercent()}</div>
+          <div className={"heading "+aboveOrBelow }>{actualPriceNow !== 1 ? this.getStrPercent() : '...'}</div>
           <div className={"subtext "+aboveOrBelow }>{aboveOrBelow}</div>
         </Col>
       </Row>
