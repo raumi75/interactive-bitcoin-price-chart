@@ -22,6 +22,8 @@ class PageFoot extends Component {
         <p>Follow me on <a href="https://twitter.com/raumi75">Twitter (@raumi75)</a> for daily price updates.</p>
         <p>Do you love this site? It's open-source, ad-free, anonymous, cookie-free and tracker-free. Tips are welcome.</p>
         <DonateQr btc_address="3B19wMMJD7Xjf9ajW2oRcfVfKjRprWmGrG" />
+        <p>Or use this button to</p>
+        <p><a href="https://tippin.me/@raumi75" className="btn btn-danger btn-lg">Tip me via ⚡️Lightning Network</a></p>
       </Col>
     </Row>
     );
