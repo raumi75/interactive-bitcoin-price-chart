@@ -51,13 +51,13 @@ class App extends Component {
       data: null,
       sortedData: null,
       countRange: [0, predictionCount],
-      activeTabKey: 2,
-      rangeMin: defaultRangeMin,
+      activeTabKey: 1,
+      rangeMin: 0,
       todayCount: 0, // chart data x value of todays prices record
       sliderMarks: {},
       historicalStart: minHistoricalStart, //'2011-01-01',
       historicalEnd: moment(),
-      scale: 'lin', // linear scale (also 'log' for logarithmic scale)
+      scale: 'log', // linear scale (also 'log' for logarithmic scale)
       growthRate: getParameterByName('percent') || this.props.growthRate,
       customPrediction: (getParameterByName('percent') !== null),
       startPrice: 0, // US$
@@ -174,6 +174,7 @@ class App extends Component {
           this.addMcAfeeRates();
           this.timerRefreshPrices = setInterval(() => this.refreshPrices(), timerMilliseconds);
           this.setSliderMarks();
+          this.handleRangeExtend();
         }
       );
     })
@@ -323,7 +324,7 @@ class App extends Component {
         this.handleRangeExtend();
         break;
       case 2:
-        this.setRangeDefault();
+        this.setRangePrediction();
         break;
       case 3:
         this.handleRange1m();
@@ -339,7 +340,7 @@ class App extends Component {
     }
   }
 
-  setRangeDefault = () => {
+  setRangePrediction = () => {
     var cr = [Math.max(-offsetPrediction,0), this.state.todayCount]
     this.setState({
       rangeMin: Math.min(defaultRangeMin, -offsetPrediction),
@@ -435,7 +436,7 @@ class App extends Component {
           startPrice: price,
         }
         , () => {
-            this.setRangeDefault();
+            this.setRangePrediction();
             this.setSliderMarks();
             this.addMcAfeeRates();
           }
@@ -460,7 +461,7 @@ class App extends Component {
       }, () => {
           predictionCount = inputDate.diff(startDate,'days')-offsetPrediction;
 
-          this.setRangeDefault();
+          this.setRangePrediction();
           this.setSliderMarks();
           this.addMcAfeeRates();                  }
     );
@@ -474,7 +475,7 @@ class App extends Component {
         startPrice: price
       }
       , () => {
-          this.setRangeDefault();
+          this.setRangePrediction();
           this.setSliderMarks();
           this.addMcAfeeRates();                  }
     );
