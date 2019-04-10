@@ -10,7 +10,6 @@ export default class InfoBox extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      predictionUpdatesIn: 60,  // seconds
       actualUpdatesIn: 60,  // seconds
     }
   }
@@ -25,7 +24,6 @@ export default class InfoBox extends Component {
 
   refreshProgressbar() {
     this.setState({
-      predictionUpdatesIn: this.props.predictionUpdatesAt.diff(moment(), 'seconds', true),
       actualUpdatesIn: this.props.actualUpdatedAt.diff(moment(), 'seconds', true)+60
      });
   }
@@ -49,8 +47,8 @@ export default class InfoBox extends Component {
   }
 
   render(){
-    const {predictionPriceNow, actualUpdatedAt, actualPriceNow, predictionUpdatesMax, loadingActualPrice} = this.props;
-    const {predictionUpdatesIn, actualUpdatesIn} = this.state;
+    const {predictionPriceNow, actualUpdatedAt, actualPriceNow, loadingActualPrice} = this.props;
+    const {actualUpdatesIn} = this.state;
     const aboveOrBelow = this.getAboveOrBelow();
     const PriceAgeSeconds = moment().diff(actualUpdatedAt, 'seconds');
 
@@ -62,7 +60,6 @@ export default class InfoBox extends Component {
         <Col xs={4} md={2} mdOffset={3} className="infobox">
           <div className="subtext">Predicted</div>
           <div className="heading predicted">{formatDollar(predictionPriceNow)}</div>
-          <Progress max={predictionUpdatesMax} value={predictionUpdatesIn} type="prediction" />
         </Col>
 
         <Col xs={4} md={2} className="infobox">
@@ -91,8 +88,6 @@ InfoBox.propTypes = {
   predictionPriceNow: PropTypes.number,
   actualUpdatedAt: PropTypes.instanceOf(moment),
   actualPriceNow: PropTypes.number,
-  predictionUpdatesAt: PropTypes.instanceOf(moment),
-  predictionUpdatesMax: PropTypes.number,
   loadingActualPrice:  PropTypes.bool
 }
 
@@ -102,5 +97,4 @@ InfoBox.defaultProps = {
   actualPriceNow: 10,
 
   predictionPriceNow: 10,
-  predictionUpdatesMax: 60,
 }
