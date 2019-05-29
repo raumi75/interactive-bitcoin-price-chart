@@ -283,7 +283,7 @@ class App extends Component {
   setSliderMarks = () => {
     const {historicalStart, startDate, targetDate} = this.state;
     var mark = {};
-    mark[0] = historicalStart.format(dateFormat);;
+    mark[0] = historicalStart.format(dateFormat);
     mark[startDate.diff(historicalStart,'days')] = startDate.format(dateFormat);
     mark[moment().diff(historicalStart,'days')] = 'now';
     mark[targetDate.diff(historicalStart,'days')] = targetDate.format(dateFormat);
