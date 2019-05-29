@@ -7,7 +7,7 @@ render() {
     <div>
       <h2>That parabolic curve - seriously?</h2>
       <p>
-        When you zoom out, the curve gets steeper and steeper.
+        When you look at the chart on a linear scale, the curve gets steeper and steeper.
         Relax! Growth curves look like that. Take the Dow Jones, a savings account
         with interest or bacteria growing in a petri dish.
       </p>
