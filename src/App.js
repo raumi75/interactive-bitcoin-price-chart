@@ -436,7 +436,7 @@ class App extends Component {
           startPrice: price,
         }
         , () => {
-            this.setRangePrediction();
+            this.handleRangeExtend();
             this.setSliderMarks();
             this.addMcAfeeRates();
           }
@@ -461,7 +461,7 @@ class App extends Component {
       }, () => {
           predictionCount = inputDate.diff(startDate,'days')-offsetPrediction;
 
-          this.setRangePrediction();
+          this.handleRangeExtend();
           this.setSliderMarks();
           this.addMcAfeeRates();                  }
     );
@@ -475,8 +475,7 @@ class App extends Component {
         startPrice: price
       }
       , () => {
-          this.setRangePrediction();
-          this.setSliderMarks();
+          this.handleRangeExtend();
           this.addMcAfeeRates();                  }
     );
   }
