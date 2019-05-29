@@ -13,7 +13,7 @@ import moment from 'moment';
 export default class FormCustomPrediction extends Component {
   render() {
     const {startDate, startPrice, growthRate, targetPrice, targetDate, maxTargetDate, historicalEnd, historicalStart} = this.props;
-
+    var minTargetDate = historicalStart.clone().add(1, 'month');
     return(
   <Well>
     <Form horizontal>
@@ -76,7 +76,7 @@ export default class FormCustomPrediction extends Component {
           <DatePicker id="targetdatepicker"
             value={targetDate.format(dateFormat)}
             onChange={this.props.onTargetDateChange}
-            minDate={historicalStart.add(1, 'month').format(dateFormat)}
+            minDate={minTargetDate.format(dateFormat)}
             maxDate={maxTargetDate.format(dateFormat)}
             onFocus={this.props.pauseEvents}
             onBlur={this.props.resumeEvents}
