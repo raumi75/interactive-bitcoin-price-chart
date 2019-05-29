@@ -571,7 +571,7 @@ class App extends Component {
 
   getUrl() {
     const {growthRate, startDate, targetDate, startPrice} = this.state;
-    return getUrl(growthRate, startDate, targetDate, startPrice);
+    return getUrl(growthRate, startDate.format(dateFormat), targetDate.format(dateFormat), startPrice);
   }
 
   render() {
