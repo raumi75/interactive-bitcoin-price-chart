@@ -5,7 +5,7 @@ export default class ExplainEnergy extends Component {
 render() { return (
   <div>
     <h2>Is bitcoin wasting electricity?</h2>
-    
+
     <p>
       Mining bitcoin is hard <strong>on purpose</strong>.
       The so called <strong>proof of work</strong> is what controls the money supply
@@ -40,6 +40,13 @@ render() { return (
     <p>
       Still not convinced? Think for a minute how complicated the current
       fiat banking system is and you will agree that bitcoin is a lot more efficient.
+    </p>
+
+    <p>
+      The Blogger Dan Held has written a very detailed
+      post <a href="https://www.danheld.com/blog/2019/1/5/pow-is-efficent">PoW
+      is Efficent</a> with calculations and comparison to other currencies and
+      assets.
     </p>
   </div>
     );
