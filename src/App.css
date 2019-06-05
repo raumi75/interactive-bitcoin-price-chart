@@ -2,10 +2,6 @@ body, html{
     overflow-x: hidden;
 }
 
-.redlineExplanation {
-  color: red;
-}
-
 #rangeTab {
   margin-top: 1em;
 }

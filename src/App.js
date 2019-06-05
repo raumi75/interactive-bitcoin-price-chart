@@ -9,7 +9,6 @@ import InfoBox from './InfoBox';
 import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
-import formatDollar from './formatting.js';
 import {getParameterByName} from './getparameter.js';
 import RadioLinLog from './RadioLinLog.js';
 import FormCustomPrediction from './FormCustomPrediction.js';
@@ -669,7 +668,6 @@ class App extends Component {
 
             <Row>
               <Col xs={12}>
-                <p className="lead redlineExplanation">The red line steadily grows to { formatDollar(targetPrice) } per BTC. Move the slider to zoom.</p>
               </Col>
             </Row>
           </Grid>
