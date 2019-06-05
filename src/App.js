@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { Grid, Row , Col, Tabs, Tab} from 'react-bootstrap';
+import { Grid, Row , Col, Tabs, Tab, Alert} from 'react-bootstrap';
 import './bootstrap.css';
 import './App.css';
 import LineChart from './LineChart';
@@ -667,7 +667,12 @@ class App extends Component {
             </Row>
 
             <Row>
-              <Col xs={12}>
+              <Col xs={12} lg={8} lgOffset={2}>
+                <Alert bsStyle="success">
+                   <p class="lead text-center"><span role="img" aria-label="speaker">🔊</span> Listen to the <a
+                   href="http://funwithcrypto.libsyn.com/fun-with-crypto-podcast-season-2-episode-24">Fun
+                   With Crypto Episode</a> about this site!</p>
+                </Alert>
               </Col>
             </Row>
           </Grid>

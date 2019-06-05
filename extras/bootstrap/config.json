@@ -392,10 +392,10 @@
     "input-groups.less",
     "navs.less",
     "labels.less",
+    "alerts.less",
     "panels.less",
     "wells.less",
     "popovers.less"
   ],
-  "js": [],
-  "customizerUrl": "<none>"
+  "js": []
 }

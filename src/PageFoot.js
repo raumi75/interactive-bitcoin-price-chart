@@ -14,6 +14,7 @@ class PageFoot extends Component {
         <p>Chart based on Brandon Morelli's <a href="https://codeburst.io/how-i-built-an-interactive-30-day-bitcoin-price-graph-with-react-and-an-api-6fe551c2ab1d">Tutorial</a></p>
         <p>Source: <a href="https://github.com/raumi75/mcafeetracker">raumi75@github</a></p>
         <p><strong>Suggestions, Feedback, Ideas?</strong> Get in touch: <a href="https://reddit.com/u/raumi75/">/u/raumi75</a>, <a href="https://twitter.com/raumi75">@raumi75</a></p>
+        <p>Listen to the <span role="img" aria-label="microphone">🎤</span> <a href="http://funwithcrypto.libsyn.com/fun-with-crypto-podcast-season-2-episode-24">Fun With Crypto Podcast</a> where I talk to coinicarus about this site.</p>
         <p>
           Spread the word:
           share on <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A//fnordprefekt.de">Facebook</a>,
