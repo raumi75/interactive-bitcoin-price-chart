@@ -29,7 +29,7 @@ export default class ToolTip extends Component {
         </div>
       );
     } else {
-      return (null);
+      return null;
     }
 
   }

@@ -398,7 +398,7 @@ class LineChart extends Component {
     const {svgHeight, activePoint} = this.state;
 
     if (activePoint.y.m === 0 || activePoint.y.p === 0) {
-      return (null);
+      return null;
     } else {
       return (
       <g>
@@ -427,7 +427,7 @@ class LineChart extends Component {
     const {activePoint} = this.state;
 
     if (activePoint.y.m === 0 || activePoint.y.p === 0) {
-      return (null);
+      return null;
     } else {
       return (
         <line

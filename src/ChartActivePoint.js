@@ -15,7 +15,7 @@ export default class ChartActivePoint extends Component {
         />
       );
     } else {
-      return (null);
+      return null;
     }
   }
 }
