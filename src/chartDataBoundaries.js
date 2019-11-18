@@ -25,36 +25,31 @@ export default function getDataBoundaries(data) {
   };
 
   let getFirstPoints = function(data) {
-    let points = {
+    return {
       p: getFirstPoint(data, 'p'),
       m: getFirstPoint(data, 'm'),
     };
-    return points;
   };
 
   let getLastPoints = function(data) {
-    let points = {
+    return {
       p: getLastPoint(data, 'p'),
       m: getLastPoint(data, 'm')
     };
-    return points;
   };
 
   let getMaxPoints = function(data) {
-    let points = {
+    return {
       p: getMaxPoint(data, 'p'),
       m: getMaxPoint(data, 'm')
     };
-    return points;
   };
 
   let getMinPoints = function(data) {
-    let points = {
+    return {
       p: getMinPoint(data, 'p'),
       m: getMinPoint(data, 'm')
     };
-
-    return points;
   };
 
   let firstPoints = getFirstPoints(data);
