@@ -51,4 +51,4 @@ export default class ToolTip extends Component {
 ToolTip.propTypes = {
   hoverLoc: PropTypes.number.isRequired,
   activePoint: PropTypes.object.isRequired
-}
+};

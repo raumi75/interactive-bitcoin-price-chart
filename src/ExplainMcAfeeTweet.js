@@ -35,4 +35,4 @@ export default class ExplainMcAfeeTweet extends Component {
 
 ExplainMcAfeeTweet.propTypes = {
   startPrice: PropTypes.number.isRequired
-}
+};

@@ -152,7 +152,7 @@ export default class FormCustomPrediction extends Component {
   onTargetPriceChange = (e) => {
     const {startPrice} = this.props;
     const targetPrice = Number(e.target.value);
-    let gR = 0
+    let gR = 0;
     if ( targetPrice === 0 || isNaN(targetPrice) ) {
       // input was deleted or 0
     } else {
@@ -160,7 +160,7 @@ export default class FormCustomPrediction extends Component {
     }
     let fakeEvent = {target: {value: gR} };
     this.props.onGrowthRateChange(fakeEvent);
-  }
+  };
 
   predictionDays() {
     return this.props.targetDate.diff(this.props.startDate, 'days');
@@ -192,4 +192,4 @@ FormCustomPrediction.propTypes = {
   onGrowthRateChange:  PropTypes.func.isRequired,
   pauseEvents:  PropTypes.func.isRequired,
   resumeEvents: PropTypes.func.isRequired
-}
+};

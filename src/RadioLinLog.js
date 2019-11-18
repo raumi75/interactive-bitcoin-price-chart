@@ -6,7 +6,7 @@ export default class RadioLinLog extends Component {
 
   handleScaleChange = (e) => {
     this.props.onChange(e.target.value === 'lin' ? 'lin' : 'log');
-  }
+  };
 
   render() {
     const {scale} = this.props;
@@ -25,4 +25,4 @@ export default class RadioLinLog extends Component {
 RadioLinLog.propTypes = {
   scale: PropTypes.oneOf(['lin', 'log']),
   onChange: PropTypes.func.isRequired
-}
+};

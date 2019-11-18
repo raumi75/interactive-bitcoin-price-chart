@@ -15,7 +15,7 @@ export default class FormPredictionDateForPrice extends Component {
 
   handlePriceChange = (e) => {
     this.setState({price: e.target.value });
-  }
+  };
 
   getDaysForPrice = () => {
     const {startPrice, growthRate} = this.props;
@@ -23,7 +23,7 @@ export default class FormPredictionDateForPrice extends Component {
     if (this.isPriceInRange()) {
       return Math.ceil(Math.log(price/startPrice)/Math.log(1+growthRate/100)-1);
     }
-  }
+  };
 
   getDateForPrice() {
     const {startDate} = this.props;
@@ -54,7 +54,7 @@ export default class FormPredictionDateForPrice extends Component {
       price = this.state.price;
     }
     return price;
-  }
+  };
 
   latexMathDaysFromPrice() {
     const {startDate, startPrice, growthRate} = this.props;
@@ -111,4 +111,4 @@ FormPredictionDateForPrice.propTypes = {
   startDate: PropTypes.instanceOf(moment),
   startPrice: PropTypes.number,
   growthRate: PropTypes.number
-}
+};

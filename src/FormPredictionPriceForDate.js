@@ -20,7 +20,7 @@ export default class FormPredictionPriceForDate extends Component {
     if (typeof(value) !== 'undefined') {
       this.setState({date: moment(value) });
     }
-  }
+  };
 
   getDaysSincePrediction() {
     const {startDate} = this.props;
@@ -110,4 +110,4 @@ FormPredictionPriceForDate.propTypes = {
   growthRate: PropTypes.number,
   pauseEvents: PropTypes.func.isRequired,
   resumeEvents: PropTypes.func.isRequired
-}
+};

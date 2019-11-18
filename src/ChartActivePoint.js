@@ -31,11 +31,11 @@ ChartActivePoint.defaultProps = {
   pointRadius: 5,
   color: 'grey',
   priceType: 'p'
-}
+};
 
 ChartActivePoint.propTypes = {
   pointRadius: PropTypes.number,
   color: PropTypes.string,
   activePoint: PropTypes.object.isRequired,
   priceType: PropTypes.oneOf(['p', 'm'])
-}
+};

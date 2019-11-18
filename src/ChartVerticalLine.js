@@ -19,10 +19,10 @@ ChartVerticalLine.defaultProps = {
   x: 0,
   height: 0,
   className: 'hoverline'
-}
+};
 
 ChartVerticalLine.propTypes = {
   x: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
   className: PropTypes.string
-}
+};

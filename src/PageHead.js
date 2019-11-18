@@ -51,4 +51,4 @@ PageHead.propTypes = {
   customPrediction: PropTypes.bool,
   targetPrice: PropTypes.number,
   targetDate: PropTypes.instanceOf(moment)
-}
+};

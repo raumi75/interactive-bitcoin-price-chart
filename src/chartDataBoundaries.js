@@ -2,7 +2,7 @@ export default function getDataBoundaries(data) {
 
   let getFirstPoint = function(data, pricetype) {
     return data.find( function (v) { return v.y[pricetype] > 0; })
-  }
+  };
 
   let getMaxPoint = function(data, pricetype) {
     if (typeof(getFirstPoint(data, pricetype)) === 'undefined') {
@@ -10,7 +10,7 @@ export default function getDataBoundaries(data) {
     } else {
       return data.reduce((max,  d) => d.y[pricetype] > max.y[pricetype] ? d : max,  getFirstPoint(data, pricetype) );
     }
-  }
+  };
 
   let getMinPoint = function(data, pricetype) {
     if (getMaxPoint(data, pricetype) === 0) {
@@ -18,11 +18,11 @@ export default function getDataBoundaries(data) {
     } else {
       return data.reduce((min,  d) => d.y[pricetype] < min.y[pricetype] ? d : min,  getMaxPoint(data, pricetype) );
     }
-  }
+  };
 
   let getLastPoint= function(data, pricetype) {
     return data.reduce((last, d) => d.y[pricetype] > 0   ? d : last, getMaxPoint(data, pricetype) )
-  }
+  };
 
   let getFirstPoints = function(data) {
     let points = {
@@ -30,32 +30,32 @@ export default function getDataBoundaries(data) {
       m: getFirstPoint(data, 'm'),
     };
     return points;
-  }
+  };
 
   let getLastPoints = function(data) {
     let points = {
       p: getLastPoint(data, 'p'),
       m: getLastPoint(data, 'm')
-    }
+    };
     return points;
-  }
+  };
 
   let getMaxPoints = function(data) {
     let points = {
       p: getMaxPoint(data, 'p'),
       m: getMaxPoint(data, 'm')
-    }
+    };
     return points;
-  }
+  };
 
   let getMinPoints = function(data) {
     let points = {
       p: getMinPoint(data, 'p'),
       m: getMinPoint(data, 'm')
-    }
+    };
 
     return points;
-  }
+  };
 
   let firstPoints = getFirstPoints(data);
   let lastPoints  = getLastPoints(data);
@@ -64,11 +64,11 @@ export default function getDataBoundaries(data) {
 
   let getMinX = function(data) {
     return 0;
-  }
+  };
 
   let getMaxX = function(data) {
     return data.length-1;
-  }
+  };
 
   let getMaxY = function() {
     if (maxPoints.m === 0) {
@@ -78,7 +78,7 @@ export default function getDataBoundaries(data) {
       return maxPoints.m.y.m;
     }
     return Math.max(maxPoints.p.y.p, maxPoints.m.y.m);
-  }
+  };
 
   let getMinY = function(data) {
     var yMins = [];
@@ -96,7 +96,7 @@ export default function getDataBoundaries(data) {
     (y > 0 && y < min) ? y : min
     ,  1000000 );
 
-  }
+  };
 
   let minX = getMinX(data);
   let maxX = getMaxX(data);

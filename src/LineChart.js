@@ -60,7 +60,7 @@ class LineChart extends Component {
       hoverLoc: null,
       activePoint: null
     });
-  }
+  };
 
 
   // GET SVG COORDINATES
@@ -156,7 +156,7 @@ class LineChart extends Component {
           m: pricePoint.m
         };
         return pricePoint;
-      }
+      };
     const firstPrices = getSvgForPoint(this.boundaries.firstPrices);
     const lastPrices  = getSvgForPoint(this.boundaries.lastPrices);
 
@@ -203,7 +203,7 @@ class LineChart extends Component {
     });
 
     ticksXvalues.map( (x) =>{
-      ticks.push(this.makeLabelDate(x, 'datetick'))
+      ticks.push(this.makeLabelDate(x, 'datetick'));
       return null;
     });
 
@@ -313,7 +313,7 @@ class LineChart extends Component {
     } else {
       this.stopHover();
     }
-  }
+  };
 
   getMouseCoords(e) {
     clearTimeout(stopHoverTimer);
@@ -343,7 +343,7 @@ class LineChart extends Component {
       return null;
     });
 
-    var resolution = (chartWidth/svgData.length) // Optimize within this range. Just for speed.
+    var resolution = (chartWidth/svgData.length); // Optimize within this range. Just for speed.
 
     let closestPoint = svgData[0];
     for(let i = 0, c = resolution*2; i < svgData.length; i++){
@@ -356,7 +356,7 @@ class LineChart extends Component {
     closestPoint.svgY = {
       p: this.getSvgY(closestPoint.y.p),
       m: this.getSvgY(closestPoint.y.m)
-    }
+    };
     closestPoint.daysPredictionAhead = this.getDaysAheadPoint(closestPoint);
     closestPoint.svgXPredictionAhead = this.getSvgX(closestPoint.x + closestPoint.daysPredictionAhead);
 
@@ -561,7 +561,7 @@ class LineChart extends Component {
 LineChart.defaultProps = {
   data: [],
   scale: 'lin'
-}
+};
 
 export default LineChart;
 
@@ -573,4 +573,4 @@ LineChart.propTypes = {
   startPrice: PropTypes.number.isRequired,
   startDate: PropTypes.instanceOf(moment).isRequired,
   growthRate: PropTypes.number.isRequired
-}
+};

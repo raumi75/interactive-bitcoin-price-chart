@@ -86,11 +86,11 @@ class App extends Component {
 
   pauseTimer = () => {
     this.setState({pausedAt: moment() });
-  }
+  };
 
   resumeTimer = () => {
     this.setState({pausedAt: null});
-  }
+  };
 
   // Should historical prices in the chart be refreshed?
   // if the lastHistoricalDate is day before yesterday
@@ -101,7 +101,7 @@ class App extends Component {
     const expectedReleaseTime = 'T02:00:00+0000';
     const historicalAgeHours = moment().utc().diff(lastHistoricalDate + expectedReleaseTime, 'hours');
     return (historicalAgeHours > 48);
-  }
+  };
 
   loadData = () => {
     const {startDate, targetDate, historicalStart, historicalEnd, loadedChartAt}  = this.state;
@@ -187,7 +187,7 @@ class App extends Component {
         this.timerRefreshPrices = setInterval(() => this.refreshPrices(), timerMilliseconds);
       }
     });
-  }
+  };
 
   refreshPrices = () => {
     const {loadingActualPrice, updatedAt, pausedAt} = this.state;
@@ -216,7 +216,7 @@ class App extends Component {
       console.log('reloading chart after midnight');
       this.loadData();
     }
-  }
+  };
 
   // Load current bitcoin price from coindesk
   // and update the state
@@ -255,7 +255,7 @@ class App extends Component {
           loadingActualPrice: false
         });
       });
-  }
+  };
 
   setActualPriceNow = (pNow) => {
     let newDataComplete = this.state.dataComplete;
@@ -264,7 +264,7 @@ class App extends Component {
     this.setState ({ dataComplete: newDataComplete },
       () => this.cutData(this.state.countRange)
     );
-  }
+  };
 
   handleLineChartLength = (pos) => {
     if (pos[0] < 0) { pos[0] = 0; }
@@ -289,7 +289,7 @@ class App extends Component {
     this.setState ({
       sliderMarks: mark
     });
-  }
+  };
 
   cutData(pos) {
     var dataCut = this.state.dataComplete.slice(pos[0],pos[1]+1);
@@ -315,7 +315,7 @@ class App extends Component {
     this.setState({
       scale: value
     });
-  }
+  };
 
   handleSelectRangeTab = (key) => {
     switch (key) {
@@ -337,10 +337,10 @@ class App extends Component {
       default:
 
     }
-  }
+  };
 
   setRangePrediction = () => {
-    var cr = [Math.max(-offsetPrediction,0), this.state.todayCount]
+    var cr = [Math.max(-offsetPrediction,0), this.state.todayCount];
     this.setState({
       rangeMin: Math.min(defaultRangeMin, -offsetPrediction),
       scale: 'lin',
@@ -348,7 +348,7 @@ class App extends Component {
       activeTabKey: 2
     });
     this.cutData(cr);
-  }
+  };
 
   handleRangeExtend = () => {
     var cr = [0, predictionCount];
@@ -360,7 +360,7 @@ class App extends Component {
       }
     );
     this.cutData(cr);
-  }
+  };
 
   handleRange1m = () => {
     var cr = [this.state.todayCount-31, this.state.todayCount];
@@ -372,7 +372,7 @@ class App extends Component {
       }
     );
     this.cutData(cr);
-  }
+  };
 
   handleRange3m = () => {
     var cr = [this.state.todayCount-91, this.state.todayCount];
@@ -384,7 +384,7 @@ class App extends Component {
       }
     );
     this.cutData(cr);
-  }
+  };
 
   handleRange1y = () => {
     var cr = [this.state.todayCount-366, this.state.todayCount];
@@ -396,7 +396,7 @@ class App extends Component {
       }
     );
     this.cutData(cr);
-  }
+  };
 
   handleGrowthRateChange = (e) => {
     this.setState(
@@ -406,7 +406,7 @@ class App extends Component {
       }
       , () => this.addMcAfeeRates()
     );
-  }
+  };
 
   // User entered a new start date
   handleStartDateChange = (value) => {
@@ -421,7 +421,7 @@ class App extends Component {
 
     const inputDateFormatted = inputDate.format(apiDateFormat);
 
-    let dataStartDate = dataComplete.find(function(data) { return data.d === inputDateFormatted} )
+    let dataStartDate = dataComplete.find(function(data) { return data.d === inputDateFormatted} );
     let price = 0;
 
     if (typeof(dataStartDate)     !== 'undefined' ||
@@ -441,7 +441,7 @@ class App extends Component {
           }
       );
     }
-  }
+  };
 
   handleTargetDateChange = (value) => {
     const {startDate} = this.state;
@@ -464,7 +464,7 @@ class App extends Component {
           this.setSliderMarks();
           this.addMcAfeeRates();                  }
     );
-  }
+  };
 
   handleStartPriceChange = (e) => {
     let price = parseFloat(e.target.value);
@@ -477,7 +477,7 @@ class App extends Component {
           this.handleRangeExtend();
           this.addMcAfeeRates();                  }
     );
-  }
+  };
 
   // USD/BTC according to John McAfee's Tweet (1.000.000 by 2020)
   // @return float with 2 decimal digits
@@ -489,7 +489,7 @@ class App extends Component {
     } else {
       return 0;
     }
-  }
+  };
 
   refreshPredictionPriceNow() {
     const predictionNow = this.getPredictionPriceNow();
@@ -552,7 +552,7 @@ class App extends Component {
       () => this.cutData(this.state.countRange)
     );
 
-  }
+  };
 
   // count days between given date and prediction
   // @return integer
@@ -812,6 +812,6 @@ App.defaultProps = {
   startDate:  moment.utc('2017-07-17'),         // Date of first McAfee Tweet
   targetDate: moment.utc('2020-12-31'),        // Day McAfee predicted the price
   growthRate:  0.484095526          // daily growth rate to goal of 1.000.000 USD/BTC
-}
+};
 
 export default App;

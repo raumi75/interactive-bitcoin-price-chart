@@ -18,10 +18,10 @@ export default class ChartHorizontalLine extends Component {
 
 ChartHorizontalLine.defaultProps = {
   className: 'hoverline'
-}
+};
 
 ChartHorizontalLine.propTypes = {
   y: PropTypes.number.isRequired,
   width: PropTypes.number.isRequired,
   className: PropTypes.string
-}
+};

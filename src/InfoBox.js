@@ -89,7 +89,7 @@ InfoBox.propTypes = {
   actualUpdatedAt: PropTypes.instanceOf(moment),
   actualPriceNow: PropTypes.number,
   loadingActualPrice:  PropTypes.bool
-}
+};
 
 // DEFAULT PROPS
 InfoBox.defaultProps = {
@@ -97,4 +97,4 @@ InfoBox.defaultProps = {
   actualPriceNow: 10,
 
   predictionPriceNow: 10,
-}
+};

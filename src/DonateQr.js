@@ -23,4 +23,4 @@ export default class DonateQr extends Component {
 
 DonateQr.propTypes = {
   btc_address: PropTypes.string
-}
+};

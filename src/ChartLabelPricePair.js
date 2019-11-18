@@ -33,13 +33,13 @@ export default class ChartLabelPricePair extends Component {
 ChartLabelPricePair.defaultProps = {
   xPos: 0,
   cssExtra: ''
-}
+};
 
 ChartLabelPricePair.propTypes = {
   activePoint: PropTypes.object.isRequired,
   xPos: PropTypes.number,
   cssExtra: PropTypes.oneOf(['', '_hover'])
-}
+};
 
 
 
@@ -70,4 +70,4 @@ function getOffsetLabelPrice(prices, pricetype) {
 
 const getOtherPricetype = function(pricetype) {
   if (pricetype === 'm') { return 'p'; } else { return 'm'; }
-}
+};

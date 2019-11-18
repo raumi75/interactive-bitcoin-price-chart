@@ -25,4 +25,4 @@ Progress.propTypes = {
   value: PropTypes.number.isRequired,
   max:   PropTypes.number.isRequired,
   type:  PropTypes.oneOf(['actual', 'prediction']).isRequired
-}
+};

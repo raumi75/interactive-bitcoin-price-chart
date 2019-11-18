@@ -36,4 +36,4 @@ ExplainMath.propTypes = {
   startPrice: PropTypes.number,
   targetPrice: PropTypes.number,
   growthRate: PropTypes.number
-}
+};

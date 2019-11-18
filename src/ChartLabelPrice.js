@@ -42,7 +42,7 @@ ChartLabelPrice.propTypes = {
   yPos: PropTypes.number,
   priceType: PropTypes.oneOf(['p','m','s']),
   cssExtra: PropTypes.oneOf(['', '_hover'])
-}
+};
 
 ChartLabelPrice.defaultProps = {
   price: 10,
@@ -50,4 +50,4 @@ ChartLabelPrice.defaultProps = {
   yPos: 0,
   priceType: 'p',
   cssExtra: ''
-}
+};

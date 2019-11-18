@@ -35,4 +35,4 @@ export default class ExplainMcAfeePerson extends Component {
 
 ExplainMcAfeePerson.propTypes = {
   customPrediction: PropTypes.bool.isRequired
-}
+};
