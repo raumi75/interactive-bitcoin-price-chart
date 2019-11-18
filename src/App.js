@@ -670,7 +670,7 @@ class App extends Component {
               <Col xs={12} lg={8} lgOffset={2}>
                 <Alert bsStyle="success">
                    <p class="lead text-center"><span role="img" aria-label="speaker">🔊</span> Listen to the <a
-                   href="http://funwithcrypto.libsyn.com/fun-with-crypto-podcast-season-2-episode-24">Fun
+                   href="https://anchor.fm/funwithbitcoin/episodes/InterviewDiscussion-with-Raumi75-bircoin-top-creator--Raspiblitz-contributor-e5l304">Fun
                    With Crypto Episode</a> about this site!</p>
                 </Alert>
               </Col>
